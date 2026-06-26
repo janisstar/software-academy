@@ -32,6 +32,13 @@ services:
         condition: service_healthy
     ports:
       - "8000:8000"
+    volumes:
+      # Папка backend на твоём компьютере и /app в контейнере — это одно и то же.
+      # Поэтому: правки кода видны сразу, а файлы, созданные внутри контейнера
+      # (например, новые миграции Alembic), появляются у тебя в репозитории.
+      - ./backend:/app
+    # --reload перезапускает сервер при изменении кода (удобно для разработки)
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 volumes:
   postgres-data:

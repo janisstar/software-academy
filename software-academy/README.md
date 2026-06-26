@@ -16,7 +16,7 @@
 | Frontend   | React 18, TypeScript, Vite, CSS Modules *(этап после бэкенда)*    |
 | Backend    | Python, FastAPI, SQLAlchemy 2.0, Alembic, Pydantic v2             |
 | База данных| PostgreSQL                                                        |
-| Auth       | username + password, JWT-токены                                   |
+| Auth       | username + password, серверные сессии (httpOnly-cookie)           |
 | Видео      | Vimeo (хранение/стриминг) + Vimeo Player (эмбед)                  |
 | Инфра      | Docker + docker-compose                                           |
 

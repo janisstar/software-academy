@@ -1,105 +1,105 @@
 # 03 — База данных (PostgreSQL)
 
 Как устроена БД, какие таблицы, как с ними работать через миграции.
+Конвенции по ролям/компаниям/авторизации — в `06-api-conventions.md`.
 
 ---
 
 ## 1. Почему PostgreSQL и зачем ORM/миграции
 
-- **PostgreSQL** — надёжная реляционная БД. Подходит для связанных данных
-  (пользователи ↔ роли ↔ уроки ↔ прогресс).
-- **SQLAlchemy (ORM)** — пишешь Python-классы, а не сырой SQL. Таблица = класс,
-  строка = объект. Меньше ручного SQL → меньше ошибок.
-- **Alembic (миграции)** — это «версии» структуры БД. Изменил модель — создаёшь
-  миграцию — применяешь её. Так структура БД на всех машинах одинаковая, и
-  изменения откатываются. Думай о миграциях как о git-коммитах для схемы.
+- **PostgreSQL** — надёжная реляционная БД для связанных данных (компании ↔
+  пользователи ↔ роли ↔ уроки ↔ прогресс). Всё в **одной** базе.
+- **SQLAlchemy (ORM)** — таблица = Python-класс, строка = объект. Меньше ручного SQL.
+- **Alembic (миграции)** — «версии» структуры БД. Изменил модель → создал
+  миграцию → применил. Как git-коммиты, но для схемы.
 
 ---
 
-## 2. Схема БД (таблицы и связи)
+## 2. Таблицы и связи
 
 ```
-        ┌──────────────┐
-        │    roles     │
-        │──────────────│
-        │ id (PK)      │
-        │ key          │  administrator / manager / site_manager /
-        │ name         │  inspector / welder / fitter
-        │ is_privileged│  true → видит все уроки + раздел Users
-        └──────┬───────┘
-               │ 1
-               │
-               │ N
-        ┌──────┴───────┐
-        │    users     │
-        │──────────────│
-        │ id (PK)      │
-        │ name         │
-        │ username     │  уникальный, для входа
-        │ password_hash│  НИКОГДА не храним пароль открыто
-        │ role_id (FK) │ ──→ roles.id
-        │ is_active    │  деактивация вместо удаления
-        │ must_change_password │  true → заставить сменить при входе
-        │ created_at   │
-        └──────┬───────┘
-               │ 1
-               │ N
-        ┌──────┴────────────┐         ┌──────────────┐
-        │  lesson_progress  │         │  categories  │
-        │───────────────────│         │──────────────│
-        │ id (PK)           │         │ id (PK)      │
-        │ user_id (FK)      │         │ name         │
-        │ lesson_id (FK)    │         │ slug         │
-        │ status            │         │ parent_id(FK)│ ──→ categories.id
-        │ watch_percent     │         │ order        │   (подкатегории)
-        │ last_position_sec │         └──────┬───────┘
-        │ started_at        │                │ 1
-        │ completed_at      │                │ N
-        └───────┬───────────┘         ┌──────┴───────────┐
-                │ N                    │     lessons      │
-                │                      │──────────────────│
-                └──────────────────→   │ id (PK)          │
-                            1          │ title            │
-                                       │ slug             │
-        ┌──────────────┐               │ description      │
-        │ lesson_roles │               │ duration_seconds │
-        │──────────────│               │ vimeo_id         │
-        │ lesson_id(FK)│ ──────────→   │ thumbnail_url    │
-        │ role_id (FK) │   N : N       │ transcript       │
-        └──────────────┘  (видимость)  │ category_id (FK) │
-                                       │ is_public        │ ← виден всем
-                                       │ order            │
-                                       │ created_at       │
-                                       └──────────────────┘
+┌──────────────┐         ┌──────────────┐
+│  companies   │         │    roles     │
+│──────────────│         │──────────────│
+│ id (PK)      │         │ id (PK)      │
+│ name         │         │ key          │ master/admin/manager/site/
+│ businessid?  │         │ name         │ inspector/user/fitter
+│ email?       │         │ is_privileged│
+│ is_locked    │         └──────┬───────┘
+│ created_at   │                │ 1
+└──────┬───────┘                │
+       │ 1                      │ N
+       │ N               ┌──────┴───────┐
+┌──────┴────────────────→│    users     │
+│                        │──────────────│
+│   (company_id FK)      │ id (PK)      │
+│                        │ username (un)│ уникальный, для входа
+│                        │ password_hash│ Argon2id, НЕ открытый пароль
+│                        │ name         │
+│                        │ email?       │ необязательное
+│                        │ company_id FK│ ──→ companies.id
+│                        │ role_id FK   │ ──→ roles.id
+│                        │ is_locked    │ блокировка (lock/unlock)
+│                        │ must_change_password │ временный пароль при 1-м входе
+│                        │ created_at   │
+│                        └──┬────────┬──┘
+│                       1 │        │ 1
+│                         │ N      │ N
+│              ┌──────────┴───┐  ┌─┴──────────────────┐
+│              │   sessions   │  │  lesson_progress   │
+│              │──────────────│  │────────────────────│
+│              │ id (PK,token)│  │ id (PK)            │
+│              │ user_id FK   │  │ user_id FK         │
+│              │ created_at   │  │ lesson_id FK ──────┼──→ lessons.id
+│              │ expires_at   │  │ status             │
+│              │ last_seen_at │  │ watch_percent      │
+│              │ ip           │  │ last_position_sec  │
+│              │ user_agent   │  │ started_at         │
+│              └──────────────┘  │ completed_at       │
+│                                └────────────────────┘
+│
+│   ┌──────────────┐          ┌──────────────────┐
+│   │  categories  │          │     lessons      │
+│   │──────────────│          │──────────────────│
+│   │ id (PK)      │ 1      N │ id (PK)          │
+│   │ name         │──────────│ title            │
+│   │ slug         │          │ slug             │
+│   │ parent_id FK │          │ description      │
+│   │ order        │          │ duration_seconds │
+│   └──────────────┘          │ vimeo_id         │
+│                             │ thumbnail_url    │
+│   ┌──────────────┐          │ transcript       │
+│   │ lesson_roles │ N : N    │ category_id FK   │
+│   │──────────────│──────────│ is_public        │ виден всем
+│   │ lesson_id FK │ видимость│ order            │
+│   │ role_id FK   │          │ created_at       │
+│   └──────────────┘          └──────────────────┘
 ```
 
 Связи словами:
-- У **роли** много **пользователей** (1:N).
-- У **пользователя** одна роль, и много записей **прогресса** (1:N).
-- **Категория** может иметь подкатегории через `parent_id` (ссылка на саму себя).
-- У **категории** много **уроков** (1:N).
-- **Уроки** и **роли** связаны через `lesson_roles` (N:N) — кто видит урок.
-- **Прогресс** связывает пользователя и урок; для пары (user, lesson) —
-  одна запись.
+- У **компании** много **пользователей** (1:N). У пользователя одна компания и одна роль.
+- У **пользователя** много **сессий** (вход с разных устройств) и много записей **прогресса**.
+- **Контент общий**: категории/уроки не привязаны к компании.
+- **Категория** может иметь подкатегории через `parent_id`.
+- **Уроки** ↔ **роли** через `lesson_roles` (N:N) — кто видит урок.
 
 ---
 
-## 3. Ключевые поля и значения
+## 3. Ключевые поля
 
-**roles.is_privileged** — самое важное поле модели доступа. `true` для
-administrator / manager / site_manager. На него опирается правило видимости.
-
-**lesson_progress.status** — одно из:
-- `not_started`
-- `in_progress`
-- `completed`
-
-**lessons.is_public** — `true`, если урок виден всем (например, Login / Adding
-hours). Тогда `lesson_roles` для него можно не заполнять.
+- **roles.is_privileged** — `true` у master/admin/manager/site. На него
+  опирается правило видимости каталога.
+- **users.role_id** — одна роль (см. `06-api-conventions.md`, §2). В ответе API
+  из неё собирается `privileges`-объект.
+- **users.company_id** — обязательно у всех; master привязан к компании-платформе (id=1).
+- **users.is_locked / must_change_password** — блокировка и обязательная смена
+  временного пароля при первом входе.
+- **lesson_progress.status** — `not_started` / `in_progress` / `completed`.
+- **lessons.is_public** — `true`, если урок виден всем (тогда `lesson_roles` пуст).
 
 ---
 
-## 4. Правило видимости — на языке БД
+## 4. Правило видимости уроков (на языке БД)
 
 Какие уроки показать пользователю с ролью `role_id`:
 
@@ -109,54 +109,48 @@ FROM lessons l
 WHERE
     l.is_public = true
     OR (SELECT is_privileged FROM roles WHERE id = :user_role_id) = true
-    OR l.id IN (
-        SELECT lesson_id FROM lesson_roles WHERE role_id = :user_role_id
-    );
+    OR l.id IN (SELECT lesson_id FROM lesson_roles WHERE role_id = :user_role_id);
 ```
 
-В коде эту логику пишем **один раз** в `services/` и переиспользуем (каталог,
-рекомендации, dashboard — всё опирается на одну функцию видимости).
+Эту логику пишем один раз в `services/` и переиспользуем (каталог, dashboard,
+рекомендации). Контент общий — фильтра по компании в видимости нет.
 
 ---
 
 ## 5. Стартовые данные (seed)
 
-При первом запуске нужно залить **6 ролей** (см. таблицу выше). Их `key` и
-`is_privileged` фиксированы. Категории и уроки вендор заводит сам.
+При старте заливаем **7 ролей** (фиксированные ключи) и **компанию-платформу**
+(id=1) для master. Команда:
 
-Seed-роли (минимум для старта):
+```bash
+docker compose exec backend python -m app.seed          # добавить недостающее
+docker compose exec backend python -m app.seed --reset  # очистить роли и залить заново
+```
 
-| key            | name          | is_privileged |
-|----------------|---------------|---------------|
-| administrator  | Administrator | true          |
-| manager        | Manager       | true          |
-| site_manager   | Site Manager  | true          |
-| inspector      | Inspector     | false         |
-| welder         | Welder        | false         |
-| fitter         | Fitter        | false         |
-
-Seed сделаем отдельным скриптом / миграцией на соответствующем шаге roadmap.
+| key       | name           | is_privileged |
+|-----------|----------------|---------------|
+| master    | Master         | true          |
+| admin     | Administrator  | true          |
+| manager   | Manager        | true          |
+| site      | Site Supervisor| true          |
+| inspector | Inspector      | false         |
+| user      | Welder         | false         |
+| fitter    | Fitter         | false         |
 
 ---
 
-## 6. Работа с миграциями Alembic (команды)
+## 6. Миграции Alembic (команды)
 
 ```bash
-# один раз — инициализация Alembic в проекте (делается на шаге настройки)
-alembic init alembic
+# создать миграцию по изменениям в models/ (autogenerate)
+docker compose exec backend alembic revision --autogenerate -m "create companies and users"
 
-# создать миграцию автоматически по изменениям в models/
-alembic revision --autogenerate -m "create users and roles"
+# применить миграции к БД
+docker compose exec backend alembic upgrade head
 
-# применить миграции к БД (привести БД к актуальной схеме)
-alembic upgrade head
-
-# откатить последнюю миграцию (если что-то пошло не так)
-alembic downgrade -1
+# откатить последнюю
+docker compose exec backend alembic downgrade -1
 ```
 
-**Рабочий цикл:** изменил модель в `models/` → `alembic revision --autogenerate`
-→ посмотрел сгенерированный файл миграции → `alembic upgrade head`.
-
-> Важно: всегда читай сгенерированную миграцию глазами перед `upgrade`.
-> Автогенерация хороша, но не идеальна.
+**Рабочий цикл:** изменил модель → autogenerate → ГЛАЗАМИ посмотрел файл
+миграции → upgrade. Автогенерация хороша, но не идеальна — всегда проверяй.

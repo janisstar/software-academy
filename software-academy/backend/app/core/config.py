@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     # --- Приложение ---
     APP_NAME: str = "Software Academy API"
     APP_VERSION: str = "0.1.0"
+    # Адреса фронтенда, которым разрешён доступ (CORS). На проде — реальные домены.
+    # Локально по умолчанию — dev-сервер Vite.
+    CORS_ORIGINS: list[str] = ["http://localhost:5173", "http://localhost:8000"]
 
     # --- База данных ---
     # Пример: postgresql+psycopg://academy:academy@localhost:5432/academy

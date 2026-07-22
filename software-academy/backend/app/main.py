@@ -6,8 +6,11 @@
 Документация Swagger:     http://localhost:8000/docs
 """
 
-from fastapi import Depends, FastAPI
+import logging
+
+from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -18,17 +21,30 @@ from app.api.v1 import (
 from app.core.config import settings
 from app.core.database import get_db
 
+logger = logging.getLogger("app")
+
 # Создаём приложение. title/version попадают в Swagger.
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
 )
 
+
+# Единый формат для НЕПРЕДВИДЕННЫХ ошибок: клиент получает чистый JSON,
+# а не трейсбек. Обычные HTTPException и ошибки валидации (422) FastAPI
+# отдаёт сам в формате {"detail": ...} — их не трогаем.
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    logger.exception("Unhandled error on %s %s", request.method, request.url.path)
+    return JSONResponse(status_code=500, content={"detail": "Internal server error"})
+
 # CORS — разрешаем фронтенду (React) обращаться к API из браузера.
-# Пока режим разработки: разрешаем всё. На проде сузим список адресов.
+# ВАЖНО: с cookie-сессиями и allow_credentials=True на ПРОДЕ нельзя "*" —
+# нужно перечислить конкретные адреса фронтенда (CORS_ORIGINS в настройках).
+# Для локальной разработки список берётся из settings (по умолчанию Vite-порт).
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

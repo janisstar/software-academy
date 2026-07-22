@@ -44,10 +44,27 @@ software-academy/
 ## С чего начать
 
 1. Прочитай **`docs/01-project-overview.md`** — общая картина продукта.
-2. Открой **`docs/05-roadmap.md`** — там пошаговый план. В нём всегда отмечено,
-   на каком шаге мы находимся.
-3. Дальше — `docs/02-backend-guide.md`, `03-database-guide.md`,
-   `04-server-and-docker.md` по мере необходимости.
+2. Открой **`docs/05-roadmap.md`** — пошаговый план (бэкенд MVP пройден целиком).
+3. Конвенции и решения — `docs/06-api-conventions.md`.
+4. **Карта всех эндпоинтов для фронтенда — `docs/07-api-reference.md`.**
+
+## Статус
+
+Бэкенд MVP готов: auth (сессии, Argon2id), пользователи и компании, согласия
+(GDPR), категории и уроки с видимостью по ролям, личный прогресс, reports и
+dashboard. Интерактивная документация — Swagger на `/docs`.
+
+## Быстрый старт
+
+```bash
+cp backend/.env.example backend/.env      # один раз
+docker compose up -d --build
+docker compose exec backend alembic upgrade head
+docker compose exec backend python -m app.seed   # роли + компания-платформа + первый master
+```
+
+Seed напечатает временный пароль master (логин `master`) — сохрани его. Затем
+`http://localhost:8000/docs` → `POST /api/login/`.
 
 > Документация написана так, чтобы по ней могли работать и человек, и ИИ-агент:
 > весь контекст проекта собран в `docs/`.

@@ -2,7 +2,7 @@
 Настройки приложения.
 
 Читаем значения из файла .env (или из переменных окружения, что важно для Docker).
-Любая настройка проекта (адрес БД, секрет JWT) живёт здесь, а не разбросана по коду.
+Любая настройка проекта (адрес БД и т.п.) живёт здесь, а не разбросана по коду.
 """
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -25,10 +25,8 @@ class Settings(BaseSettings):
     # Пример: postgresql+psycopg://academy:academy@localhost:5432/academy
     DATABASE_URL: str
 
-    # --- JWT (понадобится на Шаге 4, описываем заранее) ---
-    JWT_SECRET: str = "change-me-in-production"
-    JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+    # --- Сессии (настройки добавим на Шаге 5, при реализации входа) ---
+    # SESSION_TTL_MINUTES: int = ...
 
 
 # Один общий экземпляр настроек на всё приложение.

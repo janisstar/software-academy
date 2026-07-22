@@ -31,7 +31,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Подключаем эндпоинты разделов. Все они живут под /api/v1.
+# Подключаем эндпоинты разделов. Все они живут под /api/.
 app.include_router(roles.router, prefix="/api")
 
 

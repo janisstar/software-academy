@@ -7,11 +7,11 @@
 
 Что засевается:
 - 7 ролей (master, admin, manager, site, inspector, user, fitter);
-- компания-платформа SevenHeaven (id=1) — для master-пользователей.
+- компания-платформа SevenHeaven (id=1);
+- первый master-пользователь (логин master) — временный пароль печатается ОДИН раз.
 
-Скрипт идемпотентный: повторный запуск не создаёт дубликатов.
---reset нужен только если поменялись ключи ролей (чистит таблицу roles).
-Первый master-пользователь засевается на Шаге 5 (нужен хеш пароля Argon2id).
+Скрипт идемпотентный: повторный запуск не создаёт дубликатов
+(и не печатает пароль заново — он показывается только при создании).
 """
 
 import sys
@@ -19,6 +19,7 @@ import sys
 from app.core.database import SessionLocal
 from app.services.company_service import seed_platform_company
 from app.services.role_service import reset_roles, seed_roles
+from app.services.user_service import seed_master_user
 
 
 def main() -> None:
@@ -38,6 +39,14 @@ def main() -> None:
             if created
             else "Компания-платформа SevenHeaven: уже была."
         )
+
+        temp_password = seed_master_user(db)
+        if temp_password:
+            print("Master-пользователь создан. Логин: master")
+            print(f"ВРЕМЕННЫЙ ПАРОЛЬ (показывается один раз): {temp_password}")
+            print("Сохрани его — после входа смени на постоянный.")
+        else:
+            print("Master-пользователь: уже был.")
         print("Готово.")
     finally:
         db.close()

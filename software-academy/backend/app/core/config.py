@@ -25,8 +25,13 @@ class Settings(BaseSettings):
     # Пример: postgresql+psycopg://academy:academy@localhost:5432/academy
     DATABASE_URL: str
 
-    # --- Сессии (настройки добавим на Шаге 5, при реализации входа) ---
-    # SESSION_TTL_MINUTES: int = ...
+    # --- Сессии ---
+    # Срок жизни сессии в минутах. Пока длинный (30 дней); позже можно ~60.
+    SESSION_TTL_MINUTES: int = 60 * 24 * 30
+    # Имя cookie, в которой браузер хранит идентификатор сессии
+    SESSION_COOKIE_NAME: str = "session_id"
+    # Secure-флаг cookie: в проде (HTTPS) — True; локально по http — False
+    SESSION_COOKIE_SECURE: bool = False
 
 
 # Один общий экземпляр настроек на всё приложение.

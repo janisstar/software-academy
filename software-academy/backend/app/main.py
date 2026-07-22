@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from app.api.v1 import roles
+from app.api.v1 import auth, roles
 from app.core.config import settings
 from app.core.database import get_db
 
@@ -32,6 +32,7 @@ app.add_middleware(
 )
 
 # Подключаем эндпоинты разделов. Все они живут под /api/.
+app.include_router(auth.router, prefix="/api")
 app.include_router(roles.router, prefix="/api")
 
 

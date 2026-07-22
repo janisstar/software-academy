@@ -29,4 +29,3 @@ Thumbs.db
 # ---- Docker / logs ----
 *.log
 postgres-data/
-.DS_Store

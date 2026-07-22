@@ -12,7 +12,8 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app.api.v1 import (
-    auth, categories, companies, consents, lessons, passwords, progress, roles, users,
+    auth, categories, companies, consents, dashboard, lessons, passwords, progress,
+    roles, users,
 )
 from app.core.config import settings
 from app.core.database import get_db
@@ -42,6 +43,7 @@ app.include_router(consents.router, prefix="/api")
 app.include_router(categories.router, prefix="/api")
 app.include_router(lessons.router, prefix="/api")
 app.include_router(progress.router, prefix="/api")
+app.include_router(dashboard.router, prefix="/api")
 app.include_router(roles.router, prefix="/api")
 
 

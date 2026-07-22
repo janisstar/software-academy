@@ -12,23 +12,25 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.core.database import get_db
 from app.models.user import User
-from app.schemas.auth import LoginIn, UserOut, build_user_out
+from app.schemas.auth import LoginIn, LoginOut, UserOut, build_user_out
+from app.schemas.company import CompanyOut
 from app.api.v1.deps import get_current_user
-from app.services import auth_service
+from app.services import auth_service, consent_service
 
 router = APIRouter()
 
 
-@router.post("/login/", response_model=UserOut, tags=["authentication"])
+@router.post("/login/", response_model=LoginOut, tags=["authentication"])
 def login(
     body: LoginIn,
     request: Request,
     response: Response,
     db: Session = Depends(get_db),
-) -> UserOut:
+) -> LoginOut:
     """
     Вход по логину и паролю. Access: Public.
-    Успех → создаётся сессия, её id кладётся в httpOnly-cookie; возвращаем пользователя.
+    Успех → создаётся сессия, её id кладётся в httpOnly-cookie;
+    возвращаем {message, user, company} (как в Welding Log, но без sessionID в теле).
     """
     user = auth_service.authenticate(db, body.un, body.pw)
     if user is None:
@@ -55,7 +57,11 @@ def login(
         max_age=settings.SESSION_TTL_MINUTES * 60,
         path="/",
     )
-    return build_user_out(user)
+    pending = consent_service.pending_documents(db, user.id)
+    return LoginOut(
+        user=build_user_out(user, pending_consents=pending),
+        company=CompanyOut.model_validate(user.company),
+    )
 
 
 @router.post("/logout/", tags=["authentication"])
@@ -73,6 +79,10 @@ def logout(
 
 
 @router.get("/me/", response_model=UserOut, tags=["authentication"])
-def me(current_user: User = Depends(get_current_user)) -> UserOut:
+def me(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> UserOut:
     """Текущий пользователь (по cookie сессии). Удобно для фронтенда."""
-    return build_user_out(current_user)
+    pending = consent_service.pending_documents(db, current_user.id)
+    return build_user_out(current_user, pending_consents=pending)

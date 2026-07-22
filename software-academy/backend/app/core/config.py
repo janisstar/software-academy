@@ -25,6 +25,11 @@ class Settings(BaseSettings):
     # Пример: postgresql+psycopg://academy:academy@localhost:5432/academy
     DATABASE_URL: str
 
+    # --- Юридические документы (тексты — на фронте, здесь только версии) ---
+    # При изменении текста повышаем версию → согласие потребуется заново.
+    PRIVACY_POLICY_VERSION: str = "1.0"
+    TERMS_VERSION: str = "1.0"
+
     # --- Сессии ---
     # Срок жизни сессии в минутах. Пока длинный (30 дней); позже можно ~60.
     SESSION_TTL_MINUTES: int = 60 * 24 * 30

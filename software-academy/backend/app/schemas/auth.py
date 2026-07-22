@@ -8,6 +8,8 @@ UserOut повторяет форму Welding Log: privileges-объект со�
 
 from pydantic import BaseModel
 
+from app.schemas.company import CompanyOut
+
 # порядок ключей — как в Welding Log
 PRIVILEGE_KEYS = ["master", "admin", "manager", "site", "user", "fitter", "inspector"]
 
@@ -27,9 +29,11 @@ class UserOut(BaseModel):
     companyid: int
     privileges: dict[str, int]
     must_change_password: bool = False
+    # какие обязательные документы ещё не приняты (GDPR); пусто = всё принято
+    pending_consents: list[str] = []
 
 
-def build_user_out(user) -> UserOut:
+def build_user_out(user, pending_consents: list[str] | None = None) -> UserOut:
     """
     Собрать UserOut из модели User: privileges-объект из одной роли.
     user.role должен быть загружен (relationship).
@@ -46,4 +50,13 @@ def build_user_out(user) -> UserOut:
         companyid=user.company_id,
         privileges=privileges,
         must_change_password=user.must_change_password,
+        pending_consents=pending_consents or [],
     )
+
+
+class LoginOut(BaseModel):
+    """Ответ POST /api/login/ — форма как в Welding Log ({message, user, company}),
+    но БЕЗ sessionID в теле: сессия уезжает в httpOnly-cookie."""
+    message: str = "OK"
+    user: UserOut
+    company: CompanyOut

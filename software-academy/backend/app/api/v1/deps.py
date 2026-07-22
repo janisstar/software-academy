@@ -29,3 +29,37 @@ def get_current_user(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired session"
         )
     return user
+
+
+def require_privileged(current_user: User = Depends(get_current_user)) -> User:
+    """
+    Пускать только привилегированные роли (master/admin/manager/site).
+    Использование:  user: User = Depends(require_privileged)
+    """
+    if not current_user.role.is_privileged:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions"
+        )
+    return current_user
+
+
+def require_master(current_user: User = Depends(get_current_user)) -> User:
+    """Пускать только master (управление контентом и платформой)."""
+    if current_user.role.key != "master":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Master only"
+        )
+    return current_user
+
+
+def check_company_access(actor: User, target: User) -> None:
+    """
+    Может ли actor управлять target: master — любым, остальные — только своей компанией.
+    Нет доступа → 403.
+    """
+    if actor.role.key == "master":
+        return
+    if actor.company_id != target.company_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions"
+        )

@@ -28,3 +28,29 @@ def seed_platform_company(db: Session) -> bool:
     db.add(Company(name=PLATFORM_COMPANY_NAME))
     db.commit()
     return True
+
+
+def create_company(
+    db: Session,
+    name: str,
+    businessid: str | None = None,
+    email: str | None = None,
+) -> Company:
+    """Создать компанию-клиента (только master)."""
+    company = Company(name=name, businessid=businessid, email=email)
+    db.add(company)
+    db.commit()
+    db.refresh(company)
+    return company
+
+
+def list_companies(db: Session) -> list[Company]:
+    """Все компании (только master)."""
+    return list(db.execute(select(Company).order_by(Company.id)).scalars().all())
+
+
+def get_company(db: Session, company_id: int) -> Company | None:
+    """Компания по id."""
+    return db.execute(
+        select(Company).where(Company.id == company_id)
+    ).scalar_one_or_none()

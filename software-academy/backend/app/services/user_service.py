@@ -11,6 +11,7 @@ from app.core.security import generate_temp_password, hash_password
 from app.models.company import Company
 from app.models.password_reset_code import PasswordResetCode
 from app.models.user_consent import UserConsent
+from app.models.progress import LessonProgress
 from app.models.role import Role
 from app.models.session import UserSession
 from app.models.user import User
@@ -118,6 +119,7 @@ def delete_user(db: Session, user: User) -> None:
         delete(PasswordResetCode).where(PasswordResetCode.user_id == user.id)
     )
     db.execute(delete(UserConsent).where(UserConsent.user_id == user.id))
+    db.execute(delete(LessonProgress).where(LessonProgress.user_id == user.id))
     db.delete(user)
     db.commit()
 

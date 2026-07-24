@@ -1,0 +1,17 @@
+:root {
+  --color-ink: #1c2024;
+  --color-ink-800: #2c313a;
+  --color-ink-600: #4a515b;
+  --color-ink-400: #7c838d;
+  --color-ink-200: #c9cdd3;
+  --color-ink-100: #e9ebee;
+  --color-ink-50: #f6f7f8;
+  --color-accent: #12a594;
+  --color-accent-hover: #0e8576;
+  --color-accent-tint: #dcf2ef;
+  --color-text-on-tint: #0b6b5f;
+  --color-status-not-started: #7c838d;
+  --color-status-in-progress: #12a594;
+  --color-status-completed: #6aa632;
+  --color-status-danger: #d14b4b;
+}

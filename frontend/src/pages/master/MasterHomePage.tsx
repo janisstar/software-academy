@@ -1,7 +1,7 @@
-import { useAuth } from '../hooks/useAuth'
-import styles from './HomePage.module.css'
+import { useAuth } from '../../hooks/useAuth'
+import styles from './MasterHomePage.module.css'
 
-export function HomePage() {
+export function MasterHomePage() {
   const { user, logout } = useAuth()
 
   const privileges = Object.entries(user?.privileges ?? {})

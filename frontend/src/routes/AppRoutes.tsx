@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { HomePage } from '../components/HomePage'
-import { LoginPage } from '../components/LoginPage'
-import { ProtectedRoute } from '../components/ProtectedRoute'
+import { MasterHomePage } from '../pages/master/MasterHomePage'
+import { LoginPage } from '../pages/login/LoginPage'
+import { ProtectedRoute } from './ProtectedRoute'
 
 export function AppRoutes() {
   return (
@@ -11,7 +11,7 @@ export function AppRoutes() {
         path="/"
         element={
           <ProtectedRoute>
-            <HomePage />
+            <MasterHomePage />
           </ProtectedRoute>
         }
       />

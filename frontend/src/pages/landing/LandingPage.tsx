@@ -1,23 +1,26 @@
-import { Link } from 'react-router-dom'
+import { LandingCategories } from '../../components/landing/LandingCategories'
+import { LandingFooter } from '../../components/landing/LandingFooter'
+import { LandingHeader } from '../../components/landing/LandingHeader'
+import { LandingHero } from '../../components/landing/LandingHero'
+import { LandingStats } from '../../components/landing/LandingStats'
 import styles from './LandingPage.module.css'
 
 /**
- * Публичная витрина. Пока только каркас: дизайн и секции (Header, Hero…)
- * появятся в `components/landing/` на этапе дизайна.
+ * Публичная витрина (маршрут «/»). Сама страница только собирает секции
+ * из `components/landing/` — вся вёрстка живёт в них.
+ *
+ * Единственный h1 — в hero; у остальных секций h2.
  */
 export function LandingPage() {
   return (
     <div className={styles.page}>
-      <section className={styles.hero}>
-        <h1>Software Academy</h1>
-        <p className={styles.tagline}>
-          Короткие видеоуроки для команд на производстве — нужный ответ за пару
-          минут.
-        </p>
-        <Link className={styles.cta} to="/login">
-          Войти
-        </Link>
-      </section>
+      <div className={styles.container}>
+        <LandingHeader />
+        <LandingHero />
+        <LandingStats />
+        <LandingCategories />
+        <LandingFooter />
+      </div>
     </div>
   )
 }

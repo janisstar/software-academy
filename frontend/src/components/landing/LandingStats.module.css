@@ -1,0 +1,49 @@
+/* Мобайл (<600px): одна колонка. */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  border: 1px solid var(--color-ink-100);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  /* Серая тень, а не бирюзовая как у hero: карточки белые на белом фоне,
+     цветная тень выглядела бы грязным пятном. */
+  box-shadow: var(--shadow-soft);
+}
+
+.icon {
+  color: var(--teal-600);
+  margin-bottom: var(--space-1);
+}
+
+.value {
+  font-size: var(--font-size-h2);
+  line-height: var(--line-height-h2);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-ink);
+}
+
+.caption {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  color: var(--color-ink-600);
+}
+
+@media (min-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

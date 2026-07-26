@@ -6,9 +6,22 @@
   --space-5: 20px;
   --space-6: 24px;
   --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 14px;
+  --radius-xl: 16px;
+  /* Кнопки-пилюли: очень большой радиус скругляет края в полукруг. */
+  --radius-pill: 999px;
+  /* Ширина контентной колонки на десктопе (лендинг, дальше — портал). */
+  --layout-max-width: 1100px;
   --shadow-soft: 0 8px 24px rgba(28, 32, 36, 0.08);
   --shadow-card: 0 4px 16px rgba(28, 32, 36, 0.06);
+  /* Тени для тёмно-бирюзовых блоков: обычная серая тень на них не видна,
+     поэтому цвет взят от --teal-900 (#04342c). */
+  --shadow-panel: 0 18px 48px rgba(4, 52, 44, 0.22);
+  --shadow-glow: 0 8px 20px rgba(4, 52, 44, 0.35);
+  --shadow-glow-strong: 0 14px 32px rgba(4, 52, 44, 0.5);
 }

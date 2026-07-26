@@ -1,4 +1,8 @@
 :root {
+  /* Белый фон карточек и текст на залитых кнопках — тоже токены,
+     чтобы в компонентах не встречалось ни одного hex-значения. */
+  --color-surface: #ffffff;
+  --color-on-accent: #ffffff;
   --color-ink: #1c2024;
   --color-ink-800: #2c313a;
   --color-ink-600: #4a515b;
@@ -10,6 +14,19 @@
   --color-accent-hover: #0e8576;
   --color-accent-tint: #dcf2ef;
   --color-text-on-tint: #0b6b5f;
+
+  /* Шкала бирюзового (teal-ramp): от самого светлого фона до самого
+     тёмного. --teal-500 совпадает с --color-accent — это одна и та же
+     акцентная бирюза, просто внутри шкалы. */
+  --teal-50: #e1f5ee;
+  --teal-200: #9fe1cb;
+  --teal-300: #5dcaa5;
+  --teal-500: #12a594;
+  --teal-600: #0f8a76;
+  --teal-700: #0f6e56;
+  --teal-800: #085041;
+  --teal-900: #04342c;
+
   --color-status-not-started: #7c838d;
   --color-status-in-progress: #12a594;
   --color-status-completed: #6aa632;

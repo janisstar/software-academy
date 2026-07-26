@@ -2,6 +2,12 @@
   --font-family-sans: 'Inter', sans-serif;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
+  /* Display — крупные заголовки маркетинговых страниц (лендинг).
+     -lg включается на десктопе. */
+  --font-size-display: 30px;
+  --line-height-display: 38px;
+  --font-size-display-lg: 44px;
+  --line-height-display-lg: 52px;
   --font-size-h1: 22px;
   --font-size-h2: 18px;
   --font-size-h3: 16px;
@@ -12,6 +18,8 @@
   --line-height-h3: 22px;
   --line-height-body: 24px;
   --line-height-caption: 18px;
+  /* Разрядка букв для КАПСОВЫХ ярлыков-надзаголовков. */
+  --letter-spacing-wide: 0.08em;
 }
 
 body {

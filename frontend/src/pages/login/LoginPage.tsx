@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { ApiError } from '../../api/client'
 import { useAuth } from '../../hooks/useAuth'
 import styles from './LoginPage.module.css'
 
 export function LoginPage() {
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const { login, user, loading } = useAuth()
   const [un, setUn] = useState('')
   const [pw, setPw] = useState('')
   const [error, setError] = useState('')
@@ -26,7 +26,7 @@ export function LoginPage() {
     try {
       setIsSubmitting(true)
       await login(un, pw)
-      navigate('/', { replace: true })
+      navigate('/home', { replace: true })
     } catch (caughtError) {
       if (caughtError instanceof ApiError) {
         setError(caughtError.detail)
@@ -36,6 +36,16 @@ export function LoginPage() {
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  // Ждём проверку сессии, иначе форма мигнёт перед редиректом.
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  // Уже вошедшему пользователю форма входа не нужна.
+  if (user) {
+    return <Navigate to="/home" replace />
   }
 
   return (

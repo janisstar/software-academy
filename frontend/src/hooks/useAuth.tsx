@@ -14,6 +14,7 @@ import {
   me as meRequest,
 } from '../api/auth'
 import type { LoginResponse, UserOut } from '../types/api'
+import { markLandingSeen } from '../utils/storage'
 
 interface AuthContextValue {
   user: UserOut | null
@@ -71,6 +72,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const login = useCallback(async (un: string, pw: string) => {
     const response = await loginRequest(un, pw)
     setUser(response.user)
+
+    // Вход завершён только когда не осталось соглашений к принятию —
+    // тогда лендинг больше не показываем.
+    if (response.user.pending_consents.length === 0) {
+      markLandingSeen()
+    }
+
     return response
   }, [])
 

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 // TODO(assets): по макету сцена лежит в `assets/landing/hero-scene.png`.
 // Сейчас файл в `assets/` — при переносе поправить путь.
@@ -12,25 +13,30 @@ import styles from './LandingHero.module.css'
  * вырываем из потока (position: absolute) и прижимаем вправо.
  */
 export function LandingHero() {
+  const { t } = useTranslation()
+
   return (
     <section className={styles.hero}>
       <div className={styles.content}>
         <p className={styles.label}>
-          <span aria-hidden="true">●</span> USER ONBOARDING FOR INDUSTRIAL TEAMS
+          <span aria-hidden="true">●</span> {t('landing.hero.label')}
         </p>
         <h1 className={styles.title}>
-          Find the instruction in five minutes.{' '}
-          <span className={styles.titleAccent}>Continue your work.</span>
+          {t('landing.hero.title')}{' '}
+          <span className={styles.titleAccent}>
+            {t('landing.hero.titleAccent')}
+          </span>
         </h1>
         <Link className={styles.cta} to="/login">
-          Start onboarding <span aria-hidden="true">→</span>
+          {t('landing.hero.cta')}{' '}
+          <span aria-hidden="true">{t('common.arrow')}</span>
         </Link>
-        <p className={styles.note}>Access granted by your company manager</p>
+        <p className={styles.note}>{t('landing.hero.note')}</p>
       </div>
       <img
         className={styles.scene}
         src={heroScene}
-        alt="Onboarding presentation on a digital board"
+        alt={t('landing.hero.sceneAlt')}
       />
     </section>
   )

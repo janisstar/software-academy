@@ -1,0 +1,39 @@
+.field {
+  display: block;
+}
+
+/* Капсовый ярлык-надзаголовок над полем.
+   Не --teal-200: мелкий текст на зелёной панели не дотягивает до
+   контраста 4.5:1, который требует WCAG AA. */
+.label {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--teal-50);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+/* Прозрачная рамка в покое — чтобы при фокусе размер поля не прыгал. */
+.input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.input::placeholder {
+  color: var(--color-ink-400);
+}
+
+/* color-mix вместо rgba(93,202,165,0.35): цвет берётся из токена --teal-300. */
+.input:focus {
+  outline: none;
+  border-color: var(--teal-300);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--teal-300) 35%, transparent);
+}

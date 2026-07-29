@@ -1,0 +1,101 @@
+{
+  "brand": {
+    "name": "Software Academy",
+    "copyright": "© SevenHeaven AI · Software Academy"
+  },
+  "common": {
+    "loading": "Loading…",
+    "signIn": "Sign in",
+    "logOut": "Log out",
+    "arrow": "→"
+  },
+  "landing": {
+    "hero": {
+      "label": "USER ONBOARDING FOR INDUSTRIAL TEAMS",
+      "title": "Find the instruction in five minutes.",
+      "titleAccent": "Continue your work.",
+      "cta": "Start onboarding",
+      "note": "Access granted by your company manager",
+      "sceneAlt": "Onboarding presentation on a digital board"
+    },
+    "stats": {
+      "heading": "What you get",
+      "durationValue": "3–5 min",
+      "durationCaption": "per onboarding guide",
+      "roleValue": "By role",
+      "roleCaption": "tailored guide sets",
+      "progressValue": "Personal progress",
+      "progressCaption": "Continue right where you left off."
+    },
+    "categories": {
+      "label": "CATEGORIES",
+      "heading": "Pick a topic. Find your guide.",
+      "cta": "Peek inside",
+      "welding": {
+        "title": "Welding",
+        "text": "Daily reports, logs, and sign-offs."
+      },
+      "inspection": {
+        "title": "Inspection",
+        "text": "Reports, checklists, and approvals."
+      },
+      "installation": {
+        "title": "Installation",
+        "text": "Hours, tasks, and site workflows."
+      },
+      "management": {
+        "title": "Management & analytics",
+        "text": "Team reports, completion, and oversight."
+      }
+    },
+    "values": {
+      "heading": "How it works",
+      "duration": {
+        "title": "3–5 minutes per guide",
+        "text": "One task, one short guide. No extra theory."
+      },
+      "role": {
+        "title": "Onboarding for your role",
+        "text": "Manager, welder, inspector, fitter — only what you need."
+      },
+      "progress": {
+        "title": "Personal progress",
+        "text": "Continue right where you left off."
+      }
+    },
+    "footer": {
+      "privacy": "Privacy",
+      "terms": "Terms"
+    }
+  },
+  "login": {
+    "eyebrow": "Sign in",
+    "title": "The instruction is waiting inside.",
+    "titleAccent": "Open the book.",
+    "cover": {
+      "above": "This is your",
+      "word": "Academy",
+      "below": "click to sign in"
+    },
+    "username": "Username",
+    "usernamePlaceholder": "i.ivanov",
+    "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "submit": "Log in",
+    "submitting": "Signing in…",
+    "forgotPassword": "Forgot password?",
+    "accessHint": "Access granted by your company administrator",
+    "unexpectedError": "Unexpected error"
+  },
+  "master": {
+    "heading": "Home",
+    "signedInAs": "Signed in as {{name}}",
+    "unknownUser": "Unknown user",
+    "username": "Username",
+    "role": "Role",
+    "roleNone": "none",
+    "companyId": "Company ID",
+    "mustChangePassword": "You must change your password.",
+    "pendingConsents": "Pending consents: {{list}}"
+  }
+}

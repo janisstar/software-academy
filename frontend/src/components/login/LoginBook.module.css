@@ -1,0 +1,193 @@
+/* Тайминг «переворота страницы» держим локально: он нужен только книжке.
+   Переменные объявлены на .book и наследуются во вложенные элементы. */
+.book {
+  --page-turn-duration: 0.9s;
+  --page-turn-ease: cubic-bezier(0.06, 0.63, 0, 1);
+  /* Тот же рецепт градиента, что у панели «Pick a topic» на лендинге
+     (160deg + две соседние ступени бирюзовой шкалы), но на шаг темнее:
+     на teal-600 подписи полей не дотягивают до контраста 4.5:1 (WCAG AA),
+     а тут на зелёном лежит мелкий текст. */
+  --page-face: linear-gradient(160deg, var(--teal-800), var(--teal-700));
+  /* Обратная сторона листа — темнее лицевой, как настоящий разворот. */
+  --page-back: linear-gradient(160deg, var(--teal-900), var(--teal-800));
+  width: min(680px, 100%);
+  perspective: 1600px;
+}
+
+.eyebrow {
+  margin-bottom: var(--space-3);
+  color: var(--teal-700);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.title {
+  max-width: 480px;
+  margin-bottom: var(--space-8);
+  color: var(--color-ink);
+}
+
+.muted {
+  color: var(--teal-600);
+}
+
+/* Разворот книги. База — мобильная: страницы идут столбиком.
+   Фон нужен потому, что отвёрнутый лист скрыт (backface-visibility) —
+   без него сквозь него просвечивала бы страница, и книжка была бы
+   наполовину серой. Клик по этому фону открывает и закрывает книгу. */
+.body {
+  position: relative;
+  min-height: 300px;
+  border-radius: var(--radius-xl);
+  background: var(--page-back);
+  box-shadow: var(--shadow-panel);
+  cursor: pointer;
+}
+
+.left,
+.right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-6);
+  background: var(--page-face);
+}
+
+.left {
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.right {
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+}
+
+.row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-4);
+}
+
+/* Обложка лежит поверх формы и отворачивается от левого края. */
+.cover {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+  padding: var(--space-6);
+  border: none;
+  border-radius: var(--radius-xl);
+  background: var(--page-face);
+  color: var(--color-surface);
+  cursor: pointer;
+  transform-origin: 0% 50%;
+  transform: perspective(1600px) translateZ(1px);
+  /* Анимируем только transform: фон — градиент, он подменяется мгновенно,
+     но в этот момент лист повёрнут ребром и подмены не видно. */
+  transition: transform var(--page-turn-duration) var(--page-turn-ease);
+  backface-visibility: hidden;
+}
+
+.cover small {
+  display: block;
+  /* Не --teal-200: мелкий текст на зелёном не дотягивает до 4.5:1 (WCAG AA). */
+  color: var(--teal-50);
+}
+
+.coverWord {
+  font-size: var(--font-size-display-lg);
+  line-height: 1.1;
+  font-weight: var(--font-weight-medium);
+  text-decoration: underline;
+  text-decoration-color: var(--teal-300);
+  text-underline-offset: 6px;
+}
+
+.open .cover {
+  transform: perspective(1200px) rotateY(-180deg);
+  background: var(--page-back);
+  pointer-events: none;
+}
+
+/* ---------- Планшет и десктоп: настоящий разворот в две страницы ---------- */
+@media (min-width: 600px) {
+  .title {
+    font-size: var(--font-size-display);
+    line-height: var(--line-height-display);
+  }
+
+  .body {
+    height: 240px;
+    min-height: 0;
+  }
+
+  /* Корешок книги — тонкая линия по центру разворота. */
+  .body::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 10%;
+    bottom: 10%;
+    width: 1px;
+    background: color-mix(in srgb, var(--color-surface) 16%, transparent);
+    pointer-events: none;
+  }
+
+  .left,
+  .right {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+  }
+
+  /* Левая страница — оборот обложки: изначально перевёрнута «лицом внутрь». */
+  .left {
+    left: 0;
+    z-index: 2;
+    border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+    background: var(--page-back);
+    transform-origin: 100% 50%;
+    transform: perspective(1600px) rotateY(180deg);
+    transition: transform var(--page-turn-duration) var(--page-turn-ease);
+    backface-visibility: hidden;
+  }
+
+  .open .left {
+    transform: perspective(1600px) rotateY(0deg);
+    background: var(--page-face);
+  }
+
+  .right {
+    right: 0;
+    border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
+  }
+
+  /* На десктопе обложка закрывает только правую половину. */
+  .cover {
+    left: auto;
+    right: 0;
+    width: 50%;
+    align-items: flex-end;
+    text-align: right;
+    border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
+  }
+
+  .open .cover {
+    transform: perspective(1600px) rotateY(180deg);
+  }
+}
+
+/* Уважаем системную настройку «меньше движения» (WCAG 2.3.3). */
+@media (prefers-reduced-motion: reduce) {
+  .left,
+  .cover {
+    transition: none;
+  }
+}

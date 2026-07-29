@@ -80,6 +80,43 @@ Placement rules:
   ≥ 44px.
 - Mobile-first: side nav on desktop, bottom tabs on mobile.
 
+## UI language & i18n — every string goes through the dictionary
+
+- **No user-facing string is ever hardcoded in a component.** Headings, labels,
+  buttons, placeholders, hints, error messages, empty states, `alt` text,
+  `aria-label` — all of them come from `t('…')`.
+- **English is the source language.** `src/i18n/en/common.json` is the master
+  dictionary; other languages are added as sibling folders (`src/i18n/fi/…`)
+  and registered in `src/i18n/index.ts`.
+- **Code comments, docs and commit messages stay in Russian** — that is the team
+  language. Only what the user sees is translated.
+- Design mockups in `docs/mockups/` are written in Russian for review purposes —
+  translate the copy when implementing them.
+
+How to use it:
+
+```tsx
+import { useTranslation } from 'react-i18next'
+
+const { t } = useTranslation()
+<h1>{t('login.title')}</h1>
+<p>{t('master.signedInAs', { name: user.name })}</p>   // подстановка
+```
+
+- **Keys are type-checked.** `src/types/i18next.d.ts` derives the key union from
+  the English JSON, so a typo fails `npm run build` instead of rendering the raw
+  key in the browser. Never silence that error with a cast.
+- **Key naming:** `<area>.<block>.<element>` — `login.cover.word`,
+  `landing.hero.cta`. Strings shared by more than one area go under `common.*`
+  or `brand.*`. Group by where the string is shown, not by its wording.
+- **Lists of items** (categories, cards) keep the key strings in the data array
+  with `as const`, not the texts — see `LandingCategories.tsx`. Without
+  `as const` TypeScript widens them to `string` and the type check is lost.
+- One namespace (`common`) for now. Split it only when the file stops being
+  readable, and register the new namespace in `src/i18n/index.ts`.
+- Adding a string = add the key to the English JSON first, then use it.
+  Do not leave a key untranslated in the other language files.
+
 ## Tooling
 
 - Package manager: **npm**.

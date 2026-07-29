@@ -1,6 +1,14 @@
 import type { ApiErrorDetail } from '../types/api'
 
-const DEFAULT_API_BASE_URL = 'http://localhost:8000'
+/**
+ * Пустая строка = запросы идут относительными путями (`/api/...`), то есть на
+ * тот же адрес, с которого открыта страница. В разработке их перехватывает
+ * прокси Vite (см. vite.config.ts) и передаёт на бэкенд — поэтому CORS не
+ * нужен и не важно, на каком порту поднялся dev-сервер.
+ * Абсолютный адрес задаётся через VITE_API_URL — только если API живёт на
+ * другом домене; тогда его домен должен быть в CORS_ORIGINS на бэкенде.
+ */
+const DEFAULT_API_BASE_URL = ''
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL?.replace(/\/$/, '') ?? DEFAULT_API_BASE_URL

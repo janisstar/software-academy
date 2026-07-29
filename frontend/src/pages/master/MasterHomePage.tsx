@@ -1,7 +1,9 @@
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../hooks/useAuth'
 import styles from './MasterHomePage.module.css'
 
 export function MasterHomePage() {
+  const { t } = useTranslation()
   const { user, logout } = useAuth()
 
   const privileges = Object.entries(user?.privileges ?? {})
@@ -18,9 +20,11 @@ export function MasterHomePage() {
       <section className={styles.card}>
         <div className={styles.header}>
           <div>
-            <h1>Home</h1>
+            <h1>{t('master.heading')}</h1>
             <p className={styles.subtitle}>
-              Signed in as {user?.name ?? 'Unknown user'}
+              {t('master.signedInAs', {
+                name: user?.name ?? t('master.unknownUser'),
+              })}
             </p>
           </div>
           <button
@@ -28,32 +32,34 @@ export function MasterHomePage() {
             type="button"
             onClick={handleLogout}
           >
-            Выйти
+            {t('common.logOut')}
           </button>
         </div>
 
         <div className={styles.grid}>
           <div className={styles.stat}>
-            <span>Username</span>
+            <span>{t('master.username')}</span>
             <strong>{user?.un}</strong>
           </div>
           <div className={styles.stat}>
-            <span>Role</span>
-            <strong>{privileges.join(', ') || 'none'}</strong>
+            <span>{t('master.role')}</span>
+            <strong>{privileges.join(', ') || t('master.roleNone')}</strong>
           </div>
           <div className={styles.stat}>
-            <span>Company ID</span>
+            <span>{t('master.companyId')}</span>
             <strong>{user?.companyid}</strong>
           </div>
         </div>
 
         {user?.must_change_password ? (
-          <div className={styles.banner}>You must change your password.</div>
+          <div className={styles.banner}>{t('master.mustChangePassword')}</div>
         ) : null}
 
         {user?.pending_consents.length ? (
           <div className={styles.banner}>
-            Pending consents: {user.pending_consents.join(', ')}
+            {t('master.pendingConsents', {
+              list: user.pending_consents.join(', '),
+            })}
           </div>
         ) : null}
       </section>

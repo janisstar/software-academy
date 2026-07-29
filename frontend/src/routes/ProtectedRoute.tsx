@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 
@@ -6,10 +7,11 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
+  const { t } = useTranslation()
   const { user, loading } = useAuth()
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div>{t('common.loading')}</div>
   }
 
   if (!user) {

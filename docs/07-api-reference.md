@@ -9,7 +9,10 @@
 - В ответ сервер ставит **httpOnly-cookie** с сессией. Фронт **ничего не хранит
   вручную** — браузер сам шлёт cookie. В `fetch`/`axios` нужен режим с cookie:
   `fetch(url, { credentials: "include" })` (для axios — `withCredentials: true`).
-- CORS: разреши адрес фронтенда в `CORS_ORIGINS` (по умолчанию `http://localhost:5173`).
+- CORS: в **локальной разработке не нужен** — dev-сервер Vite проксирует `/api`
+  на бэкенд (`frontend/vite.config.ts`), поэтому для браузера запросы
+  same-origin и порт фронта не имеет значения. `CORS_ORIGINS` нужен только
+  когда фронт ходит на API по абсолютному адресу (прод, стенд, `VITE_API_URL`).
 - Выход: `POST /api/logout/`.
 - «Кто я»: `GET /api/me/` → пользователь + `pending_consents` + `must_change_password`.
 

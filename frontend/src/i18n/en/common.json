@@ -7,6 +7,7 @@
     "loading": "Loading…",
     "signIn": "Sign in",
     "logOut": "Log out",
+    "inDevelopment": "In development",
     "arrow": "→"
   },
   "landing": {
@@ -96,6 +97,38 @@
     "roleNone": "none",
     "companyId": "Company ID",
     "mustChangePassword": "You must change your password.",
-    "pendingConsents": "Pending consents: {{list}}"
+    "pendingConsents": "Pending consents: {{list}}",
+    "nav": {
+      "label": "Main navigation",
+      "tabsLabel": "Bottom navigation",
+      "dashboard": "Dashboard",
+      "content": "Content",
+      "categories": "Categories",
+      "lessons": "Lessons",
+      "people": "People",
+      "users": "Users",
+      "companies": "Companies",
+      "reports": "Reports",
+      "settings": "Settings"
+    },
+    "roles": {
+      "master": "Master",
+      "admin": "Admin",
+      "manager": "Manager",
+      "site": "Site manager",
+      "inspector": "Inspector",
+      "user": "User",
+      "fitter": "Fitter"
+    },
+    "pages": {
+      "eyebrow": "SevenHeaven · platform",
+      "greeting": "Good day, {{name}}",
+      "categories": "Categories",
+      "lessons": "Lessons",
+      "users": "Users",
+      "companies": "Companies",
+      "reports": "Reports",
+      "settings": "Settings"
+    }
   }
 }

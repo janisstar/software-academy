@@ -1,0 +1,24 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  background: var(--color-ink-50);
+}
+
+/* min-width: 0 — иначе длинная таблица внутри растянет колонку и сломает flex. */
+.main {
+  flex: 1;
+  min-width: 0;
+  /* 96px снизу — запас под нижние табы на мобильном. */
+  padding: var(--space-8) var(--space-6) 96px;
+}
+
+.inner {
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  .main {
+    padding: var(--space-6) var(--space-4) 96px;
+  }
+}

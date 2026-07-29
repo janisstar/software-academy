@@ -1,4 +1,4 @@
-/* Кнопка-пилюля. min-height 44px — минимальный тач-таргет (WCAG). */
+/* Общая геометрия. min-height 44px — минимальный тач-таргет (WCAG). */
 .button {
   display: inline-flex;
   align-items: center;
@@ -7,16 +7,9 @@
   padding: 0 var(--space-6);
   border: none;
   border-radius: var(--radius-pill);
-  background: var(--color-accent);
-  color: var(--color-on-accent);
   font-weight: var(--font-weight-medium);
-  box-shadow: var(--shadow-glow);
   cursor: pointer;
   transition: background 0.2s ease;
-}
-
-.button:hover:not(:disabled) {
-  background: var(--color-accent-hover);
 }
 
 /* Кольцо фокуса видно только при навигации с клавиатуры. */
@@ -25,12 +18,41 @@
   outline-offset: 2px;
 }
 
+/* --- solid: главное действие на экране ------------------------------------ */
+
+.solid {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  box-shadow: var(--shadow-glow);
+}
+
+.solid:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+}
+
 /* Нейтральный серый, а не тёмная бирюза: кнопка живёт и на светлом фоне,
    и на зелёной панели — на второй бирюзовый disabled просто растворялся бы. */
-.button:disabled {
+.solid:disabled {
   background: var(--color-ink-200);
   color: var(--color-ink-600);
   box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* --- ghost: второстепенное действие (Log out в меню) ---------------------- */
+
+.ghost {
+  background: transparent;
+  color: var(--color-ink-600);
+}
+
+.ghost:hover:not(:disabled) {
+  background: var(--color-ink-50);
+  color: var(--color-ink);
+}
+
+.ghost:disabled {
+  color: var(--color-ink-200);
   cursor: not-allowed;
 }
 

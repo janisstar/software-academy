@@ -1,0 +1,179 @@
+/* Стили всего бокового меню: используются и в SideNav, и в NavGroup,
+   и в NavItemLink — чтобы состояния пункта жили в одном месте. */
+
+.sidenav {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 240px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-5) var(--space-3);
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-ink-100);
+}
+
+.brand {
+  padding: 0 var(--space-2) var(--space-5);
+}
+
+.list,
+.subList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* --- пункт меню ----------------------------------------------------------- */
+
+/* min-height 44px — минимальный тач-таргет (WCAG 2.1 AA). */
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-ink-600);
+  font-weight: var(--font-weight-medium);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.navItem:hover {
+  background: var(--color-ink-50);
+  color: var(--color-ink);
+}
+
+.navItem:focus-visible {
+  outline: 3px solid var(--teal-300);
+  outline-offset: 2px;
+}
+
+.icon {
+  flex: none;
+}
+
+/* Длинное название не должно ломать ширину меню. */
+.label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Активный пункт — единственное цветное пятно в меню. */
+.active {
+  background: var(--color-accent-tint);
+  color: var(--color-text-on-tint);
+}
+
+.active:hover {
+  background: var(--color-accent-tint);
+  color: var(--color-text-on-tint);
+}
+
+/* --- группа --------------------------------------------------------------- */
+
+.groupHeader {
+  /* Кнопка наследует шрифт от body, иначе браузер поставит системный. */
+  font: inherit;
+  font-weight: var(--font-weight-medium);
+}
+
+/* Заголовок группы с активным подпунктом: только цвет текста, без заливки —
+   заливка остаётся у самого подпункта, чтобы не было двух пятен подряд. */
+.activeParent {
+  color: var(--color-text-on-tint);
+}
+
+.chevron {
+  flex: none;
+  transition: transform 0.2s ease;
+}
+
+.chevronCollapsed {
+  transform: rotate(-90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    transition: none;
+  }
+}
+
+/* Направляющая линия вдоль подпунктов — видно, что они относятся к группе. */
+.subList {
+  margin-left: var(--space-5);
+  padding-left: var(--space-2);
+  border-left: 1px solid var(--color-ink-100);
+}
+
+/* Атрибут hidden проигрывает нашему display: flex — гасим явно. */
+.subList[hidden] {
+  display: none;
+}
+
+.subItem {
+  font-weight: var(--font-weight-regular);
+}
+
+/* --- подвал: пользователь и выход ---------------------------------------- */
+
+.spacer {
+  flex: 1;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-top: 1px solid var(--color-ink-100);
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--teal-700);
+  color: var(--color-on-accent);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-caption);
+}
+
+.userText {
+  display: grid;
+  min-width: 0;
+}
+
+.userName,
+.userRole {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userRole {
+  color: var(--color-ink-400);
+}
+
+/* Меню — только для десктопа; ниже 600px его заменяют нижние табы. */
+@media (max-width: 600px) {
+  .sidenav {
+    display: none;
+  }
+}

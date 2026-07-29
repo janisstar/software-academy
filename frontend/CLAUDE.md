@@ -52,6 +52,20 @@ Placement rules:
 - Each component sits next to its `<Component>.module.css` (co-location).
 - Page files are named by area: `MasterHomePage`, not `HomePage`.
 
+## Navigation = one config, never JSX
+
+- The master menu structure lives in a single array in
+  `components/master/navConfig.ts` (i18n label key, icon name, `path` or
+  `children`). `SideNav`, `NavGroup` and `TabBar` render from that array.
+- **Adding a menu item = one entry in the config.** Never edit the JSX of the
+  nav components to add, reorder or hide an item.
+- Role visibility is expressed only as a `roles` list on a config entry and
+  resolved through `visibleNavItems()` + the existing `activeRole()` from
+  `types/api.ts`. Do not add role checks inside components; a group with no
+  visible children disappears automatically.
+- Icon names in the config are plain strings; the mapping to inline SVG
+  components lives in `components/master/MasterIcons.tsx`.
+
 ## API types = codegen (single source of truth)
 
 - API types are **generated** from the backend OpenAPI spec into

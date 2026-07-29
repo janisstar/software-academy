@@ -1,0 +1,54 @@
+/* На десктопе табов нет — их роль выполняет SideNav. */
+.tabbar {
+  display: none;
+  position: fixed;
+  z-index: 50;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-ink-100);
+  /* Нижний отступ учитывает «шторку» жестов на iPhone. */
+  padding: var(--space-1) var(--space-2)
+    calc(var(--space-1) + env(safe-area-inset-bottom));
+}
+
+.tab {
+  flex: 1;
+  min-width: 0;
+  /* 48px — комфортный тач-таргет (WCAG требует минимум 44px). */
+  min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: var(--space-2) 0;
+  border-radius: var(--radius-sm);
+  color: var(--color-ink-400);
+  text-decoration: none;
+}
+
+.label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+.tab:focus-visible {
+  outline: 3px solid var(--teal-300);
+  outline-offset: -3px;
+}
+
+.active {
+  color: var(--color-text-on-tint);
+}
+
+@media (max-width: 600px) {
+  .tabbar {
+    display: flex;
+  }
+}

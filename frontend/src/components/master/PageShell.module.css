@@ -1,0 +1,13 @@
+.eyebrow {
+  margin-bottom: var(--space-1);
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.title {
+  margin-bottom: var(--space-6);
+}

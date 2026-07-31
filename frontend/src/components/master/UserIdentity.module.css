@@ -1,0 +1,37 @@
+.identity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--teal-700);
+  color: var(--color-on-accent);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-caption);
+}
+
+.text {
+  display: grid;
+  min-width: 0;
+}
+
+/* Длинные имя и название компании обрезаем: меню всего 240px шириной. */
+.name,
+.meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-ink);
+}
+
+.meta {
+  color: var(--color-ink-400);
+}

@@ -1,7 +1,5 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -12,36 +10,40 @@ import {
   login as loginRequest,
   logout as logoutRequest,
   me as meRequest,
+  userCompany as companyRequest,
 } from '../api/auth'
-import type { LoginResponse, UserOut } from '../types/api'
+import type { CompanyOut, UserOut } from '../types/api'
 import { markLandingSeen } from '../utils/storage'
-
-interface AuthContextValue {
-  user: UserOut | null
-  loading: boolean
-  login: (un: string, pw: string) => Promise<LoginResponse>
-  logout: () => Promise<void>
-  refresh: () => Promise<UserOut | null>
-}
-
-const AuthContext = createContext<AuthContextValue | undefined>(undefined)
+import { AuthContext, type AuthContextValue } from './useAuth'
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<UserOut | null>(null)
+  const [company, setCompany] = useState<CompanyOut | null>(null)
   const [loading, setLoading] = useState(true)
 
   const refresh = useCallback(async () => {
     try {
-      const nextUser = await meRequest()
+      // Название компании отдаёт отдельный эндпоинт (/api/me/ возвращает
+      // только companyid), поэтому запрашиваем параллельно — иначе ожидание
+      // на старте приложения удвоилось бы.
+      // Название — украшение: если запрос не прошёл, интерфейс работает без него.
+      const [nextUser, nextCompany] = await Promise.all([
+        meRequest(),
+        companyRequest().catch(() => null),
+      ])
+
       setUser(nextUser)
+      setCompany(nextCompany)
       return nextUser
     } catch (error) {
       if (error instanceof ApiError && error.status === 401) {
         setUser(null)
+        setCompany(null)
         return null
       }
 
       setUser(null)
+      setCompany(null)
       return null
     }
   }, [])
@@ -72,6 +74,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const login = useCallback(async (un: string, pw: string) => {
     const response = await loginRequest(un, pw)
     setUser(response.user)
+    // Ответ логина уже содержит компанию — отдельный запрос не нужен.
+    setCompany(response.company)
 
     // Вход завершён только когда не осталось соглашений к принятию —
     // тогда лендинг больше не показываем.
@@ -87,29 +91,21 @@ export function AuthProvider({ children }: PropsWithChildren) {
       await logoutRequest()
     } finally {
       setUser(null)
+      setCompany(null)
     }
   }, [])
 
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
+      company,
       loading,
       login,
       logout,
       refresh,
     }),
-    [loading, login, logout, refresh, user],
+    [company, loading, login, logout, refresh, user],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext)
-
-  if (!context) {
-    throw new Error('useAuth must be used inside AuthProvider')
-  }
-
-  return context
 }

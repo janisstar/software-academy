@@ -1,5 +1,10 @@
 import { apiRequest } from './client'
-import type { LoginResponse, MeResponse, UserOut } from '../types/api'
+import type {
+  CompanyOut,
+  LoginResponse,
+  MeResponse,
+  UserOut,
+} from '../types/api'
 import { API_ENDPOINTS } from '../constants/api'
 
 export async function login(un: string, pw: string): Promise<LoginResponse> {
@@ -17,6 +22,13 @@ export async function logout(): Promise<{ status: string }> {
 
 export async function me(): Promise<UserOut> {
   return apiRequest<UserOut>(API_ENDPOINTS.me, {
+    method: 'GET',
+  })
+}
+
+/** Компания текущего пользователя: /api/me/ отдаёт только `companyid`. */
+export async function userCompany(): Promise<CompanyOut> {
+  return apiRequest<CompanyOut>(API_ENDPOINTS.userCompany, {
     method: 'GET',
   })
 }

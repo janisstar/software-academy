@@ -134,41 +134,11 @@
   flex: 1;
 }
 
+/* Сам блок пользователя живёт в UserIdentity — здесь только его посадка
+   в подвал меню. */
 .user {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
   padding: var(--space-3);
   border-top: 1px solid var(--color-ink-100);
-}
-
-.avatar {
-  width: 36px;
-  height: 36px;
-  flex: none;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--teal-700);
-  color: var(--color-on-accent);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-caption);
-}
-
-.userText {
-  display: grid;
-  min-width: 0;
-}
-
-.userName,
-.userRole {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.userRole {
-  color: var(--color-ink-400);
 }
 
 /* Меню — только для десктопа; ниже 600px его заменяют нижние табы. */

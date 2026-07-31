@@ -13,7 +13,7 @@ export function PageShell({ eyebrow, title, children }: PageShellProps) {
     <>
       {eyebrow ? <p className={styles.eyebrow}>{eyebrow}</p> : null}
       <h1 className={styles.title}>{title}</h1>
-      {children}
+      <div className={styles.content}>{children}</div>
     </>
   )
 }

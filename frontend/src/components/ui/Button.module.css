@@ -56,6 +56,45 @@
   cursor: not-allowed;
 }
 
+/* --- outline: второстепенное действие на белой карточке ------------------- */
+
+/* Рамка нарисована внутренней тенью, а не border: так кнопка остаётся
+   ровно той же высоты, что solid рядом с ней. */
+.outline {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: inset 0 0 0 1px var(--color-ink-200);
+}
+
+.outline:hover:not(:disabled) {
+  background: var(--color-ink-50);
+}
+
+.outline:disabled {
+  color: var(--color-ink-400);
+  cursor: not-allowed;
+}
+
+/* --- danger: разрушающее действие (удаление) ------------------------------ */
+
+/* Без заливки: кнопка не должна выглядеть как приглашение нажать. */
+.danger {
+  background: transparent;
+  color: var(--color-status-danger);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--color-status-danger) 40%, transparent);
+}
+
+.danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-status-danger) 8%, transparent);
+}
+
+.danger:disabled {
+  color: var(--color-ink-400);
+  box-shadow: inset 0 0 0 1px var(--color-ink-200);
+  cursor: not-allowed;
+}
+
 .fullWidth {
   width: 100%;
 }

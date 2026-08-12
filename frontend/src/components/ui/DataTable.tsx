@@ -8,6 +8,10 @@ export type DataTableColumn<Row> = {
   header: string
   /** Как нарисовать ячейку этой колонки для конкретной строки. */
   cell: (row: Row) => ReactNode
+  /** Прижать содержимое к правому краю — для колонки-действия. */
+  align?: 'right'
+  /** Скрыть колонку на узком экране (< 900px), когда места на всё не хватает. */
+  hideOnNarrow?: boolean
 }
 
 type DataTableProps<Row> = {
@@ -35,12 +39,24 @@ export function DataTable<Row>({
     return <p className={styles.empty}>{emptyText}</p>
   }
 
+  // Модификаторы колонки одинаковы для заголовка и для ячеек — считаем их
+  // один раз, чтобы правила не разъехались между thead и tbody.
+  const modifiers = (column: DataTableColumn<Row>) =>
+    [
+      column.align === 'right' ? styles.right : '',
+      column.hideOnNarrow ? styles.hideOnNarrow : '',
+    ].filter(Boolean)
+
   return (
     <table className={styles.table}>
       <thead>
         <tr>
           {columns.map((column) => (
-            <th key={column.key} scope="col" className={styles.th}>
+            <th
+              key={column.key}
+              scope="col"
+              className={[styles.th, ...modifiers(column)].join(' ')}
+            >
               {column.header}
             </th>
           ))}
@@ -50,7 +66,10 @@ export function DataTable<Row>({
         {rows.map((row) => (
           <tr key={rowKey(row)}>
             {columns.map((column) => (
-              <td key={column.key} className={styles.td}>
+              <td
+                key={column.key}
+                className={[styles.td, ...modifiers(column)].join(' ')}
+              >
                 {column.cell(row)}
               </td>
             ))}

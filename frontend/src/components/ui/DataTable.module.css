@@ -28,6 +28,18 @@
   padding-right: 0;
 }
 
+/* Модификаторы колонок. Стоят ПОСЛЕ .th/.td в этом же файле, поэтому
+   перебивают их выравнивание без повышения специфичности. */
+.right {
+  text-align: right;
+}
+
+@media (max-width: 900px) {
+  .hideOnNarrow {
+    display: none;
+  }
+}
+
 .empty {
   padding: var(--space-6) 0;
   color: var(--color-ink-400);

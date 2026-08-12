@@ -166,9 +166,18 @@ export function entryTargetPath(entry: NavEntry): string {
   return isGroup(entry) ? entry.children[0].path : entry.path
 }
 
+/**
+ * Совпадает ли адрес с путём пункта — сам путь или что-то вложенное в него.
+ * Вложенное учитываем, чтобы на странице вида `/people/users/i.ivanov`
+ * пункт «Users» оставался подсвеченным (так же ведёт себя NavLink в SideNav).
+ */
+function isPathActive(path: string, pathname: string): boolean {
+  return pathname === path || pathname.startsWith(`${path}/`)
+}
+
 /** Активен ли пункт верхнего уровня при текущем адресе. */
 export function isEntryActive(entry: NavEntry, pathname: string): boolean {
   return isGroup(entry)
-    ? entry.children.some((child) => child.path === pathname)
-    : entry.path === pathname
+    ? entry.children.some((child) => isPathActive(child.path, pathname))
+    : isPathActive(entry.path, pathname)
 }

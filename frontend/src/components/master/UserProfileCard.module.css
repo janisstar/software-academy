@@ -1,0 +1,66 @@
+.title {
+  margin-bottom: var(--space-2);
+}
+
+/* Строка «ярлык — значение». Колонка ярлыков фиксированной ширины, чтобы
+   значения выстроились в один столбец. */
+.row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: var(--space-2) var(--space-4);
+  align-items: center;
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--color-ink-100);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Первая строка идёт сразу под заголовком — линия сверху ей не нужна. */
+.row:first-of-type {
+  border-top: 0;
+}
+
+.label {
+  color: var(--color-ink-400);
+}
+
+/* Значение, которого нет (email не заполнен). */
+.empty {
+  color: var(--color-ink-400);
+}
+
+/* Роль: чип и кнопка смены рядом, на узком экране — в две строки. */
+.roleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+/* Поля формы редактирования: тот же вертикальный ритм, что у строк. */
+.form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.error {
+  margin-top: var(--space-3);
+  color: var(--color-status-danger);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+@media (max-width: 600px) {
+  /* На телефоне ярлык встаёт над значением: 140px съедали половину экрана. */
+  .row {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+}

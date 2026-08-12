@@ -1,0 +1,32 @@
+.intro {
+  color: var(--color-ink-600);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Тёмная панель с кодом: его нужно прочитать вслух или переписать, поэтому
+   он подан крупно и отделён от остального текста. */
+.panel {
+  margin: var(--space-4) 0;
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--teal-900);
+  text-align: center;
+}
+
+.code {
+  margin-bottom: var(--space-3);
+  color: var(--color-on-accent);
+  font-size: var(--font-size-display);
+  line-height: var(--line-height-display);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.12em;
+  /* Двойной клик выделяет код целиком — так его удобнее скопировать руками. */
+  user-select: all;
+}
+
+.howto {
+  color: var(--color-ink-600);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}

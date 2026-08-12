@@ -1,3 +1,14 @@
+/* Шапка страницы: слева надзаголовок с h1, справа — действие раздела.
+   Отступ до содержимого теперь задаёт она, а не сам заголовок. */
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-6);
+}
+
 .eyebrow {
   margin-bottom: var(--space-1);
   color: var(--color-ink-400);
@@ -9,7 +20,11 @@
 }
 
 .title {
-  margin-bottom: var(--space-6);
+  margin-bottom: 0;
+}
+
+.actions {
+  flex: none;
 }
 
 /* Единый вертикальный ритм между блоками страницы. */

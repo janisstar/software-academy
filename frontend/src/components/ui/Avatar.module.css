@@ -1,0 +1,24 @@
+/* Кружок с инициалами вместо фотографии: фотографий в системе нет. */
+.avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  border-radius: 50%;
+  background: var(--teal-700);
+  color: var(--color-on-accent);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Размеры кружка — размеры самого элемента, к шкале отступов отношения
+   не имеют. */
+.md {
+  width: 36px;
+  height: 36px;
+  font-size: var(--font-size-caption);
+}
+
+.lg {
+  width: 48px;
+  height: 48px;
+  font-size: var(--font-size-h2);
+}

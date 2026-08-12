@@ -1,0 +1,37 @@
+/* Каждый класс только подставляет переменные, а рисует пилюлю ui/Chip.
+   Один класс на ключ роли — имена совпадают с RoleKey из types/api.ts. */
+
+.master {
+  --chip-bg: var(--role-master-bg);
+  --chip-text: var(--role-master-text);
+}
+
+.admin {
+  --chip-bg: var(--role-admin-bg);
+  --chip-text: var(--role-admin-text);
+}
+
+.manager {
+  --chip-bg: var(--role-manager-bg);
+  --chip-text: var(--role-manager-text);
+}
+
+.site {
+  --chip-bg: var(--role-site-bg);
+  --chip-text: var(--role-site-text);
+}
+
+.inspector {
+  --chip-bg: var(--role-inspector-bg);
+  --chip-text: var(--role-inspector-text);
+}
+
+.user {
+  --chip-bg: var(--role-user-bg);
+  --chip-text: var(--role-user-text);
+}
+
+.fitter {
+  --chip-bg: var(--role-fitter-bg);
+  --chip-text: var(--role-fitter-text);
+}

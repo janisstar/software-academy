@@ -1,0 +1,67 @@
+/* Ссылка «← Users» стоит над шапкой страницы, вне PageShell. */
+.backlink {
+  display: inline-block;
+  margin-bottom: var(--space-4);
+  color: var(--color-ink-600);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  text-decoration: none;
+}
+
+.backlink:hover {
+  color: var(--color-accent);
+}
+
+/* Шапка: аватар, имя со строкой «логин · компания», статус справа. */
+.head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-6);
+}
+
+/* Занимает всё свободное место, чтобы статус ушёл к правому краю. */
+.headText {
+  flex: 1;
+  min-width: 200px;
+}
+
+.meta {
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Две колонки: профиль шире — в нём длинные значения полей. */
+.columns {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+/* Правая колонка: доступ и опасная зона друг под другом. */
+.side {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Карточка ошибки загрузки: текст и кнопка повтора столбиком. */
+.error {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+}
+
+.confirmText {
+  color: var(--color-ink-600);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+@media (max-width: 900px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+}

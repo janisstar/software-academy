@@ -4,18 +4,34 @@ import styles from './TextField.module.css'
 type TextFieldProps = React.InputHTMLAttributes<HTMLInputElement> & {
   /** Текст ярлыка над полем. */
   label: string
+  /**
+   * На каком фоне стоит поле: `panel` — тёмно-бирюзовая панель входа
+   * (по умолчанию), `surface` — белая карточка. От этого зависят цвета
+   * ярлыка и рамки: светлый ярлык на белом фоне просто не виден.
+   */
+  tone?: 'panel' | 'surface'
   /** Ссылка на сам <input> — нужна, например, чтобы увести в него фокус. */
   ref?: React.Ref<HTMLInputElement>
 }
 
 /** Общее текстовое поле: капсовый ярлык + input с кольцом фокуса. */
-export function TextField({ label, id, className, ...rest }: TextFieldProps) {
+export function TextField({
+  label,
+  tone = 'panel',
+  id,
+  className,
+  ...rest
+}: TextFieldProps) {
   // useId даёт уникальный id даже если полей на странице несколько.
   const generatedId = useId()
   const inputId = id ?? generatedId
 
   return (
-    <div className={[styles.field, className].filter(Boolean).join(' ')}>
+    <div
+      className={[styles.field, styles[tone], className]
+        .filter(Boolean)
+        .join(' ')}
+    >
       <label className={styles.label} htmlFor={inputId}>
         {label}
       </label>

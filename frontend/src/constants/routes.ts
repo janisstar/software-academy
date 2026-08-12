@@ -19,3 +19,17 @@ export const FIRST_LOGIN_PATHS = {
   password: '/first-login/password',
   consents: '/first-login/consents',
 } as const
+
+// Раздел People. Страница пользователя и форма создания нужны одновременно
+// роутеру и ссылкам в списке пользователей, поэтому пути живут здесь.
+export const PEOPLE_PATHS = {
+  users: '/people/users',
+  newUser: '/people/users/new',
+  // Шаблон с параметром — только для роутера; ссылку строит userPath().
+  userPattern: '/people/users/:username',
+} as const
+
+/** Ссылка на страницу конкретного пользователя. */
+export function userPath(un: string): string {
+  return `${PEOPLE_PATHS.users}/${encodeURIComponent(un)}`
+}

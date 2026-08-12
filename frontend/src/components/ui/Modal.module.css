@@ -1,0 +1,39 @@
+/* Затемнение поверх всей страницы. Цвет от --teal-900, как у теней
+   тёмно-бирюзовых блоков: обычный серый на нашем фоне выглядит грязным. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  background: rgba(4, 52, 44, 0.5);
+}
+
+.modal {
+  width: 100%;
+  max-width: 440px;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: var(--space-6);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.modal:focus {
+  outline: none;
+}
+
+.title {
+  margin-bottom: var(--space-2);
+}
+
+/* Кнопки внизу справа: главное действие последним, как в системных диалогах. */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+  flex-wrap: wrap;
+}

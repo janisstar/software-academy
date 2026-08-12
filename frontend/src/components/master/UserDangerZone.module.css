@@ -1,0 +1,32 @@
+/* Не карточка: красная рамка вместо белой заливки — блок должен читаться
+   как предупреждение, а не как обычный раздел. */
+.zone {
+  padding: var(--space-4);
+  border: 1px solid
+    color-mix(in srgb, var(--color-status-danger) 30%, transparent);
+  border-radius: var(--radius-lg);
+}
+
+.title {
+  margin-bottom: var(--space-3);
+  color: var(--color-status-danger);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.note {
+  margin-top: var(--space-1);
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+.error {
+  margin-top: var(--space-3);
+  color: var(--color-status-danger);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}

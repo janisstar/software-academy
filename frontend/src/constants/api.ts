@@ -8,9 +8,18 @@ export const API_ENDPOINTS = {
   acceptTerms: `${API_BASE_PATH}/accept_terms_and_conditions/`,
   changePassword: `${API_BASE_PATH}/user/change-password/`,
   passwordResetConfirm: `${API_BASE_PATH}/user/password-reset/confirm/`,
+  // Код сброса пароля, который привилегированная роль выдаёт человеку офлайн.
+  adminResetCode: `${API_BASE_PATH}/admin/password-reset/code/`,
   generatePassword: `${API_BASE_PATH}/generate/password/`,
   companies: `${API_BASE_PATH}/companies/`,
   userCompany: `${API_BASE_PATH}/user/company/`,
+  // Список пользователей: master видит всех (можно фильтровать ?companyid=),
+  // остальные привилегированные роли — только свою компанию.
+  users: `${API_BASE_PATH}/users/`,
+  // Один пользователь: POST — создать, PATCH — изменить, DELETE — удалить.
+  // Кого именно меняем, всегда передаётся в теле (`un`), а не в адресе.
+  user: `${API_BASE_PATH}/user/`,
+  userLock: `${API_BASE_PATH}/user/lock/`,
   roles: `${API_BASE_PATH}/roles/`,
   dashboard: `${API_BASE_PATH}/dashboard/`,
   // Сводка платформы: доступна только master, остальным бэкенд отвечает 403.

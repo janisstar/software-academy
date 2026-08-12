@@ -1,7 +1,11 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { FirstLoginLayout } from '../components/login/FirstLoginLayout'
 import { MasterLayout } from '../components/master/MasterLayout'
-import { FIRST_LOGIN_PATHS, LEGAL_PATHS } from '../constants/routes'
+import {
+  FIRST_LOGIN_PATHS,
+  LEGAL_PATHS,
+  PEOPLE_PATHS,
+} from '../constants/routes'
 import { LandingPage } from '../pages/landing/LandingPage'
 import { PrivacyPage } from '../pages/legal/PrivacyPage'
 import { TermsPage } from '../pages/legal/TermsPage'
@@ -12,8 +16,10 @@ import { CategoriesPage } from '../pages/master/CategoriesPage'
 import { CompaniesPage } from '../pages/master/CompaniesPage'
 import { DashboardPage } from '../pages/master/DashboardPage'
 import { LessonsPage } from '../pages/master/LessonsPage'
+import { NewUserPage } from '../pages/master/NewUserPage'
 import { ReportsPage } from '../pages/master/ReportsPage'
 import { SettingsPage } from '../pages/master/SettingsPage'
+import { UserDetailPage } from '../pages/master/UserDetailPage'
 import { UsersPage } from '../pages/master/UsersPage'
 import { FirstLoginGate } from './FirstLoginGate'
 import { LandingRoute } from './LandingRoute'
@@ -74,7 +80,11 @@ export function AppRoutes() {
         <Route path="/home" element={<DashboardPage />} />
         <Route path="/content/categories" element={<CategoriesPage />} />
         <Route path="/content/lessons" element={<LessonsPage />} />
-        <Route path="/people/users" element={<UsersPage />} />
+        <Route path={PEOPLE_PATHS.users} element={<UsersPage />} />
+        {/* Форма создания объявлена раньше страницы пользователя, чтобы
+            «new» не был принят за логин. */}
+        <Route path={PEOPLE_PATHS.newUser} element={<NewUserPage />} />
+        <Route path={PEOPLE_PATHS.userPattern} element={<UserDetailPage />} />
         <Route path="/people/companies" element={<CompaniesPage />} />
         <Route path="/reports" element={<ReportsPage />} />
         <Route path="/settings" element={<SettingsPage />} />

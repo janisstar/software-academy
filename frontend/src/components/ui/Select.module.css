@@ -1,0 +1,51 @@
+/* Обёртка нужна ради своей стрелки: системную стрелку браузер прижимает
+   к краю и padding'ом её не сдвинуть, а на самом <select> псевдоэлементы
+   не рисуются. */
+.wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+/* Стрелка — уголок из двух границ, повёрнутый на 45°. Размер 7px и толщина
+   1.5px — размеры самого значка, к шкале отступов отношения не имеют.
+   Клики она не перехватывает: они уходят в селект. */
+.wrap::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: var(--space-4);
+  width: 7px;
+  height: 7px;
+  margin-top: -6px;
+  border-right: 1.5px solid var(--color-ink-400);
+  border-bottom: 1.5px solid var(--color-ink-400);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+/* min-height 44px — минимальный тач-таргет (WCAG 2.1 AA). Правый отступ
+   держит место под стрелку. Скругление — как у TextField. */
+.select {
+  appearance: none;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-10) var(--space-2) var(--space-4);
+  border: 1px solid var(--color-ink-200);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: inherit;
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  cursor: pointer;
+}
+
+.select:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.select:disabled {
+  color: var(--color-ink-400);
+  cursor: not-allowed;
+}

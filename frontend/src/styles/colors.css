@@ -31,4 +31,24 @@
   --color-status-in-progress: #12a594;
   --color-status-completed: #6aa632;
   --color-status-danger: #d14b4b;
+
+  /* Цвета чипов ролей (раздел People и далее). Роль — это признак человека,
+     а не состояние аккаунта, поэтому у неё свой визуальный язык: заливка
+     цветом у чипа роли, точка у статуса. Спутать их нельзя.
+     Каждая пара bg/text — приглушённый фон плюс тёмный текст того же тона:
+     контраст текста к фону проходит WCAG AA. */
+  --role-master-bg: var(--teal-800);
+  --role-master-text: var(--color-on-accent);
+  --role-admin-bg: #e3e8fd;
+  --role-admin-text: #3d4ec7;
+  --role-manager-bg: #efe4fb;
+  --role-manager-text: #7b3fc4;
+  --role-site-bg: #fdeed8;
+  --role-site-text: #a05e1a;
+  --role-inspector-bg: #ddf0fb;
+  --role-inspector-text: #1a6f9e;
+  --role-user-bg: var(--color-accent-tint);
+  --role-user-text: var(--color-text-on-tint);
+  --role-fitter-bg: #fbe4ee;
+  --role-fitter-text: #b03a6e;
 }

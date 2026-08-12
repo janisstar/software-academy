@@ -33,6 +33,19 @@ export type LoginPayload = Schemas['LoginIn']
 // GET /api/me/ отдаёт того же пользователя, что и вход.
 export type MeResponse = UserOut
 
+// Тело запроса POST /api/user/lock/ — { un, locked }.
+export type UserLockPayload = Schemas['UserLockIn']
+
+// Тело запроса PATCH /api/user/ — { un, name?, email?, new_un?, role? }.
+// `un` говорит, КОГО меняем; остальные поля — только то, что меняется.
+export type UserUpdatePayload = Schemas['UserUpdateIn']
+
+// Тело запроса DELETE /api/user/ — { un }.
+export type UserDeletePayload = Schemas['UserDeleteIn']
+
+// Ответ POST /api/admin/password-reset/code/ — { un, code, expires_minutes }.
+export type ResetCode = Schemas['ResetCodeOut']
+
 // Тело запроса POST /api/user/change-password/ — { old_pw, new_pw }.
 // Минимальную длину нового пароля схема не описывает: её проверяет бэкенд
 // (backend/app/schemas/password.py, MIN_PASSWORD_LENGTH).
@@ -124,4 +137,12 @@ export function activeRole(privileges: Privileges): RoleKey | null {
     }
   }
   return null
+}
+
+/**
+ * Заблокирован ли пользователь. Блокировка живёт не отдельным полем, а
+ * служебным ключом `locked` внутри privileges (docs/06 §5).
+ */
+export function isLocked(privileges: Privileges): boolean {
+  return privileges.locked === 1
 }

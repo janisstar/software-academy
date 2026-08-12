@@ -1,0 +1,24 @@
+/* Полоса фильтров над таблицей: слева статусы, справа компания.
+   На узком экране части встают друг под друга. */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+/* Карточка ошибки: текст и кнопка повтора столбиком, кнопка по левому краю
+   (тот же приём, что на дашборде). */
+.error {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+}
+
+/* Неудачное переключение доступа: строка над таблицей, состояние не менялось. */
+.lockError {
+  color: var(--color-status-danger);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}

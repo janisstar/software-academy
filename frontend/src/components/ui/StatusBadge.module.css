@@ -1,0 +1,40 @@
+/* Статус — точка плюс текст, без заливки. Так он не спорит с чипом роли
+   в соседней колонке: у роли заливка, у статуса точка. */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-ink-600);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  white-space: nowrap;
+}
+
+/* Точка 8 px — размер маркера, не отступ. */
+.status::before {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.active::before {
+  background: var(--color-status-completed);
+}
+
+/* Первый вход не пройден — полое кольцо: «начато, но не завершено». */
+.pending::before {
+  background: transparent;
+  box-shadow: inset 0 0 0 2px var(--color-ink-200);
+}
+
+/* У блокировки красится и текст: цвет не должен быть единственным
+   сигналом, но здесь его подкрепляет само слово «Locked». */
+.locked {
+  color: var(--color-status-danger);
+}
+
+.locked::before {
+  background: var(--color-status-danger);
+}

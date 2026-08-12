@@ -1,0 +1,35 @@
+/* Имя пользователя — ссылка на его страницу. Цвет наследуем от строки:
+   подчёркиванием при наведении уже понятно, что это ссылка. */
+.name {
+  display: block;
+  color: inherit;
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+}
+
+.name:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+}
+
+.name:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Второстепенное в ячейке: логин под именем, название компании, дата. */
+.dim {
+  display: block;
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Подвал таблицы: сколько всего записей. Постраничности пока нет. */
+.foot {
+  padding-top: var(--space-3);
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}

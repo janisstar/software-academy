@@ -1,0 +1,54 @@
+/* Группа пилюль в общей серой подложке — один переключатель, а не набор
+   отдельных кнопок. */
+.tabs {
+  display: inline-flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  /* Скругление умеренное, не в полукруг: пилюли-полукружия остаются за
+     кнопками действий, у переключателя фильтра форма спокойнее. */
+  border-radius: var(--radius-md);
+  background: var(--color-ink-100);
+  /* На узком экране список фильтров прокручивается вбок, а не рвёт вёрстку. */
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* min-height 44px — минимальный тач-таргет (WCAG 2.1 AA). */
+.tab {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: 0;
+  /* На шаг меньше, чем у группы, — вложенная форма повторяет внешнюю. */
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-ink-600);
+  font-family: inherit;
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.tab:hover {
+  color: var(--color-ink);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+/* Выбранная пилюля «всплывает»: белая подложка и тень поверх серой группы. */
+.active {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-weight: var(--font-weight-medium);
+  box-shadow: var(--shadow-card);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab {
+    transition: none;
+  }
+}

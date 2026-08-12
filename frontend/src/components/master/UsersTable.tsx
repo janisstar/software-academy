@@ -6,6 +6,7 @@ import { StatusBadge } from '../ui/StatusBadge'
 import { Switch } from '../ui/Switch'
 import { userPath } from '../../constants/routes'
 import { activeRole, isLocked, type UserOut } from '../../types/api'
+import { formatShortDate } from '../../utils/date'
 import { userStatus, type UserStatus } from '../../utils/users'
 import styles from './UsersTable.module.css'
 
@@ -87,10 +88,8 @@ export function UsersTable({
     {
       key: 'created',
       header: t('people.users.colCreated'),
-      // Даты создания в UserOut пока нет — колонку держим пустой, чтобы
-      // добавить значение одной строкой, когда поле появится у бэкенда.
-      cell: () => (
-        <span className={styles.dim}>{t('people.users.noValue')}</span>
+      cell: (user) => (
+        <span className={styles.dim}>{formatShortDate(user.created_at)}</span>
       ),
       hideOnNarrow: true,
     },

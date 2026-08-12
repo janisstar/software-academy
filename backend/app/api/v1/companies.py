@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.models.user import User
 from app.api.v1.deps import get_current_user, require_privileged
-from app.schemas.company import CompanyCreateIn, CompanyOut
+from app.schemas.company import CompanyCreateIn, CompanyOut, build_company_out
 from app.services import company_service
 
 router = APIRouter()
@@ -39,7 +39,7 @@ def create_company(
     company = company_service.create_company(
         db, name=body.name, businessid=body.businessid, email=body.email
     )
-    return CompanyOut.model_validate(company)
+    return build_company_out(company, company_service.count_users(db, company.id))
 
 
 @router.get("/companies/", response_model=list[CompanyOut], tags=["companies"])
@@ -49,10 +49,18 @@ def list_companies(
 ) -> list[CompanyOut]:
     """Все компании. Access: master."""
     _require_master(actor)
-    return [CompanyOut.model_validate(c) for c in company_service.list_companies(db)]
+    return [
+        build_company_out(company, users_count)
+        for company, users_count in company_service.list_companies_with_user_counts(db)
+    ]
 
 
 @router.get("/user/company/", response_model=CompanyOut, tags=["companies"])
-def my_company(actor: User = Depends(get_current_user)) -> CompanyOut:
+def my_company(
+    db: Session = Depends(get_db),
+    actor: User = Depends(get_current_user),
+) -> CompanyOut:
     """Своя компания. Access: любой залогиненный (как в Welding Log)."""
-    return CompanyOut.model_validate(actor.company)
+    return build_company_out(
+        actor.company, company_service.count_users(db, actor.company_id)
+    )

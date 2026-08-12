@@ -13,9 +13,9 @@ from app.core.config import settings
 from app.core.database import get_db
 from app.models.user import User
 from app.schemas.auth import LoginIn, LoginOut, UserOut, build_user_out
-from app.schemas.company import CompanyOut
+from app.schemas.company import build_company_out
 from app.api.v1.deps import get_current_user
-from app.services import auth_service, consent_service
+from app.services import auth_service, company_service, consent_service
 
 router = APIRouter()
 
@@ -60,7 +60,9 @@ def login(
     pending = consent_service.pending_documents(db, user.id)
     return LoginOut(
         user=build_user_out(user, pending_consents=pending),
-        company=CompanyOut.model_validate(user.company),
+        company=build_company_out(
+            user.company, company_service.count_users(db, user.company_id)
+        ),
     )
 
 

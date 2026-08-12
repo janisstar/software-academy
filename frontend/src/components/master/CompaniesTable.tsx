@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { DataTable, type DataTableColumn } from '../ui/DataTable'
 import { StatusBadge } from '../ui/StatusBadge'
 import type { CompanyOut } from '../../types/api'
+import { formatShortDate } from '../../utils/date'
 import styles from './CompaniesTable.module.css'
 
 type CompaniesTableProps = {
@@ -17,7 +18,7 @@ type CompaniesTableProps = {
  */
 export function CompaniesTable({ companies, emptyText }: CompaniesTableProps) {
   const { t } = useTranslation()
-  // Прочерк вместо значений, которых бэкенд пока не отдаёт.
+  // Прочерк для необязательного бизнес-ID: компания могла его не указать.
   const noValue = t('people.users.noValue')
 
   const columns: DataTableColumn<CompanyOut>[] = [
@@ -37,8 +38,9 @@ export function CompaniesTable({ companies, emptyText }: CompaniesTableProps) {
     {
       key: 'users',
       header: t('people.companies.colUsers'),
-      // Числа людей в компании в ответе бэкенда нет — колонка ждёт поле.
-      cell: () => <span className={styles.dim}>{noValue}</span>,
+      cell: (company) => (
+        <span className={styles.dim}>{company.users_count}</span>
+      ),
     },
     {
       key: 'status',
@@ -57,8 +59,9 @@ export function CompaniesTable({ companies, emptyText }: CompaniesTableProps) {
     {
       key: 'created',
       header: t('people.companies.colCreated'),
-      // Даты создания в ответе бэкенда тоже пока нет.
-      cell: () => <span className={styles.dim}>{noValue}</span>,
+      cell: (company) => (
+        <span className={styles.dim}>{formatShortDate(company.created_at)}</span>
+      ),
       hideOnNarrow: true,
     },
   ]

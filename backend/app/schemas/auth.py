@@ -6,6 +6,8 @@ UserOut повторяет форму Welding Log: privileges-объект со�
 См. docs/06-api-conventions.md, §5.
 """
 
+from datetime import datetime
+
 from pydantic import BaseModel
 
 from app.schemas.company import CompanyOut
@@ -29,6 +31,8 @@ class UserOut(BaseModel):
     companyid: int
     privileges: dict[str, int]
     must_change_password: bool = False
+    # когда пользователя создали (UTC); фронтенд показывает в колонке Created
+    created_at: datetime
     # какие обязательные документы ещё не приняты (GDPR); пусто = всё принято
     pending_consents: list[str] = []
 
@@ -50,6 +54,7 @@ def build_user_out(user, pending_consents: list[str] | None = None) -> UserOut:
         companyid=user.company_id,
         privileges=privileges,
         must_change_password=user.must_change_password,
+        created_at=user.created_at,
         pending_consents=pending_consents or [],
     )
 

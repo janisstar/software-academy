@@ -66,6 +66,11 @@ Academy строится в одном стиле с **Welding Log API** (эко
 `email` (необяз.), `is_locked`, `created_at`. **Убрано** из Welding Log:
 `privileges` (master/retailer), `mastercompanyid`.
 
+В ответе API компания отдаёт ещё одно поле — `users_count` (сколько людей в
+компании). Это **вычисляемое** поле, в таблице `companies` его нет: для списка
+`/api/companies/` считаем одним запросом (`COUNT` + `GROUP BY`), для одной
+компании — отдельным `COUNT`. Запроса-на-компанию (N+1) не делаем.
+
 ---
 
 ## 4. Авторизация — серверные сессии (безопасный вариант)
@@ -115,7 +120,9 @@ Academy строится в одном стиле с **Welding Log API** (эко
     "master": 0, "admin": 0, "manager": 0, "site": 0,
     "user": 1, "fitter": 0, "inspector": 0,
     "locked": 0                 // locked = 1, если пользователь заблокирован
-  }
+  },
+  "must_change_password": false, // true → заставить сменить временный пароль
+  "created_at": "2026-08-12T09:14:00+00:00"  // UTC, ISO-8601
 }
 ```
 

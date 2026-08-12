@@ -773,6 +773,13 @@ export interface components {
             email?: string | null;
             /** Is Locked */
             is_locked: boolean;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Users Count */
+            users_count: number;
         };
         /**
          * ContentBlock
@@ -1211,6 +1218,11 @@ export interface components {
              * @default false
              */
             must_change_password: boolean;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
             /**
              * Pending Consents
              * @default []

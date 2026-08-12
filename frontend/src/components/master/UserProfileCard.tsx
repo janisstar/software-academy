@@ -6,6 +6,7 @@ import { Card } from '../ui/Card'
 import { Select } from '../ui/Select'
 import { TextField } from '../ui/TextField'
 import { activeRole, type RoleOut, type UserOut } from '../../types/api'
+import { formatShortDate } from '../../utils/date'
 import styles from './UserProfileCard.module.css'
 
 /** Что можно поменять в профиле. Роль меняется отдельно — правила у неё свои. */
@@ -194,8 +195,7 @@ export function UserProfileCard({
             <span className={styles.label}>
               {t('people.user.fieldCreated')}
             </span>
-            {/* Даты создания в ответе бэкенда пока нет. */}
-            <span className={styles.empty}>{t('people.users.noValue')}</span>
+            <span>{formatShortDate(user.created_at)}</span>
           </div>
         </>
       )}

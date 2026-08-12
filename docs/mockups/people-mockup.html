@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup — People (Users + Companies)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ===== Токены (копия из styles/) ===== */
+  :root {
+    --color-surface: #ffffff;
+    --color-on-accent: #ffffff;
+    --color-ink: #1c2024;
+    --color-ink-600: #4a515b;
+    --color-ink-400: #7c838d;
+    --color-ink-200: #c9cdd3;
+    --color-ink-100: #e9ebee;
+    --color-ink-50: #f6f7f8;
+    --color-accent: #12a594;
+    --color-accent-hover: #0e8576;
+    --color-accent-tint: #dcf2ef;
+    --color-text-on-tint: #0b6b5f;
+    --teal-50: #e1f5ee;
+    --teal-200: #9fe1cb;
+    --teal-500: #12a594;
+    --teal-700: #0f6e56;
+    --teal-800: #085041;
+    --teal-900: #04342c;
+    --color-status-danger: #d14b4b;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-xl: 16px;
+    --radius-pill: 999px;
+    --shadow-card: 0 4px 16px rgba(28, 32, 36, 0.06);
+    --font: 'Inter', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    font-family: var(--font); font-size: 16px; line-height: 24px;
+    color: var(--color-ink); background: var(--color-ink-50);
+    padding-top: 56px;
+  }
+
+  /* ===== Переключатель экранов (ТОЛЬКО в мокапе) ===== */
+  .switcher {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--teal-900); color: #fff;
+    display: flex; gap: 4px; padding: 10px 16px; overflow-x: auto;
+    font-size: 13px;
+  }
+  .switcher button {
+    font: inherit; color: var(--teal-200); background: transparent;
+    border: 1px solid transparent; border-radius: var(--radius-pill);
+    padding: 4px 14px; cursor: pointer; white-space: nowrap;
+  }
+  .switcher button.active { background: var(--teal-700); color: #fff; }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ===== Оболочка ===== */
+  .shell { display: flex; min-height: calc(100vh - 56px); }
+  .sidenav {
+    width: 224px; flex-shrink: 0; background: var(--color-surface);
+    border-right: 1px solid var(--color-ink-100); padding: 24px 12px;
+  }
+  .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; padding: 0 12px 24px; }
+  .brand-mark {
+    width: 26px; height: 26px; border-radius: 8px;
+    background: linear-gradient(135deg, #5dcaa5, var(--teal-700));
+    color: #fff; font-size: 15px; font-weight: 700; display: grid; place-items: center;
+  }
+  .nav-item { display: block; padding: 9px 12px; border-radius: 10px;
+    font-size: 14px; color: var(--color-ink-600); text-decoration: none; }
+  .nav-item.active { background: var(--color-accent-tint); color: var(--color-text-on-tint); font-weight: 500; }
+  .nav-item.sub { padding-left: 32px; }
+  .nav-group { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--color-ink-400); padding: 18px 12px 6px; }
+
+  .page { flex: 1; padding: 32px 40px 64px; max-width: 1100px; }
+  .eyebrow { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--color-ink-400); margin-bottom: 4px; }
+  h1 { font-size: 22px; line-height: 28px; font-weight: 500; }
+  .page-head { display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+
+  /* ===== Кнопки ===== */
+  .btn {
+    font: inherit; font-size: 14px; font-weight: 500;
+    border: 0; border-radius: var(--radius-pill); cursor: pointer;
+    padding: 9px 18px;
+  }
+  .btn-primary { background: var(--color-accent); color: var(--color-on-accent); }
+  .btn-primary:hover { background: var(--color-accent-hover); }
+  .btn-secondary { background: var(--color-surface); color: var(--color-ink);
+    box-shadow: inset 0 0 0 1px var(--color-ink-200); }
+  .btn-danger-ghost { background: transparent; color: var(--color-status-danger);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-status-danger) 40%, transparent); }
+
+  /* ===== Табы + фильтры над таблицей ===== */
+  .toolbar { display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  .tabs { display: flex; gap: 4px; background: var(--color-ink-100);
+    border-radius: var(--radius-pill); padding: 4px; }
+  .tab {
+    font: inherit; font-size: 14px; border: 0; cursor: pointer;
+    background: transparent; color: var(--color-ink-600);
+    border-radius: var(--radius-pill); padding: 6px 16px;
+  }
+  .tab.active { background: var(--color-surface); color: var(--color-ink);
+    font-weight: 500; box-shadow: var(--shadow-card); }
+  .select {
+    font: inherit; font-size: 14px; color: var(--color-ink);
+    background: var(--color-surface); border: 1px solid var(--color-ink-200);
+    border-radius: var(--radius-pill); padding: 8px 14px;
+  }
+
+  /* ===== Карточка + таблица ===== */
+  .card { background: var(--color-surface); border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-card); padding: 8px 20px; }
+  .card.pad { padding: 20px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--color-ink-400); font-weight: 500; padding: 14px 12px 10px 0; }
+  td { padding: 12px 12px 12px 0; border-top: 1px solid var(--color-ink-100); vertical-align: middle; }
+  tr.rowlink { cursor: pointer; }
+  tr.rowlink:hover td { background: var(--color-ink-50); }
+  .cell-main { font-weight: 500; }
+  .cell-main a { color: inherit; text-decoration: none; }
+  .cell-main a:hover { text-decoration: underline; text-decoration-color: var(--color-accent); }
+  .cell-dim { color: var(--color-ink-400); font-size: 13px; }
+
+  /* Роли — у каждой свой цвет (кандидаты в токены --role-* в colors.css) */
+  .chip { display: inline-block; padding: 2px 10px; border-radius: var(--radius-pill);
+    font-size: 12px; font-weight: 500; }
+  .chip.r-master { background: var(--teal-800); color: #fff; }
+  .chip.r-admin { background: #e3e8fd; color: #3d4ec7; }
+  .chip.r-manager { background: #efe4fb; color: #7b3fc4; }
+  .chip.r-site { background: #fdeed8; color: #a05e1a; }
+  .chip.r-inspector { background: #ddf0fb; color: #1a6f9e; }
+  .chip.r-welder { background: var(--color-accent-tint); color: var(--color-text-on-tint); }
+  .chip.r-fitter { background: #fbe4ee; color: #b03a6e; }
+
+  /* Статус — другой визуальный язык: точка + текст, без заливки */
+  .status { display: inline-flex; align-items: center; gap: 7px;
+    font-size: 13px; color: var(--color-ink-600); white-space: nowrap; }
+  .status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .status.active::before { background: #6aa632; } /* --color-status-completed */
+  .status.pending::before { background: transparent;
+    box-shadow: inset 0 0 0 2px var(--color-ink-200); } /* полое кольцо */
+  .status.locked { color: var(--color-status-danger); }
+  .status.locked::before { background: var(--color-status-danger); }
+
+  /* Toggle доступа: вкл = active, выкл = locked */
+  .switch { position: relative; width: 40px; height: 22px; flex-shrink: 0;
+    border-radius: var(--radius-pill); border: 0; cursor: pointer;
+    background: var(--teal-500); transition: background .15s; }
+  .switch::after { content: ''; position: absolute; top: 3px; left: 21px;
+    width: 16px; height: 16px; border-radius: 50%; background: #fff;
+    transition: left .15s; }
+  .switch.off { background: var(--color-ink-200); }
+  .switch.off::after { left: 3px; }
+
+  .icon-btn {
+    font: inherit; font-size: 13px; cursor: pointer;
+    background: transparent; border: 1px solid var(--color-ink-200);
+    color: var(--color-ink-600); border-radius: var(--radius-pill); padding: 4px 12px;
+  }
+  .icon-btn:hover { border-color: var(--color-status-danger); color: var(--color-status-danger); }
+
+  .table-foot { display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 0; font-size: 13px; color: var(--color-ink-400); }
+
+  /* ===== Страница пользователя ===== */
+  .backlink { font-size: 14px; color: var(--color-ink-600); text-decoration: none;
+    display: inline-block; margin-bottom: 16px; }
+  .backlink:hover { color: var(--color-accent); }
+  .user-head { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+  .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--teal-800);
+    color: #fff; font-weight: 600; font-size: 18px; display: grid; place-items: center; }
+  .user-head .grow { flex: 1; min-width: 200px; }
+  .grid2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; align-items: start; }
+  .field-row { display: grid; grid-template-columns: 140px 1fr; gap: 8px 16px;
+    padding: 12px 0; border-top: 1px solid var(--color-ink-100); font-size: 14px; }
+  .field-row:first-of-type { border-top: 0; }
+  .field-label { color: var(--color-ink-400); }
+  .card-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+  .action-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .action-note { font-size: 13px; color: var(--color-ink-400); }
+  .danger-zone { border: 1px solid color-mix(in srgb, var(--color-status-danger) 30%, transparent);
+    border-radius: var(--radius-md); padding: 14px 16px; margin-top: 20px; }
+  .danger-zone .card-title { color: var(--color-status-danger); font-size: 14px; }
+
+  /* ===== Формы ===== */
+  .form { max-width: 480px; }
+  .form-field { margin-bottom: 16px; }
+  .form-label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+  .input, select.input {
+    width: 100%; font: inherit; font-size: 15px;
+    border: 1px solid var(--color-ink-200); border-radius: var(--radius-sm);
+    padding: 10px 12px; background: var(--color-surface);
+  }
+  .input:focus { outline: 2px solid var(--color-accent); outline-offset: 0; border-color: transparent; }
+  .form-hint { font-size: 13px; color: var(--color-ink-400); margin-top: 4px; }
+  .form-actions { display: flex; gap: 12px; margin-top: 24px; }
+
+  /* ===== Temp password ===== */
+  .success-wrap { max-width: 560px; }
+  .code-panel {
+    background: var(--teal-900); color: #fff; border-radius: var(--radius-xl);
+    padding: 28px; text-align: center; margin: 20px 0;
+  }
+  .code-panel .code {
+    font-size: 30px; line-height: 38px; letter-spacing: 0.12em; font-weight: 600;
+    margin: 8px 0 16px; user-select: all;
+  }
+  .code-panel .hint { font-size: 13px; color: var(--teal-200); }
+  .warn-note {
+    display: flex; gap: 10px; font-size: 14px; color: var(--color-ink-600);
+    background: var(--color-ink-100); border-radius: var(--radius-md); padding: 12px 14px;
+  }
+
+  /* ===== Модалка ===== */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(4, 52, 44, 0.5);
+    display: grid; place-items: center; z-index: 50; padding: 16px;
+  }
+  .modal {
+    background: var(--color-surface); border-radius: var(--radius-xl);
+    max-width: 440px; width: 100%; padding: 24px;
+  }
+  .modal h2 { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
+  .modal p { font-size: 14px; color: var(--color-ink-600); }
+  .modal .form-actions { justify-content: flex-end; }
+
+  @media (max-width: 900px) {
+    .sidenav { display: none; }
+    .page { padding: 24px 16px 96px; }
+    .grid2 { grid-template-columns: 1fr; }
+    .hide-mobile { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Переключатель экранов — только в мокапе -->
+<div class="switcher">
+  <button class="active" onclick="show(0, this)">1 · Users list</button>
+  <button onclick="show(1, this)">2 · User page</button>
+  <button onclick="show(2, this)">3 · New user</button>
+  <button onclick="show(3, this)">4 · Temp password</button>
+  <button onclick="show(4, this)">5 · Reset code (modal)</button>
+  <button onclick="show(5, this)">6 · Companies</button>
+</div>
+
+<!-- ============ ЭКРАН 1: Users list ============ -->
+<div class="screen active">
+<div class="shell">
+  <nav class="sidenav">
+    <div class="brand"><span class="brand-mark">S</span> Software Academy</div>
+    <a class="nav-item" href="#">Dashboard</a>
+    <div class="nav-group">Content</div>
+    <a class="nav-item" href="#">Categories</a>
+    <a class="nav-item" href="#">Lessons</a>
+    <div class="nav-group">People</div>
+    <a class="nav-item active" href="#">Users</a>
+    <a class="nav-item" href="#">Companies</a>
+    <div class="nav-group"></div>
+    <a class="nav-item" href="#">Reports</a>
+    <a class="nav-item" href="#">Settings</a>
+  </nav>
+  <main class="page">
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">People</div>
+        <h1>Users</h1>
+      </div>
+      <button class="btn btn-primary">+ Add user</button>
+    </div>
+
+    <div class="toolbar">
+      <div class="tabs">
+        <button class="tab active">All · 6</button>
+        <button class="tab">Pending first login · 2</button>
+        <button class="tab">Locked · 1</button>
+      </div>
+      <select class="select">
+        <option>All companies</option>
+        <option>Acme Oy</option>
+        <option>Pipes Ltd</option>
+        <option>WeldCo</option>
+      </select>
+    </div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>User</th><th>Company</th><th>Role</th><th>Status</th>
+            <th class="hide-mobile">Created</th><th style="text-align:right">Access</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="rowlink">
+            <td><div class="cell-main"><a href="#">Jenna Salmela</a></div><div class="cell-dim">j.salmela</div></td>
+            <td class="cell-dim">Acme Oy</td>
+            <td><span class="chip r-welder">Welder</span></td>
+            <td><span class="status active">Active</span></td>
+            <td class="cell-dim hide-mobile">Aug 10, 2026</td>
+            <td style="text-align:right"><button class="switch" title="Active — turn off to lock" aria-label="Lock Jenna Salmela"></button></td>
+          </tr>
+          <tr class="rowlink">
+            <td><div class="cell-main"><a href="#">Ivan Ivanov</a></div><div class="cell-dim">i.ivanov</div></td>
+            <td class="cell-dim">Acme Oy</td>
+            <td><span class="chip r-inspector">Inspector</span></td>
+            <td><span class="status pending">Pending first login</span></td>
+            <td class="cell-dim hide-mobile">Aug 9, 2026</td>
+            <td style="text-align:right"><button class="switch" title="Active — turn off to lock" aria-label="Lock Ivan Ivanov"></button></td>
+          </tr>
+          <tr class="rowlink">
+            <td><div class="cell-main"><a href="#">Mika Laine</a></div><div class="cell-dim">m.laine</div></td>
+            <td class="cell-dim">Pipes Ltd</td>
+            <td><span class="chip r-admin">Administrator</span></td>
+            <td><span class="status active">Active</span></td>
+            <td class="cell-dim hide-mobile">Aug 3, 2026</td>
+            <td style="text-align:right"><button class="switch" title="Active — turn off to lock" aria-label="Lock Mika Laine"></button></td>
+          </tr>
+          <tr class="rowlink">
+            <td><div class="cell-main"><a href="#">Sara Kotro</a></div><div class="cell-dim">s.kotro</div></td>
+            <td class="cell-dim">Pipes Ltd</td>
+            <td><span class="chip r-fitter">Fitter</span></td>
+            <td><span class="status locked">Locked</span></td>
+            <td class="cell-dim hide-mobile">Jul 28, 2026</td>
+            <td style="text-align:right"><button class="switch off" title="Locked — turn on to unlock" aria-label="Unlock Sara Kotro"></button></td>
+          </tr>
+          <tr class="rowlink">
+            <td><div class="cell-main"><a href="#">Teemu Aho</a></div><div class="cell-dim">t.aho</div></td>
+            <td class="cell-dim">WeldCo</td>
+            <td><span class="chip r-manager">Manager</span></td>
+            <td><span class="status active">Active</span></td>
+            <td class="cell-dim hide-mobile">Jul 21, 2026</td>
+            <td style="text-align:right"><button class="switch" title="Active — turn off to lock" aria-label="Lock Teemu Aho"></button></td>
+          </tr>
+          <tr class="rowlink">
+            <td><div class="cell-main"><a href="#">Anna Virta</a></div><div class="cell-dim">a.virta</div></td>
+            <td class="cell-dim">WeldCo</td>
+            <td><span class="chip r-site">Site Supervisor</span></td>
+            <td><span class="status pending">Pending first login</span></td>
+            <td class="cell-dim hide-mobile">Jul 20, 2026</td>
+            <td style="text-align:right"><button class="switch" title="Active — turn off to lock" aria-label="Lock Anna Virta"></button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-foot">
+        <span>6 users</span>
+        <span>Page 1 of 1</span>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- ============ ЭКРАН 2: User page ============ -->
+<div class="screen">
+<div class="shell">
+  <nav class="sidenav">
+    <div class="brand"><span class="brand-mark">S</span> Software Academy</div>
+    <a class="nav-item" href="#">Dashboard</a>
+    <div class="nav-group">People</div>
+    <a class="nav-item active" href="#">Users</a>
+    <a class="nav-item" href="#">Companies</a>
+  </nav>
+  <main class="page">
+    <a class="backlink" href="#">← Users</a>
+    <div class="user-head">
+      <div class="avatar">II</div>
+      <div class="grow">
+        <h1>Ivan Ivanov</h1>
+        <div class="cell-dim">i.ivanov · Acme Oy</div>
+      </div>
+      <span class="status pending">Pending first login</span>
+    </div>
+
+    <div class="grid2">
+      <!-- Левая колонка: профиль -->
+      <div class="card pad">
+        <div class="card-title">Profile</div>
+        <div class="field-row"><span class="field-label">Name</span><span>Ivan Ivanov</span></div>
+        <div class="field-row"><span class="field-label">Username</span><span>i.ivanov</span></div>
+        <div class="field-row"><span class="field-label">Email</span><span>ivan@acme.fi</span></div>
+        <div class="field-row"><span class="field-label">Company</span><span>Acme Oy</span></div>
+        <div class="field-row">
+          <span class="field-label">Role</span>
+          <span style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+            <span class="chip r-inspector">Inspector</span>
+            <button class="icon-btn" style="border-color: var(--color-ink-200); color: var(--color-ink-600)">Change role</button>
+          </span>
+        </div>
+        <div class="field-row"><span class="field-label">Created</span><span>Aug 9, 2026</span></div>
+        <div class="form-actions">
+          <button class="btn btn-secondary">Edit profile</button>
+        </div>
+      </div>
+
+      <!-- Правая колонка: доступ -->
+      <div>
+        <div class="card pad">
+          <div class="card-title">Access</div>
+          <div class="action-list">
+            <span style="display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:14px">
+              Account active
+              <button class="switch" title="Active — turn off to lock" aria-label="Lock user"></button>
+            </span>
+            <span class="action-note">Locked users cannot sign in. Data is kept.</span>
+            <button class="btn btn-secondary">Issue password reset code</button>
+            <span class="action-note">Gives a one-time code valid for 15 minutes.</span>
+          </div>
+        </div>
+        <div class="danger-zone">
+          <div class="card-title">Danger zone</div>
+          <div class="action-list">
+            <button class="btn btn-danger-ghost">Delete user</button>
+            <span class="action-note">Removes the user and their progress permanently (GDPR).</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- ============ ЭКРАН 3: New user ============ -->
+<div class="screen">
+<div class="shell">
+  <nav class="sidenav">
+    <div class="brand"><span class="brand-mark">S</span> Software Academy</div>
+    <div class="nav-group">People</div>
+    <a class="nav-item active" href="#">Users</a>
+    <a class="nav-item" href="#">Companies</a>
+  </nav>
+  <main class="page">
+    <a class="backlink" href="#">← Users</a>
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">People</div>
+        <h1>New user</h1>
+      </div>
+    </div>
+    <div class="card pad">
+      <div class="form">
+        <div class="form-field">
+          <label class="form-label">Full name</label>
+          <input class="input" value="Ivan Ivanov">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Username</label>
+          <input class="input" value="i.ivanov">
+          <div class="form-hint">Used to sign in. Cannot contain spaces.</div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Email (optional)</label>
+          <input class="input" value="ivan@acme.fi">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Company</label>
+          <select class="input"><option>Acme Oy</option><option>Pipes Ltd</option><option>WeldCo</option></select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Role</label>
+          <select class="input">
+            <option>Inspector</option><option>Welder</option><option>Fitter</option>
+            <option>Site Supervisor</option><option>Manager</option><option>Administrator</option>
+          </select>
+          <div class="form-hint">Role defines which lessons the user sees.</div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary">Create user</button>
+          <button class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- ============ ЭКРАН 4: Temp password ============ -->
+<div class="screen">
+<div class="shell">
+  <nav class="sidenav">
+    <div class="brand"><span class="brand-mark">S</span> Software Academy</div>
+    <div class="nav-group">People</div>
+    <a class="nav-item active" href="#">Users</a>
+    <a class="nav-item" href="#">Companies</a>
+  </nav>
+  <main class="page">
+    <div class="success-wrap">
+      <div class="eyebrow">People</div>
+      <h1>User created</h1>
+      <p style="margin-top:8px; font-size:14px; color:var(--color-ink-600)">
+        <strong>Ivan Ivanov</strong> (i.ivanov) can now sign in with this temporary password.
+      </p>
+
+      <div class="code-panel">
+        <div class="hint">Temporary password</div>
+        <div class="code">K7m-Ph2x-Qd94</div>
+        <button class="btn btn-secondary">Copy password</button>
+        <div class="hint" style="margin-top:14px">Shown only once. The user must change it at first sign-in.</div>
+      </div>
+
+      <div class="warn-note">
+        <span>⚠️</span>
+        <span>Pass it to the user in person or by phone — not in a shared chat.
+        If it gets lost, issue a password reset code from the user's page.</span>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-primary">Done — back to Users</button>
+        <button class="btn btn-secondary">Open user page</button>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- ============ ЭКРАН 5: Reset code modal ============ -->
+<div class="screen">
+<div class="shell">
+  <nav class="sidenav">
+    <div class="brand"><span class="brand-mark">S</span> Software Academy</div>
+    <div class="nav-group">People</div>
+    <a class="nav-item active" href="#">Users</a>
+    <a class="nav-item" href="#">Companies</a>
+  </nav>
+  <main class="page" style="filter: blur(1px); pointer-events:none">
+    <a class="backlink" href="#">← Users</a>
+    <div class="user-head">
+      <div class="avatar">II</div>
+      <div class="grow">
+        <h1>Ivan Ivanov</h1>
+        <div class="cell-dim">i.ivanov · Acme Oy</div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="modal-backdrop">
+  <div class="modal">
+    <h2>Password reset code</h2>
+    <p>Give this one-time code to <strong>Ivan Ivanov</strong>. It expires in <strong>15 minutes</strong>.</p>
+    <div class="code-panel" style="padding:20px; margin:16px 0">
+      <div class="code" style="margin:0 0 12px">483 902</div>
+      <button class="btn btn-secondary">Copy code</button>
+    </div>
+    <p>The user opens <strong>Forgot password?</strong> on the sign-in page and enters
+    their username, this code, and a new password.</p>
+    <div class="form-actions">
+      <button class="btn btn-primary">Done</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ ЭКРАН 6: Companies ============ -->
+<div class="screen">
+<div class="shell">
+  <nav class="sidenav">
+    <div class="brand"><span class="brand-mark">S</span> Software Academy</div>
+    <a class="nav-item" href="#">Dashboard</a>
+    <div class="nav-group">People</div>
+    <a class="nav-item" href="#">Users</a>
+    <a class="nav-item active" href="#">Companies</a>
+  </nav>
+  <main class="page">
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">People</div>
+        <h1>Companies</h1>
+      </div>
+      <button class="btn btn-primary">+ Add company</button>
+    </div>
+    <div class="card">
+      <table>
+        <thead>
+          <tr><th>Company</th><th class="hide-mobile">Business ID</th><th>Users</th><th>Status</th><th class="hide-mobile">Created</th></tr>
+        </thead>
+        <tbody>
+          <tr class="rowlink">
+            <td><div class="cell-main">SevenHeaven</div><div class="cell-dim">platform</div></td>
+            <td class="cell-dim hide-mobile">1234567-8</td>
+            <td>1</td>
+            <td><span class="status active">Active</span></td>
+            <td class="cell-dim hide-mobile">Jul 1, 2026</td>
+          </tr>
+          <tr class="rowlink">
+            <td><div class="cell-main">Acme Oy</div></td>
+            <td class="cell-dim hide-mobile">2345678-9</td>
+            <td>2</td>
+            <td><span class="status active">Active</span></td>
+            <td class="cell-dim hide-mobile">Jul 28, 2026</td>
+          </tr>
+          <tr class="rowlink">
+            <td><div class="cell-main">Pipes Ltd</div></td>
+            <td class="cell-dim hide-mobile">3456789-0</td>
+            <td>2</td>
+            <td><span class="status active">Active</span></td>
+            <td class="cell-dim hide-mobile">Aug 3, 2026</td>
+          </tr>
+          <tr class="rowlink">
+            <td><div class="cell-main">WeldCo</div></td>
+            <td class="cell-dim hide-mobile">4567890-1</td>
+            <td>2</td>
+            <td><span class="status locked">Locked</span></td>
+            <td class="cell-dim hide-mobile">Aug 10, 2026</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-foot"><span>4 companies</span><span>Page 1 of 1</span></div>
+    </div>
+  </main>
+</div>
+</div>
+
+<script>
+  function show(i, btn) {
+    document.querySelectorAll('.screen').forEach((s, k) => s.classList.toggle('active', k === i));
+    document.querySelectorAll('.switcher button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+</script>
+</body>
+</html>

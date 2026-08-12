@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup — Master Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ===== Токены (копия из styles/, чтобы мокап был автономным) ===== */
+  :root {
+    --color-surface: #ffffff;
+    --color-ink: #1c2024;
+    --color-ink-600: #4a515b;
+    --color-ink-400: #7c838d;
+    --color-ink-200: #c9cdd3;
+    --color-ink-100: #e9ebee;
+    --color-ink-50: #f6f7f8;
+    --color-accent: #12a594;
+    --color-accent-tint: #dcf2ef;
+    --color-text-on-tint: #0b6b5f;
+    --teal-50: #e1f5ee;
+    --teal-200: #9fe1cb;
+    --teal-300: #5dcaa5;
+    --teal-500: #12a594;
+    --teal-700: #0f6e56;
+    --teal-800: #085041;
+    --teal-900: #04342c;
+    --color-status-danger: #d14b4b;
+    --radius-md: 12px;
+    --radius-xl: 16px;
+    --radius-pill: 999px;
+    --shadow-card: 0 4px 16px rgba(28, 32, 36, 0.06);
+    --font: 'Inter', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    font-family: var(--font);
+    font-size: 16px; line-height: 24px;
+    color: var(--color-ink);
+    background: var(--color-ink-50);
+  }
+
+  /* ===== Упрощённая master-оболочка (уже существует, для контекста) ===== */
+  .shell { display: flex; min-height: 100vh; }
+  .sidenav {
+    width: 224px; flex-shrink: 0;
+    background: var(--color-surface);
+    border-right: 1px solid var(--color-ink-100);
+    padding: 24px 12px;
+  }
+  .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; padding: 0 12px 24px; }
+  .brand-mark {
+    width: 26px; height: 26px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--teal-300), var(--teal-700));
+    color: #fff; font-size: 15px; font-weight: 700;
+    display: grid; place-items: center;
+  }
+  .nav-item {
+    display: block; padding: 9px 12px; border-radius: 10px;
+    font-size: 14px; color: var(--color-ink-600); text-decoration: none;
+  }
+  .nav-item.active { background: var(--color-accent-tint); color: var(--color-text-on-tint); font-weight: 500; }
+  .nav-group { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--color-ink-400); padding: 18px 12px 6px; }
+
+  /* ===== Контент страницы ===== */
+  .page { flex: 1; padding: 32px 40px 64px; max-width: 1100px; }
+  .page-head { display: flex; align-items: baseline; justify-content: space-between;
+    flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  h1 { font-size: 22px; line-height: 28px; font-weight: 500; }
+  .page-caption { font-size: 13px; color: var(--color-ink-400); }
+
+  /* --- Ряд 1: карточки-счётчики --- */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .stat {
+    background: var(--color-surface); border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-card); padding: 20px;
+  }
+  .stat-label { font-size: 13px; color: var(--color-ink-600); margin-bottom: 8px; }
+  .stat-value { font-size: 32px; line-height: 38px; font-weight: 600; }
+  .stat-sub { font-size: 13px; color: var(--color-ink-400); margin-top: 6px; }
+  .stat-sub .warn { color: var(--color-status-danger); }
+  /* Online now — единственная акцентная карточка */
+  .stat.online { background: var(--teal-800); color: #fff; }
+  .stat.online .stat-label { color: var(--teal-200); }
+  .stat.online .stat-sub { color: var(--teal-300); }
+  .pulse {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--teal-300); margin-right: 6px;
+    box-shadow: 0 0 0 0 rgba(93, 202, 165, 0.6);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(93, 202, 165, 0.55); }
+    70% { box-shadow: 0 0 0 8px rgba(93, 202, 165, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(93, 202, 165, 0); }
+  }
+  @media (prefers-reduced-motion: reduce) { .pulse { animation: none; } }
+
+  /* --- Ряд 2: популярные уроки + новые пользователи --- */
+  .row2 { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .card {
+    background: var(--color-surface); border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-card); padding: 20px;
+  }
+  .card-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
+  .card-title { font-size: 16px; font-weight: 500; }
+  .card-meta { font-size: 13px; color: var(--color-ink-400); }
+
+  /* Популярные уроки: строка = название + полоса + число */
+  .lesson-row { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px;
+    padding: 10px 0; border-top: 1px solid var(--color-ink-100); align-items: center; }
+  .lesson-row:first-of-type { border-top: 0; padding-top: 0; }
+  .lesson-title { font-size: 14px; }
+  .lesson-count { font-size: 14px; font-weight: 600; color: var(--teal-700); }
+  .bar { grid-column: 1 / -1; height: 6px; border-radius: 999px; background: var(--color-ink-100); overflow: hidden; }
+  .bar > i { display: block; height: 100%; border-radius: 999px; background: var(--teal-500); }
+
+  /* Таблицы Recent */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--color-ink-400); font-weight: 500; padding: 0 12px 10px 0; }
+  td { padding: 10px 12px 10px 0; border-top: 1px solid var(--color-ink-100); vertical-align: middle; }
+  .cell-main { font-weight: 500; }
+  .cell-dim { color: var(--color-ink-400); font-size: 13px; }
+  .chip {
+    display: inline-block; padding: 2px 10px; border-radius: var(--radius-pill);
+    font-size: 12px; font-weight: 500;
+    background: var(--color-accent-tint); color: var(--color-text-on-tint);
+  }
+
+  .empty { color: var(--color-ink-400); font-size: 14px; padding: 24px 0; text-align: center; }
+
+  /* --- Мобильная раскладка --- */
+  @media (max-width: 900px) {
+    .sidenav { display: none; }
+    .page { padding: 24px 16px 96px; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .row2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- SideNav — уже существует, здесь только для контекста -->
+  <nav class="sidenav">
+    <div class="brand"><span class="brand-mark">S</span> Software Academy</div>
+    <a class="nav-item active" href="#">Dashboard</a>
+    <div class="nav-group">Content</div>
+    <a class="nav-item" href="#">Categories</a>
+    <a class="nav-item" href="#">Lessons</a>
+    <div class="nav-group">People</div>
+    <a class="nav-item" href="#">Users</a>
+    <a class="nav-item" href="#">Companies</a>
+    <div class="nav-group"></div>
+    <a class="nav-item" href="#">Reports</a>
+    <a class="nav-item" href="#">Settings</a>
+  </nav>
+
+  <main class="page">
+    <div class="page-head">
+      <h1>Dashboard</h1>
+      <span class="page-caption">Platform overview · updated just now</span>
+    </div>
+
+    <!-- Ряд 1: счётчики -->
+    <section class="stats">
+      <div class="stat">
+        <div class="stat-label">Companies</div>
+        <div class="stat-value">5</div>
+        <div class="stat-sub"><span class="warn">1 locked</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Users</div>
+        <div class="stat-value">42</div>
+        <div class="stat-sub">7 pending first login · <span class="warn">3 locked</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Lessons</div>
+        <div class="stat-value">28</div>
+        <div class="stat-sub">6 categories · 4 public</div>
+      </div>
+      <div class="stat online">
+        <div class="stat-label"><span class="pulse"></span>Online now</div>
+        <div class="stat-value">4</div>
+        <div class="stat-sub">active in the last 10 min</div>
+      </div>
+    </section>
+
+    <!-- Ряд 2: популярные уроки + новые пользователи -->
+    <section class="row2">
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Popular lessons</span>
+          <span class="card-meta">156 completions total</span>
+        </div>
+        <div class="lesson-row">
+          <span class="lesson-title">Daily Welding Report</span>
+          <span class="lesson-count">40</span>
+          <span class="bar"><i style="width: 100%"></i></span>
+        </div>
+        <div class="lesson-row">
+          <span class="lesson-title">Create Inspection Report</span>
+          <span class="lesson-count">34</span>
+          <span class="bar"><i style="width: 85%"></i></span>
+        </div>
+        <div class="lesson-row">
+          <span class="lesson-title">Adding hours</span>
+          <span class="lesson-count">29</span>
+          <span class="bar"><i style="width: 72%"></i></span>
+        </div>
+        <div class="lesson-row">
+          <span class="lesson-title">Login &amp; first steps</span>
+          <span class="lesson-count">25</span>
+          <span class="bar"><i style="width: 62%"></i></span>
+        </div>
+        <div class="lesson-row">
+          <span class="lesson-title">Project sign-offs</span>
+          <span class="lesson-count">18</span>
+          <span class="bar"><i style="width: 45%"></i></span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Recent users</span>
+          <span class="card-meta">last 5</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>User</th><th>Company</th><th>Role</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="cell-main">Jenna Salmela</div><div class="cell-dim">j.salmela</div></td>
+              <td class="cell-dim">Acme Oy</td>
+              <td><span class="chip">user</span></td>
+            </tr>
+            <tr>
+              <td><div class="cell-main">Ivan Ivanov</div><div class="cell-dim">i.ivanov</div></td>
+              <td class="cell-dim">Acme Oy</td>
+              <td><span class="chip">inspector</span></td>
+            </tr>
+            <tr>
+              <td><div class="cell-main">Mika Laine</div><div class="cell-dim">m.laine</div></td>
+              <td class="cell-dim">Pipes Ltd</td>
+              <td><span class="chip">admin</span></td>
+            </tr>
+            <tr>
+              <td><div class="cell-main">Sara Kotro</div><div class="cell-dim">s.kotro</div></td>
+              <td class="cell-dim">Pipes Ltd</td>
+              <td><span class="chip">fitter</span></td>
+            </tr>
+            <tr>
+              <td><div class="cell-main">Teemu Aho</div><div class="cell-dim">t.aho</div></td>
+              <td class="cell-dim">WeldCo</td>
+              <td><span class="chip">manager</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Ряд 3: новые компании (компактный) -->
+    <section class="card">
+      <div class="card-head">
+        <span class="card-title">Recent companies</span>
+        <span class="card-meta">last 5</span>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Company</th><th>Created</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="cell-main">WeldCo</td><td class="cell-dim">Aug 10, 2026</td></tr>
+          <tr><td class="cell-main">Pipes Ltd</td><td class="cell-dim">Aug 3, 2026</td></tr>
+          <tr><td class="cell-main">Acme Oy</td><td class="cell-dim">Jul 28, 2026</td></tr>
+          <tr><td class="cell-main">Nordic Steel</td><td class="cell-dim">Jul 21, 2026</td></tr>
+          <tr><td class="cell-main">SevenHeaven (platform)</td><td class="cell-dim">Jul 1, 2026</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+/* Тёмная «переплётная» сторона продукта: оболочка экранов первого входа по
+   макету docs/mockups/auth-flow-mockup.html (.auth-shell).
+
+   Страница входа при этом осталась светлой — так решено сознательно, поэтому
+   этот модуль её НЕ обслуживает и стили оттуда сюда не переносились. */
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: var(--space-6) var(--space-4) var(--space-10);
+  /* Мягкая подсветка сверху справа: цвет берём из токена акцента, а не из
+     сырой rgba, как было в макете. */
+  background:
+    radial-gradient(
+      1200px 600px at 85% -10%,
+      color-mix(in srgb, var(--color-accent) 16%, transparent),
+      transparent 60%
+    ),
+    var(--teal-900);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: var(--layout-max-width);
+  min-height: 44px;
+  margin: 0 auto;
+}
+
+.logo {
+  height: 28px;
+  width: auto;
+  display: block;
+}
+
+.brandName {
+  color: var(--color-surface);
+  font-weight: var(--font-weight-medium);
+}
+
+.center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--space-10);
+}

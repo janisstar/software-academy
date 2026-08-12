@@ -18,7 +18,11 @@ A new area folder appears ONLY when a new TYPE of interface is needed.
 Areas (interfaces):
 
 - `landing` — public marketing site, no authentication
-- `login` — sign-in screen, no authentication
+- `login` — sign-in screen, plus the first-login flow (temporary password,
+  consents); the sign-in screen needs no authentication, the first-login screens
+  need a session but are deliberately kept out of the portal
+- `legal` — public document texts (Privacy Policy, Terms); linked from the
+  landing footer and from the consents screen, opened in a separate tab
 - `master` — vendor interface (Jenna): manage content and companies
 - `app` — (later) shared learning portal for all learner roles; also hosts
   Users / Reports for admin/manager/site
@@ -29,16 +33,18 @@ Structure:
 frontend/src/
 ├── pages/            # one screen = one route, grouped by area
 │   ├── landing/      # LandingPage.tsx (+ .module.css)
-│   ├── login/        # LoginPage.tsx
+│   ├── login/        # LoginPage.tsx, FirstLoginPasswordPage, FirstLoginConsentsPage
+│   ├── legal/        # PrivacyPage.tsx, TermsPage.tsx
 │   └── master/       # MasterHomePage.tsx, (later) Lessons, Users, Reports…
 │   # app/ — add when we start the learning portal
 ├── components/       # components grouped by area
 │   ├── landing/      # Header, Hero… (landing only)
-│   ├── login/        # LoginForm… (login only)
+│   ├── login/        # LoginBook, AuthShell, StepCard, FirstLoginLayout (login only)
+│   ├── legal/        # LegalLayout (legal only)
 │   ├── master/       # Sidebar, Header, Footer, Filters, Cards (master only)
 │   └── ui/           # SHARED across all areas: Button, VideoCard, Card, Input…
 │   # app/ — shared components of the learning portal (later)
-├── routes/           # routing infrastructure: AppRoutes, ProtectedRoute
+├── routes/           # routing infrastructure: AppRoutes, ProtectedRoute, FirstLoginGate
 ├── api/ hooks/ styles/ types/ utils/ constants/ assets/
 ```
 

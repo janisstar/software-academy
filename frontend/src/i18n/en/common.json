@@ -8,7 +8,38 @@
     "signIn": "Sign in",
     "logOut": "Log out",
     "inDevelopment": "In development",
-    "arrow": "→"
+    "back": "Back",
+    "saving": "Saving…",
+    "arrow": "→",
+    "arrowBack": "←",
+    "externalArrow": "↗"
+  },
+  "firstLogin": {
+    "eyebrow": "First login",
+    "step": "First login · step {{current}} of {{total}}",
+    "password": {
+      "title": "Set your own password",
+      "subtitle": "You signed in with a temporary password. Choose a permanent one — only you will know it.",
+      "tempLabel": "Temporary password",
+      "newLabel": "New password",
+      "newPlaceholder": "At least {{min}} characters",
+      "confirmLabel": "New password again",
+      "lengthHint": "At least {{min}} characters.",
+      "mismatchHint": "The two new passwords do not match.",
+      "tooShort": "The new password must be at least {{min}} characters long.",
+      "submit": "Save password"
+    },
+    "consents": {
+      "title": "Accept the terms",
+      "subtitle": "The documents open in a new tab. Tick every item to continue.",
+      "openDocument": "Open the document",
+      "privacyLabel": "I have read and accept the Privacy Policy",
+      "privacyNote": "How we process personal data",
+      "termsLabel": "I have read and accept the Terms & Conditions",
+      "termsNote": "Rules for using the portal",
+      "submit": "Confirm and start",
+      "unavailable": "Some of the required documents cannot be shown in this version of the app, so sign-in cannot be completed here. Please contact your company administrator."
+    }
   },
   "landing": {
     "hero": {
@@ -67,6 +98,40 @@
     "footer": {
       "privacy": "Privacy",
       "terms": "Terms"
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Privacy Policy",
+      "meta": "Version 1.0 · Effective July 2026 · SevenHeaven AI Ltd",
+      "general": {
+        "title": "1. General",
+        "text": "Placeholder text. The final wording will be provided by SevenHeaven AI: who the data controller is, what the legal basis for processing is, and how to reach us."
+      },
+      "data": {
+        "title": "2. What we store",
+        "text": "We keep the minimum: your name, username, an optional email address and your personal learning progress. Your progress is never shown to other users, including administrators."
+      },
+      "rights": {
+        "title": "3. Your rights",
+        "text": "You can ask your company administrator to correct or delete your account. Deleting the account removes your personal data together with your progress."
+      }
+    },
+    "terms": {
+      "title": "Terms & Conditions",
+      "meta": "Version 1.0 · Effective July 2026 · SevenHeaven AI Ltd",
+      "general": {
+        "title": "1. General",
+        "text": "Placeholder text. The real legal wording goes here: who provides the service, to whom, and on what terms."
+      },
+      "access": {
+        "title": "2. Access and accounts",
+        "text": "Accounts are created by your company administrator. You are responsible for keeping your password safe. Access can be suspended by your administrator or by the vendor."
+      },
+      "data": {
+        "title": "3. Personal data",
+        "text": "We store the minimum: name, username, an optional email address and personal learning progress. Progress is not visible to other users, including administrators."
+      }
     }
   },
   "login": {

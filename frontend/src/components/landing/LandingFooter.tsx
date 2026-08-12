@@ -1,11 +1,13 @@
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 // TODO(assets): по макету знак лежит в `assets/landing/` — см. LandingHeader.
 import logoMark from '../../assets/logo-mark-light.png'
+import { LEGAL_PATHS } from '../../constants/routes'
 import styles from './LandingFooter.module.css'
 
 /**
- * Подвал лендинга. «Privacy» и «Terms» — пока span-заглушки:
- * страниц ещё нет, а неработающая ссылка сбивает с толку.
+ * Подвал лендинга. «Privacy» и «Terms» ведут на публичные страницы текстов —
+ * те же, что открываются с экрана согласий при первом входе.
  */
 export function LandingFooter() {
   const { t } = useTranslation()
@@ -17,9 +19,13 @@ export function LandingFooter() {
         <span className={styles.copy}>{t('brand.copyright')}</span>
       </div>
       <p className={styles.legal}>
-        <span>{t('landing.footer.privacy')}</span>{' '}
+        <Link className={styles.link} to={LEGAL_PATHS.privacy}>
+          {t('landing.footer.privacy')}
+        </Link>{' '}
         <span aria-hidden="true">·</span>{' '}
-        <span>{t('landing.footer.terms')}</span>
+        <Link className={styles.link} to={LEGAL_PATHS.terms}>
+          {t('landing.footer.terms')}
+        </Link>
       </p>
     </footer>
   )

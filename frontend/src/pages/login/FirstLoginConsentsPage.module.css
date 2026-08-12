@@ -1,0 +1,113 @@
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Строка согласия (макет: .consent-item). min-height 44px — тач-таргет. */
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-height: 44px;
+  padding: var(--space-4);
+  margin-bottom: var(--space-3);
+  border: 1px solid color-mix(in srgb, var(--color-surface) 14%, transparent);
+  border-radius: var(--radius-md);
+}
+
+.item:hover {
+  border-color: var(--teal-300);
+}
+
+/* margin-top выравнивает квадрат по первой строке текста рядом. */
+.check {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.check:focus-visible {
+  outline: 3px solid var(--teal-300);
+  outline-offset: 2px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  color: var(--color-surface);
+  cursor: pointer;
+}
+
+/* Ссылка на документ — отдельной строкой, поэтому align-self, иначе она
+   растянулась бы на всю ширину колонки и ловила клики мимо текста. */
+.link {
+  align-self: flex-start;
+  color: var(--teal-300);
+  font-weight: var(--font-weight-medium);
+}
+
+.link:hover {
+  color: var(--teal-200);
+}
+
+.link:focus-visible {
+  outline: 3px solid var(--teal-300);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.note {
+  color: var(--teal-200);
+}
+
+/* Плашка ошибки на тёмной карточке — та же, что на экране смены пароля.
+   .notice выглядит так же: это тоже тупик, из которого сам пользователь
+   выйти не может. */
+.error,
+.notice {
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid
+    color-mix(in srgb, var(--color-status-danger) 70%, transparent);
+  border-radius: var(--radius-sm);
+  background: color-mix(
+    in srgb,
+    var(--color-status-danger) 45%,
+    var(--teal-900)
+  );
+  color: var(--color-surface);
+}
+
+/* Кнопка, стилизованная под ссылку, как «Забыли пароль?» на входе.
+   Общий Button не подошёл: его вариант ghost рассчитан на светлый фон.
+   min-height 44px — тач-таргет (WCAG). */
+.logout {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: var(--space-2);
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-surface);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.logout:focus-visible {
+  outline: 3px solid var(--teal-300);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.submit {
+  margin-top: var(--space-6);
+}

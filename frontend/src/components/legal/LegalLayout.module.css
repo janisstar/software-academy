@@ -1,0 +1,131 @@
+/* Светлая страница юридического текста со своей обвязкой: навигации портала
+   здесь нет — документ открывают отдельной вкладкой прямо с экрана согласий,
+   ещё до входа в приложение.
+
+   --legal-column: узкая колонка для читаемости длинного текста. Значение
+   локальное, поэтому живёт custom property на корневом классе, а не в токенах. */
+.page {
+  --legal-column: 720px;
+
+  min-height: 100vh;
+  background: var(--color-ink-50);
+}
+
+.topbar {
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-ink-100);
+}
+
+/* Та же ширина, что у текста ниже: кнопка «назад» встаёт ровно над началом
+   колонки. flex-wrap — чтобы на узком экране бренд с названием документа
+   переехали на вторую строку, а не сжимались. */
+.topbarInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  max-width: var(--legal-column);
+  margin: 0 auto;
+}
+
+/* Кнопка-стрелка. 44x44 — тач-таргет (WCAG), поэтому отрицательный margin:
+   иначе видимая стрелка стояла бы с отступом от начала колонки. */
+.back {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-left: calc(-1 * var(--space-3));
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--teal-700);
+  font-size: var(--font-size-h3);
+  cursor: pointer;
+}
+
+.back:hover {
+  color: var(--teal-800);
+  background: var(--color-ink-50);
+}
+
+.back:focus-visible {
+  outline: 3px solid var(--teal-500);
+  outline-offset: 2px;
+}
+
+/* Знак и название документа держим вместе: при переносе строки они не
+   разъезжаются по разным строкам. */
+.identity {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* Знак + название = ссылка на лендинг. min-height 44px — тач-таргет (WCAG). */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-2);
+  margin-left: calc(-1 * var(--space-2));
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+}
+
+.brand:hover .brandName {
+  color: var(--teal-700);
+}
+
+.brand:focus-visible {
+  outline: 3px solid var(--teal-500);
+  outline-offset: 2px;
+}
+
+.logo {
+  height: 24px;
+  width: auto;
+  display: block;
+}
+
+.brandName {
+  color: var(--color-ink);
+  font-weight: var(--font-weight-medium);
+}
+
+.docName {
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+.body {
+  max-width: var(--legal-column);
+  margin: 0 auto;
+  padding: var(--space-10) var(--space-4) var(--space-16);
+}
+
+.title {
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-display);
+  line-height: var(--line-height-display);
+}
+
+.meta {
+  display: block;
+  margin-bottom: var(--space-8);
+  color: var(--color-ink-400);
+}
+
+/* Разделы документа приходят из страниц через children, поэтому стилизуем их
+   как потомков: у PrivacyPage и TermsPage своего CSS-модуля нет. */
+.body h2 {
+  margin: var(--space-8) 0 var(--space-3);
+}
+
+.body p {
+  margin-bottom: var(--space-4);
+  color: var(--color-ink-600);
+}

@@ -25,6 +25,26 @@
   color: var(--color-ink-600);
 }
 
+/* Подчёркивание оставляем: в строке подвала цвет — не единственный признак
+   ссылки (WCAG). Тач-таргет добирается вертикальным padding'ом, чтобы не
+   растягивать строку в высоту. */
+.link {
+  display: inline-block;
+  padding: var(--space-2) 0;
+  color: var(--teal-700);
+  text-decoration: underline;
+}
+
+.link:hover {
+  color: var(--teal-800);
+}
+
+.link:focus-visible {
+  outline: 3px solid var(--teal-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
 @media (min-width: 600px) {
   .footer {
     flex-direction: row;

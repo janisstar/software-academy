@@ -33,6 +33,24 @@ export type LoginPayload = Schemas['LoginIn']
 // GET /api/me/ отдаёт того же пользователя, что и вход.
 export type MeResponse = UserOut
 
+// Тело запроса POST /api/user/change-password/ — { old_pw, new_pw }.
+// Минимальную длину нового пароля схема не описывает: её проверяет бэкенд
+// (backend/app/schemas/password.py, MIN_PASSWORD_LENGTH).
+export type ChangePasswordPayload = Schemas['ChangePasswordIn']
+
+// --- Согласия (GDPR) --------------------------------------------------------
+
+// Ответ POST /api/accept_privacy_policy/ и /api/accept_terms_and_conditions/.
+// Написан руками: у бэкенда это обычный dict, и codegen выводит его как
+// `{ [key: string]: unknown }` — по такому типу ничего не прочитать.
+// `document` — ключ документа из backend/app/services/consent_service.py
+// (`privacy_policy` / `terms_and_conditions`), те же значения, что приходят
+// в `pending_consents`.
+export type ConsentAccepted = {
+  status: string
+  document: string
+}
+
 // --- Контент: категории и уроки ---------------------------------------------
 
 export type CategoryOut = Schemas['CategoryOut']

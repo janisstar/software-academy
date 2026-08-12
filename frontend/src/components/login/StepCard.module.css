@@ -1,0 +1,55 @@
+/* Карточка одного шага первого входа (макет: .step-card). */
+.card {
+  width: min(520px, 100%);
+  padding: var(--space-8);
+  border-radius: var(--radius-xl);
+  background: var(--teal-800);
+  box-shadow: var(--shadow-panel);
+  color: var(--color-surface);
+}
+
+/* Полоска прогресса. aria-hidden на контейнере: то же самое сказано словами
+   в подписи выше заголовка, поэтому цвет не остаётся единственным сигналом
+   (WCAG 2.1 AA). */
+.dots {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+
+.dot {
+  flex: 1;
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-surface) 18%, transparent);
+}
+
+.done {
+  background: var(--color-status-completed);
+}
+
+.current {
+  background: var(--color-accent);
+}
+
+/* Капсовая подпись над заголовком. --teal-300 на --teal-800 даёт 4.7:1 —
+   проходит порог 4.5:1 для обычного текста. */
+.eyebrow {
+  margin-bottom: var(--space-2);
+  color: var(--teal-300);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.title {
+  margin-bottom: var(--space-2);
+  color: var(--color-surface);
+}
+
+.subtitle {
+  margin-bottom: var(--space-6);
+  color: var(--teal-200);
+}

@@ -1,0 +1,35 @@
+/* Тёмная панель: код нужно прочитать вслух или переписать, поэтому он подан
+   крупно и отделён от остального текста. */
+.panel {
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--teal-900);
+  text-align: center;
+}
+
+.caption {
+  color: var(--teal-200);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+.code {
+  margin: var(--space-2) 0 var(--space-3);
+  color: var(--color-on-accent);
+  font-size: var(--font-size-display);
+  line-height: var(--line-height-display);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.12em;
+  /* Двойной клик выделяет код целиком — так его удобнее скопировать руками,
+     если буфер обмена недоступен. */
+  user-select: all;
+  /* Длинный пароль переносим, а не выпускаем за края панели. */
+  overflow-wrap: anywhere;
+}
+
+.note {
+  margin-top: var(--space-3);
+  color: var(--teal-200);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}

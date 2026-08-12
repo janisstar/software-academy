@@ -36,6 +36,17 @@ export type MeResponse = UserOut
 // Тело запроса POST /api/user/lock/ — { un, locked }.
 export type UserLockPayload = Schemas['UserLockIn']
 
+// Тело запроса POST /api/company/ — { name, businessid?, email? }.
+export type CompanyCreatePayload = Schemas['CompanyCreateIn']
+
+// Тело запроса POST /api/user/ — { un, name, role, email?, companyid? }.
+// companyid обязателен только для master: остальные заводят людей у себя.
+export type UserCreatePayload = Schemas['UserCreateIn']
+
+// Ответ POST /api/user/ — { user, temp_password }.
+// Временный пароль приходит ОДИН раз и больше нигде не хранится.
+export type UserCreated = Schemas['UserCreateOut']
+
 // Тело запроса PATCH /api/user/ — { un, name?, email?, new_un?, role? }.
 // `un` говорит, КОГО меняем; остальные поля — только то, что меняется.
 export type UserUpdatePayload = Schemas['UserUpdateIn']

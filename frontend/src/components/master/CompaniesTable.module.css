@@ -1,0 +1,22 @@
+/* Название компании — главная строка ячейки. */
+.main {
+  display: block;
+  color: var(--color-ink);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Второстепенное: бизнес-ID, число людей, дата. */
+.dim {
+  display: block;
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Подвал таблицы: сколько всего записей. Постраничности пока нет. */
+.foot {
+  padding-top: var(--space-3);
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}

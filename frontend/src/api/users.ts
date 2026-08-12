@@ -1,6 +1,8 @@
 import { apiRequest } from './client'
 import type {
   ResetCode,
+  UserCreated,
+  UserCreatePayload,
   UserDeletePayload,
   UserLockPayload,
   UserOut,
@@ -39,6 +41,23 @@ export async function fetchUsers({
 export async function fetchUser(un: string): Promise<UserOut> {
   return apiRequest<UserOut>(`${API_ENDPOINTS.user}${encodeURIComponent(un)}`, {
     method: 'GET',
+  })
+}
+
+/**
+ * Завести пользователя.
+ *
+ * В ответе приходит сам пользователь и его ВРЕМЕННЫЙ пароль — он показывается
+ * один раз и больше нигде не хранится: потерялся — выпускать код сброса.
+ * `companyid` обязателен только для master; остальные роли заводят людей
+ * в своей компании, и бэкенд подставляет её сам.
+ */
+export async function createUser(
+  payload: UserCreatePayload,
+): Promise<UserCreated> {
+  return apiRequest<UserCreated>(API_ENDPOINTS.user, {
+    method: 'POST',
+    body: JSON.stringify(payload),
   })
 }
 

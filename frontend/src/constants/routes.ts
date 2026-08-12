@@ -27,6 +27,8 @@ export const PEOPLE_PATHS = {
   newUser: '/people/users/new',
   // Шаблон с параметром — только для роутера; ссылку строит userPath().
   userPattern: '/people/users/:username',
+  companies: '/people/companies',
+  newCompany: '/people/companies/new',
 } as const
 
 /** Ссылка на страницу конкретного пользователя. */

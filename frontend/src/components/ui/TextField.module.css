@@ -38,6 +38,13 @@
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--teal-300) 35%, transparent);
 }
 
+.hint {
+  margin-top: var(--space-1);
+  color: var(--teal-200);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
 /* --- поле на белой карточке ----------------------------------------------- */
 
 /* Ярлык светлый только на зелёной панели; на белом он был бы невидим.
@@ -49,6 +56,10 @@
 
 .surface .input {
   border-color: var(--color-ink-200);
+}
+
+.surface .hint {
+  color: var(--color-ink-400);
 }
 
 .surface .input:focus {

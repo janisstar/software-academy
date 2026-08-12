@@ -1,6 +1,6 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '../ui/Button'
+import { CodePanel } from '../ui/CodePanel'
 import { Modal } from '../ui/Modal'
 import type { ResetCode } from '../../types/api'
 import styles from './ResetCodeModal.module.css'
@@ -25,16 +25,6 @@ export function ResetCodeModal({
   onClose,
 }: ResetCodeModalProps) {
   const { t } = useTranslation()
-  const [copied, setCopied] = useState(false)
-
-  const copy = () => {
-    void navigator.clipboard
-      .writeText(resetCode.code)
-      .then(() => setCopied(true))
-      // Буфер обмена может быть недоступен (нет https, отказ в правах) —
-      // тогда код всё равно виден на экране и его можно выделить руками.
-      .catch(() => setCopied(false))
-  }
 
   return (
     <Modal
@@ -50,10 +40,11 @@ export function ResetCodeModal({
       </p>
 
       <div className={styles.panel}>
-        <p className={styles.code}>{resetCode.code}</p>
-        <Button variant="outline" onClick={copy}>
-          {copied ? t('people.user.copied') : t('people.user.copyCode')}
-        </Button>
+        <CodePanel
+          code={resetCode.code}
+          copyLabel={t('people.user.copyCode')}
+          copiedLabel={t('people.user.copied')}
+        />
       </div>
 
       <p className={styles.howto}>{t('people.user.resetCodeHowTo')}</p>

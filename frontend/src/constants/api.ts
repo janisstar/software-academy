@@ -12,6 +12,8 @@ export const API_ENDPOINTS = {
   adminResetCode: `${API_BASE_PATH}/admin/password-reset/code/`,
   generatePassword: `${API_BASE_PATH}/generate/password/`,
   companies: `${API_BASE_PATH}/companies/`,
+  // Создание компании. Изменения и удаления у компаний в API пока нет.
+  company: `${API_BASE_PATH}/company/`,
   userCompany: `${API_BASE_PATH}/user/company/`,
   // Список пользователей: master видит всех (можно фильтровать ?companyid=),
   // остальные привилегированные роли — только свою компанию.

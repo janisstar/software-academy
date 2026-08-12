@@ -16,6 +16,7 @@ import { CategoriesPage } from '../pages/master/CategoriesPage'
 import { CompaniesPage } from '../pages/master/CompaniesPage'
 import { DashboardPage } from '../pages/master/DashboardPage'
 import { LessonsPage } from '../pages/master/LessonsPage'
+import { NewCompanyPage } from '../pages/master/NewCompanyPage'
 import { NewUserPage } from '../pages/master/NewUserPage'
 import { ReportsPage } from '../pages/master/ReportsPage'
 import { SettingsPage } from '../pages/master/SettingsPage'
@@ -85,7 +86,8 @@ export function AppRoutes() {
             «new» не был принят за логин. */}
         <Route path={PEOPLE_PATHS.newUser} element={<NewUserPage />} />
         <Route path={PEOPLE_PATHS.userPattern} element={<UserDetailPage />} />
-        <Route path="/people/companies" element={<CompaniesPage />} />
+        <Route path={PEOPLE_PATHS.companies} element={<CompaniesPage />} />
+        <Route path={PEOPLE_PATHS.newCompany} element={<NewCompanyPage />} />
         <Route path="/reports" element={<ReportsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Route>

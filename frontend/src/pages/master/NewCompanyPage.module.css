@@ -1,0 +1,33 @@
+/* Ссылка «← Companies» над шапкой страницы. */
+.backlink {
+  display: inline-block;
+  margin-bottom: var(--space-4);
+  color: var(--color-ink-600);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  text-decoration: none;
+}
+
+.backlink:hover {
+  color: var(--color-accent);
+}
+
+/* Форма узкая: длинная строка ввода читается хуже короткой. */
+.form {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 480px;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.error {
+  color: var(--color-status-danger);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}

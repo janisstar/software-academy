@@ -1,3 +1,35 @@
+/* По умолчанию список шириной по содержимому — таким он стоит в фильтрах.
+   В формах его растягивает fullWidth. */
+.field {
+  display: inline-block;
+}
+
+.fullWidth,
+.fullWidth .wrap {
+  display: block;
+  width: 100%;
+}
+
+/* Ярлык — как у TextField на белой карточке: списки у нас стоят только
+   на светлом фоне. */
+.label {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--color-ink-600);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.hint {
+  margin-top: var(--space-1);
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
 /* Обёртка нужна ради своей стрелки: системную стрелку браузер прижимает
    к краю и padding'ом её не сдвинуть, а на самом <select> псевдоэлементы
    не рисуются. */

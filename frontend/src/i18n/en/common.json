@@ -12,7 +12,8 @@
     "saving": "Saving…",
     "arrow": "→",
     "arrowBack": "←",
-    "externalArrow": "↗"
+    "externalArrow": "↗",
+    "dot": "·"
   },
   "firstLogin": {
     "eyebrow": "First login",
@@ -194,6 +195,40 @@
       "companies": "Companies",
       "reports": "Reports",
       "settings": "Settings"
+    }
+  },
+  "masterDashboard": {
+    "caption": "Platform overview",
+    "error": "Could not load the platform overview.",
+    "retry": "Retry",
+    "last": "last {{n}}",
+    "stats": {
+      "companies": "Companies",
+      "users": "Users",
+      "lessons": "Lessons",
+      "online": "Online now",
+      "locked": "{{n}} locked",
+      "pendingFirstLogin": "{{n}} pending first login",
+      "lessonsSub": "{{categories}} categories · {{publicLessons}} public",
+      "onlineSub": "active in the last 10 min"
+    },
+    "popular": {
+      "title": "Popular lessons",
+      "total": "{{n}} completions total",
+      "empty": "No completions yet"
+    },
+    "recentUsers": {
+      "title": "Recent users",
+      "colUser": "User",
+      "colCompany": "Company",
+      "colRole": "Role",
+      "empty": "No users yet"
+    },
+    "recentCompanies": {
+      "title": "Recent companies",
+      "colCompany": "Company",
+      "colCreated": "Created",
+      "empty": "No companies yet"
     }
   }
 }

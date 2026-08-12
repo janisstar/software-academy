@@ -13,5 +13,7 @@ export const API_ENDPOINTS = {
   userCompany: `${API_BASE_PATH}/user/company/`,
   roles: `${API_BASE_PATH}/roles/`,
   dashboard: `${API_BASE_PATH}/dashboard/`,
+  // Сводка платформы: доступна только master, остальным бэкенд отвечает 403.
+  masterDashboard: `${API_BASE_PATH}/master/dashboard/`,
   reports: `${API_BASE_PATH}/reports/`,
 } as const

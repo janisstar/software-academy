@@ -67,6 +67,18 @@ export type ProgressSummary = Schemas['ProgressSummary']
 export type Reports = Schemas['ReportsOut']
 export type Dashboard = Schemas['DashboardOut']
 
+// --- Master-дашборд ---------------------------------------------------------
+
+// Ответ GET /api/master/dashboard/ — сводка «здоровья платформы» для master.
+// Личного прогресса тут нет: он строго персональный (docs/06).
+export type MasterDashboard = Schemas['MasterDashboardOut']
+
+// Строки списков внутри дашборда — вынесены отдельно, чтобы компоненты
+// (PopularLessons, RecentUsers, RecentCompanies) типизировали свои props.
+export type MasterTopLesson = Schemas['TopLesson']
+export type MasterRecentUser = Schemas['RecentUser']
+export type MasterRecentCompany = Schemas['RecentCompany']
+
 // --- Роли и права (privileges) ----------------------------------------------
 
 // Ключи ролей платформы. Один пользователь — одна роль (см. docs/06).

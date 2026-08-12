@@ -1,0 +1,42 @@
+/* Карточка-счётчик строится на общей Card (фон, скругление, тень, отступы) —
+   здесь только внутренняя типографика и тёмный акцентный вариант. */
+
+.label {
+  margin-bottom: var(--space-2);
+  color: var(--color-ink-600);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Крупное число — самый заметный элемент карточки. */
+.value {
+  color: var(--color-ink);
+  font-size: var(--font-size-display);
+  line-height: var(--line-height-display);
+  font-weight: var(--font-weight-medium);
+}
+
+.sub {
+  margin-top: var(--space-1);
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Акцентный вариант: тёмная бирюза. Цвета текста внутри переопределяем явно —
+   графитовые токены на тёмном фоне не читаются. */
+.accent {
+  background: var(--teal-800);
+}
+
+.accent .label {
+  color: var(--teal-200);
+}
+
+.accent .value {
+  color: var(--color-on-accent);
+}
+
+.accent .sub {
+  color: var(--teal-300);
+}

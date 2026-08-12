@@ -1,0 +1,27 @@
+/* Каптион под приветствием — та же роль, что у приписки в шапке карточки. */
+.caption {
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Ряд «популярные уроки + новые пользователи». Первая колонка шире —
+   в ней длинные названия уроков. На узком экране колонки складываются. */
+.row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--space-4);
+}
+
+@media (max-width: 900px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Карточка ошибки: текст и кнопка повтора столбиком, кнопка по левому краю. */
+.error {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+}

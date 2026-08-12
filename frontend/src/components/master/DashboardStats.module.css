@@ -1,0 +1,49 @@
+/* Четыре счётчика в ряд; на узком экране — по два. */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 900px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* «3 locked» — тревожное число. Цвет здесь не единственный сигнал:
+   рядом всегда стоит слово «locked» (WCAG 2.1 AA). */
+.warn {
+  color: var(--color-status-danger);
+}
+
+/* Пульсирующая точка «в сети сейчас»: расходящееся кольцо через box-shadow.
+   color-mix даёт прозрачную бирюзу от токена — чтобы не писать hex руками. */
+.pulse {
+  display: inline-block;
+  width: var(--space-2);
+  height: var(--space-2);
+  margin-right: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--teal-300);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--teal-300) 55%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 var(--space-2) transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+/* Пользователь попросил меньше движения — точка просто стоит на месте. */
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
+}

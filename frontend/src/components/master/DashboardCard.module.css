@@ -1,0 +1,21 @@
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+/* Размер и вес h2 приходят из типографики — здесь только цвет,
+   потому что Card задаёт всему содержимому приглушённый ink-600. */
+.title {
+  color: var(--color-ink);
+}
+
+/* flex: none — приписка не должна сжиматься, переносится заголовок. */
+.meta {
+  flex: none;
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}

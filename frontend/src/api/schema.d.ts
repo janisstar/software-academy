@@ -568,6 +568,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/master/dashboard/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Master Dashboard
+         * @description Сводка «здоровья платформы». Access: master.
+         */
+        get: operations["master_dashboard_api_master_dashboard__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/": {
         parameters: {
             query?: never;
@@ -633,6 +653,18 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * ActivityBlock
+         * @description Блок «Активность» — только анонимные агрегаты по всей платформе.
+         */
+        ActivityBlock: {
+            /** Online Now */
+            online_now: number;
+            /** Completions Total */
+            completions_total: number;
+            /** Top Lessons */
+            top_lessons: components["schemas"]["TopLesson"][];
+        };
         /**
          * CategoryCreateIn
          * @description POST /api/category/ — создать (master). parent_id=None → верхний уровень.
@@ -708,6 +740,16 @@ export interface components {
             new_pw: string;
         };
         /**
+         * CompaniesBlock
+         * @description Блок «Компании».
+         */
+        CompaniesBlock: {
+            /** Total */
+            total: number;
+            /** Locked */
+            locked: number;
+        };
+        /**
          * CompanyCreateIn
          * @description POST /api/company/ — создать компанию-клиента (только master).
          */
@@ -731,6 +773,18 @@ export interface components {
             email?: string | null;
             /** Is Locked */
             is_locked: boolean;
+        };
+        /**
+         * ContentBlock
+         * @description Блок «Контент» — каталог общий для всех компаний.
+         */
+        ContentBlock: {
+            /** Categories */
+            categories: number;
+            /** Lessons */
+            lessons: number;
+            /** Public Lessons */
+            public_lessons: number;
         };
         /**
          * DashboardOut
@@ -921,6 +975,17 @@ export interface components {
             user: components["schemas"]["UserOut"];
             company: components["schemas"]["CompanyOut"];
         };
+        /**
+         * MasterDashboardOut
+         * @description GET /api/master/dashboard/ — сводка платформы для master.
+         */
+        MasterDashboardOut: {
+            companies: components["schemas"]["CompaniesBlock"];
+            users: components["schemas"]["UsersBlock"];
+            content: components["schemas"]["ContentBlock"];
+            activity: components["schemas"]["ActivityBlock"];
+            recent: components["schemas"]["RecentBlock"];
+        };
         /** ProgressOut */
         ProgressOut: {
             /** Lesson Id */
@@ -967,6 +1032,52 @@ export interface components {
             not_started: number;
             /** Completion Percent */
             completion_percent: number;
+        };
+        /**
+         * RecentBlock
+         * @description Блок «Недавнее» — последние созданные компании и пользователи.
+         */
+        RecentBlock: {
+            /** Companies */
+            companies: components["schemas"]["RecentCompany"][];
+            /** Users */
+            users: components["schemas"]["RecentUser"][];
+        };
+        /**
+         * RecentCompany
+         * @description Недавно созданная компания.
+         */
+        RecentCompany: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /**
+         * RecentUser
+         * @description Недавно созданный пользователь.
+         */
+        RecentUser: {
+            /** Id */
+            id: number;
+            /** Un */
+            un: string;
+            /** Name */
+            name: string;
+            /** Company Name */
+            company_name: string;
+            /** Role Key */
+            role_key: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
         };
         /**
          * ReportsOut
@@ -1019,6 +1130,18 @@ export interface components {
             name: string;
             /** Is Privileged */
             is_privileged: boolean;
+        };
+        /**
+         * TopLesson
+         * @description Урок в топе по числу завершений.
+         */
+        TopLesson: {
+            /** Id */
+            id: number;
+            /** Title */
+            title: string;
+            /** Completions */
+            completions: number;
         };
         /**
          * UserCreateIn
@@ -1110,6 +1233,18 @@ export interface components {
             new_un?: string | null;
             /** Role */
             role?: string | null;
+        };
+        /**
+         * UsersBlock
+         * @description Блок «Пользователи».
+         */
+        UsersBlock: {
+            /** Total */
+            total: number;
+            /** Locked */
+            locked: number;
+            /** Pending First Login */
+            pending_first_login: number;
         };
         /** ValidationError */
         ValidationError: {
@@ -2218,6 +2353,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RoleOut"][];
+                };
+            };
+        };
+    };
+    master_dashboard_api_master_dashboard__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                session_id?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MasterDashboardOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

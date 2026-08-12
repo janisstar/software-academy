@@ -1,0 +1,17 @@
+/* Общие стили ячеек для карточек «Recent …» — их две (пользователи и
+   компании), и обе рисуют одинаковые главную и второстепенную строки. */
+
+/* Имя человека или название компании — главная строка ячейки. */
+.main {
+  display: block;
+  color: var(--color-ink);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Второстепенное: логин, компания, дата. */
+.dim {
+  display: block;
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}

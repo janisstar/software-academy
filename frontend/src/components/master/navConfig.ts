@@ -69,11 +69,14 @@ export const NAV_ITEMS: readonly NavEntry[] = [
         labelKey: 'master.nav.categories',
         path: '/content/categories',
         icon: 'categories',
+        // Контент общий для всей платформы, ведёт его только вендор (docs/06 §3).
+        roles: ['master'],
       },
       {
         labelKey: 'master.nav.lessons',
         path: '/content/lessons',
         icon: 'lessons',
+        roles: ['master'],
       },
     ],
   },

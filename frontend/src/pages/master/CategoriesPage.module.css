@@ -1,0 +1,41 @@
+/* Подпись под заголовком: зачем этот экран и на что влияет порядок. */
+.caption {
+  margin-bottom: var(--space-4);
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Карточка ошибки: текст и кнопка повтора столбиком, кнопка по левому краю
+   (тот же приём, что на дашборде и в списке пользователей). */
+.error {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+}
+
+/* Пояснение под деревом. */
+.footNote {
+  margin-top: var(--space-4);
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Пустое состояние: заголовок, пояснение и кнопка по центру карточки. */
+.empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-10);
+  text-align: center;
+}
+
+/* Кнопке нужен воздух сверху: она отделена от текста, а не продолжает его. */
+.empty button {
+  margin-top: var(--space-4);
+}
+
+.confirmText {
+  color: var(--color-ink-600);
+}

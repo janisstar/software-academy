@@ -22,6 +22,14 @@ export const API_ENDPOINTS = {
   // Кого именно меняем, всегда передаётся в теле (`un`), а не в адресе.
   user: `${API_BASE_PATH}/user/`,
   userLock: `${API_BASE_PATH}/user/lock/`,
+  // Дерево категорий каталога: два уровня, порядок задаёт бэкенд.
+  categories: `${API_BASE_PATH}/categories/`,
+  // Одна категория: POST — создать, PATCH — переименовать или перенести,
+  // DELETE — удалить (только пустую). Что менять, передаётся в теле; id для
+  // удаления — в строке запроса (`?id=`), как и у остальных DELETE.
+  category: `${API_BASE_PATH}/category/`,
+  // Сдвиг категории на одну позицию внутри своего уровня.
+  categoryMove: `${API_BASE_PATH}/category/move/`,
   roles: `${API_BASE_PATH}/roles/`,
   dashboard: `${API_BASE_PATH}/dashboard/`,
   // Сводка платформы: доступна только master, остальным бэкенд отвечает 403.

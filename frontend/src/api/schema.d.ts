@@ -369,9 +369,33 @@ export interface paths {
         head?: never;
         /**
          * Update Category
-         * @description Обновить категорию (имя/порядок). Access: master.
+         * @description Обновить категорию: имя и/или уровень (parent_id). Access: master.
+         *     parent_id=null переносит категорию наверх, поэтому «не трогать родителя»
+         *     означает не присылать поле совсем — это и проверяет model_fields_set.
+         *     При переносе категория встаёт в конец нового уровня.
          */
         patch: operations["update_category_api_category__patch"];
+        trace?: never;
+    };
+    "/api/category/move/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Move Category
+         * @description Сдвинуть категорию на одну позицию вверх/вниз внутри своего уровня.
+         *     Если она уже крайняя — статус "noop" (не ошибка). Access: master.
+         */
+        post: operations["move_category_api_category_move__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/categories/": {
@@ -386,6 +410,9 @@ export interface paths {
          * @description Дерево категорий (два уровня). Access: любой залогиненный.
          *     Рабочие видят только категории, где есть доступные им уроки;
          *     привилегированные/master — все категории.
+         *
+         *     Счётчики в узлах показывают ПОЛНОЕ число уроков/подкатегорий в категории,
+         *     без поправки на видимость: это характеристика самой категории.
          */
         get: operations["list_categories_api_categories__get"];
         put?: never;
@@ -422,6 +449,27 @@ export interface paths {
          * @description Обновить урок (в т.ч. видимость). Access: master.
          */
         patch: operations["update_lesson_api_lesson__patch"];
+        trace?: never;
+    };
+    "/api/lesson/move/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Move Lesson
+         * @description Сдвинуть урок на одну позицию вверх/вниз внутри своей категории.
+         *     Если он уже крайний — статус "noop" (не ошибка). Access: master.
+         */
+        post: operations["move_lesson_api_lesson_move__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/lessons/": {
@@ -588,6 +636,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/master/lessons/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Master Lessons
+         * @description Все уроки для таблицы управления контентом. Access: master.
+         *     Без фильтров и пагинации: контента мало, фильтрация клиентская (как в Users).
+         *     Названия категорий фронт берёт из GET /api/categories/.
+         */
+        get: operations["master_lessons_api_master_lessons__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/": {
         parameters: {
             query?: never;
@@ -668,17 +738,26 @@ export interface components {
         /**
          * CategoryCreateIn
          * @description POST /api/category/ — создать (master). parent_id=None → верхний уровень.
+         *     order не передаётся: категория встаёт в конец своего уровня.
          */
         CategoryCreateIn: {
             /** Name */
             name: string;
             /** Parent Id */
             parent_id?: number | null;
+        };
+        /**
+         * CategoryMoveIn
+         * @description POST /api/category/move/ — сдвинуть на одну позицию внутри своего уровня.
+         */
+        CategoryMoveIn: {
+            /** Id */
+            id: number;
             /**
-             * Order
-             * @default 0
+             * Direction
+             * @enum {string}
              */
-            order: number;
+            direction: "up" | "down";
         };
         /**
          * CategoryOut
@@ -695,6 +774,10 @@ export interface components {
             parent_id: number | null;
             /** Order */
             order: number;
+            /** Lessons Count */
+            lessons_count: number;
+            /** Subcategories Count */
+            subcategories_count: number;
         };
         /**
          * CategoryTreeOut
@@ -711,6 +794,10 @@ export interface components {
             parent_id: number | null;
             /** Order */
             order: number;
+            /** Lessons Count */
+            lessons_count: number;
+            /** Subcategories Count */
+            subcategories_count: number;
             /**
              * Subcategories
              * @default []
@@ -720,14 +807,19 @@ export interface components {
         /**
          * CategoryUpdateIn
          * @description PATCH /api/category/ — обновить (master). Меняется только переданное.
+         *     Порядок здесь не меняется — только через POST /api/category/move/.
+         *
+         *     parent_id особенный: у него None — это осмысленное значение («поднять на
+         *     верхний уровень»), а не «не трогать». Поэтому «не трогать» = не присылать
+         *     поле вообще; роут отличает одно от другого через model_fields_set.
          */
         CategoryUpdateIn: {
             /** Id */
             id: number;
             /** Name */
             name?: string | null;
-            /** Order */
-            order?: number | null;
+            /** Parent Id */
+            parent_id?: number | null;
         };
         /**
          * ChangePasswordIn
@@ -838,6 +930,7 @@ export interface components {
         /**
          * LessonCreateIn
          * @description POST /api/lesson/ — создать урок (master).
+         *     order не передаётся: урок встаёт в конец своей категории.
          */
         LessonCreateIn: {
             /** Title */
@@ -858,11 +951,6 @@ export interface components {
             /** Transcript */
             transcript?: string | null;
             /**
-             * Order
-             * @default 0
-             */
-            order: number;
-            /**
              * Is Public
              * @default false
              */
@@ -872,6 +960,19 @@ export interface components {
              * @default []
              */
             roles: string[];
+        };
+        /**
+         * LessonMoveIn
+         * @description POST /api/lesson/move/ — сдвинуть на одну позицию внутри своей категории.
+         */
+        LessonMoveIn: {
+            /** Id */
+            id: number;
+            /**
+             * Direction
+             * @enum {string}
+             */
+            direction: "up" | "down";
         };
         /**
          * LessonOut
@@ -907,6 +1008,7 @@ export interface components {
          * LessonUpdateIn
          * @description PATCH /api/lesson/ — обновить урок (master). Меняется только переданное.
          *     roles=None — не трогать видимость; roles=[] — очистить список ролей.
+         *     Порядок здесь не меняется — только через POST /api/lesson/move/.
          */
         LessonUpdateIn: {
             /** Id */
@@ -925,8 +1027,6 @@ export interface components {
             thumbnail_url?: string | null;
             /** Transcript */
             transcript?: string | null;
-            /** Order */
-            order?: number | null;
             /** Is Public */
             is_public?: boolean | null;
             /** Roles */
@@ -992,6 +1092,39 @@ export interface components {
             content: components["schemas"]["ContentBlock"];
             activity: components["schemas"]["ActivityBlock"];
             recent: components["schemas"]["RecentBlock"];
+        };
+        /**
+         * MasterLessonOut
+         * @description Строка таблицы управления уроками (GET /api/master/lessons/, только master).
+         *
+         *     Отличие от LessonCardOut: здесь видно всё, что нужно для управления
+         *     (видимость, Vimeo ID, дата создания), но нет длинных текстов — описание и
+         *     транскрипт master берёт из GET /api/lesson/{id} при открытии формы.
+         */
+        MasterLessonOut: {
+            /** Id */
+            id: number;
+            /** Title */
+            title: string;
+            /** Slug */
+            slug: string;
+            /** Category Id */
+            category_id: number;
+            /** Vimeo Id */
+            vimeo_id: string;
+            /** Duration Seconds */
+            duration_seconds: number;
+            /** Is Public */
+            is_public: boolean;
+            /** Roles */
+            roles: string[];
+            /** Order */
+            order: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
         };
         /** ProgressOut */
         ProgressOut: {
@@ -1985,6 +2118,43 @@ export interface operations {
             };
         };
     };
+    move_category_api_category_move__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                session_id?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CategoryMoveIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_categories_api_categories__get: {
         parameters: {
             query?: never;
@@ -2108,6 +2278,43 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LessonOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    move_lesson_api_lesson_move__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                session_id?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LessonMoveIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Validation Error */
@@ -2387,6 +2594,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MasterDashboardOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    master_lessons_api_master_lessons__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                session_id?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MasterLessonOut"][];
                 };
             };
             /** @description Validation Error */

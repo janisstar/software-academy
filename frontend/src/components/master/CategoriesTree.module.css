@@ -1,0 +1,203 @@
+/* Карточка-дерево: строки разделены линиями, скругление обрезает их по краям.
+   Своя карточка, а не общий Card: у Card есть внутренний отступ, из-за
+   которого линии между строками не доходили бы до краёв. */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+/* У последней строки линия снизу лишняя — её рисует край карточки. */
+.card > *:last-child {
+  border-bottom: none;
+}
+
+/* Строка категории. Содержимое лежит в .rowMain, чтобы ошибка мутации
+   встала ПОД ним, а не в один ряд с кнопками. */
+.row {
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--color-ink-100);
+}
+
+.rowMain {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+/* Подкатегория: отступ слева и вертикальная рельса, связывающая её
+   с родителем. */
+.sub {
+  position: relative;
+  padding-left: var(--space-16);
+}
+
+.sub::before {
+  content: '';
+  position: absolute;
+  left: var(--space-10);
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--color-ink-100);
+}
+
+/* Строка, которую сейчас редактируют. */
+.editing {
+  background: var(--color-accent-tint);
+}
+
+/* --- Порядок: две стрелки столбиком --------------------------------------- */
+
+.orderButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* 24×18 — размер стрелки из мокапа; к шкале отступов он отношения не имеет.
+   Пара стрелок по высоте примерно равна строке текста. */
+.orderButton {
+  width: 24px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-ink-400);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.orderButton:hover:not(:disabled) {
+  background: var(--color-ink-100);
+  color: var(--color-ink-800);
+}
+
+.orderButton:disabled {
+  color: var(--color-ink-200);
+  cursor: default;
+}
+
+/* --- Содержимое строки ---------------------------------------------------- */
+
+.name {
+  font-weight: var(--font-weight-medium);
+}
+
+.meta {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  color: var(--color-ink-400);
+}
+
+/* Действия приглушены и проявляются при наведении И при фокусе внутри строки:
+   без второго условия страницей нельзя было бы пользоваться с клавиатуры. */
+.actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  opacity: 0.35;
+  transition: opacity 0.12s;
+}
+
+.row:hover .actions,
+.row:focus-within .actions {
+  opacity: 1;
+}
+
+/* Кнопки редактора видны всегда: строка уже открыта, прятать нечего. */
+.actionsVisible {
+  opacity: 1;
+}
+
+.linkButton {
+  padding: var(--space-1) var(--space-2);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-ink-600);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  cursor: pointer;
+}
+
+.linkButton:hover:not(:disabled) {
+  background: var(--color-ink-50);
+  color: var(--color-ink);
+}
+
+.linkButton:disabled {
+  color: var(--color-ink-200);
+  cursor: default;
+}
+
+.danger {
+  color: var(--color-status-danger);
+}
+
+.danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-status-danger) 8%, transparent);
+  color: var(--color-status-danger);
+}
+
+/* --- Строка «+ Add subcategory» ------------------------------------------- */
+
+.addRow {
+  padding: var(--space-2) var(--space-5) var(--space-3) var(--space-16);
+  border-bottom: 1px solid var(--color-ink-100);
+}
+
+.addLink {
+  padding: var(--space-1) 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-accent);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+.addLink:hover {
+  color: var(--color-accent-hover);
+  text-decoration: underline;
+}
+
+/* --- Inline-редактирование ------------------------------------------------ */
+
+/* Локальное поле, а не общий TextField: тот всегда рисует ярлык НАД полем
+   и в одну строку с кнопками не встаёт. min-height как у Button и Select —
+   минимальный тач-таргет (WCAG 2.1 AA). */
+.input {
+  min-height: 44px;
+  /* 240px — ширина поля из мокапа, к шкале отступов не относится. */
+  min-width: 240px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  color: var(--color-ink);
+  background: var(--color-surface);
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Ошибка изменения: под содержимым строки. Редактор при этом остаётся
+   открытым — набранное значение не теряется. */
+.rowError {
+  margin-top: var(--space-2);
+  color: var(--color-status-danger);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}

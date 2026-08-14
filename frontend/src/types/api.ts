@@ -80,6 +80,22 @@ export type ConsentAccepted = {
 export type CategoryOut = Schemas['CategoryOut']
 export type CategoryTree = Schemas['CategoryTreeOut']
 
+// Тело запроса POST /api/category/ — { name, parent_id? }.
+// `order` не передаётся: новая категория встаёт в конец своего уровня.
+export type CategoryCreatePayload = Schemas['CategoryCreateIn']
+
+// Тело запроса PATCH /api/category/ — { id, name?, parent_id? }.
+// У `parent_id` значение null осмысленно («поднять на верхний уровень»),
+// поэтому «не трогать родителя» = НЕ класть это поле в тело совсем.
+export type CategoryUpdatePayload = Schemas['CategoryUpdateIn']
+
+// Тело запроса POST /api/category/move/ — { id, direction }.
+export type CategoryMovePayload = Schemas['CategoryMoveIn']
+
+// Направление сдвига ("up" | "down") — берём из схемы, чтобы не дублировать
+// литералы руками.
+export type MoveDirection = CategoryMovePayload['direction']
+
 export type LessonCard = Schemas['LessonCardOut']
 export type LessonOut = Schemas['LessonOut']
 export type LessonWithStatus = Schemas['LessonWithStatus']

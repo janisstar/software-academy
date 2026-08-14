@@ -57,6 +57,10 @@ export type UserDeletePayload = Schemas['UserDeleteIn']
 // Ответ POST /api/admin/password-reset/code/ — { un, code, expires_minutes }.
 export type ResetCode = Schemas['ResetCodeOut']
 
+// Тело запроса POST /api/user/password-reset/confirm/ — { un, code, new_pw }.
+// Эндпоинт публичный: человек забыл пароль и сессии у него нет.
+export type ResetConfirmPayload = Schemas['ResetConfirmIn']
+
 // Тело запроса POST /api/user/change-password/ — { old_pw, new_pw }.
 // Минимальную длину нового пароля схема не описывает: её проверяет бэкенд
 // (backend/app/schemas/password.py, MIN_PASSWORD_LENGTH).

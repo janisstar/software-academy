@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { FirstLoginLayout } from '../components/login/FirstLoginLayout'
 import { MasterLayout } from '../components/master/MasterLayout'
 import {
+  AUTH_PATHS,
   CONTENT_PATHS,
   FIRST_LOGIN_PATHS,
   LEGAL_PATHS,
@@ -12,6 +13,7 @@ import { PrivacyPage } from '../pages/legal/PrivacyPage'
 import { TermsPage } from '../pages/legal/TermsPage'
 import { FirstLoginConsentsPage } from '../pages/login/FirstLoginConsentsPage'
 import { FirstLoginPasswordPage } from '../pages/login/FirstLoginPasswordPage'
+import { ForgotPasswordPage } from '../pages/login/ForgotPasswordPage'
 import { LoginPage } from '../pages/login/LoginPage'
 import { CategoriesPage } from '../pages/master/CategoriesPage'
 import { CompaniesPage } from '../pages/master/CompaniesPage'
@@ -40,6 +42,13 @@ export function AppRoutes() {
         }
       />
       <Route path="/login" element={<LoginPage />} />
+
+      {/* Восстановление доступа по коду — публичный экран: сессии у человека
+          нет, поэтому ни ProtectedRoute, ни FirstLoginGate здесь не нужны. */}
+      <Route
+        path={AUTH_PATHS.forgotPassword}
+        element={<ForgotPasswordPage />}
+      />
 
       {/* Юридические тексты — публичные: их открывают и из футера лендинга,
           и с экрана согласий (в новой вкладке, ещё до входа в портал). */}

@@ -4,6 +4,7 @@ import type {
   CompanyOut,
   ConsentAccepted,
   LoginResponse,
+  ResetConfirmPayload,
   UserOut,
 } from '../types/api'
 import { API_ENDPOINTS } from '../constants/api'
@@ -49,6 +50,29 @@ export async function changePassword(
   const payload: ChangePasswordPayload = { old_pw: oldPw, new_pw: newPw }
 
   return apiRequest<{ status: string }>(API_ENDPOINTS.changePassword, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
+/**
+ * Сброс забытого пароля по коду от администратора (код одноразовый и живёт
+ * 15 минут).
+ *
+ * Эндпоинт публичный: он проверяет код и меняет пароль, но сессию НЕ создаёт —
+ * после успеха человек идёт на страницу входа и входит уже с новым паролем.
+ * Неверный, просроченный или уже использованный код — 400 с общим текстом:
+ * бэкенд намеренно не сообщает, существует ли такой логин.
+ */
+export async function confirmPasswordReset(
+  un: string,
+  code: string,
+  newPw: string,
+): Promise<{ status: string }> {
+  // Псевдоним из types/api.ts: имена полей сверит компилятор.
+  const payload: ResetConfirmPayload = { un, code, new_pw: newPw }
+
+  return apiRequest<{ status: string }>(API_ENDPOINTS.passwordResetConfirm, {
     method: 'POST',
     body: JSON.stringify(payload),
   })

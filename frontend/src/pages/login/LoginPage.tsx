@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { ApiError } from '../../api/client'
+import { AUTH_PATHS } from '../../constants/routes'
 import { useAuth } from '../../hooks/useAuth'
 import { LoginBook } from '../../components/login/LoginBook'
 // Тот же вариант знака, что в шапке лендинга — фон здесь тоже светлый.
@@ -87,11 +88,9 @@ export function LoginPage() {
         ) : null}
 
         <div className={styles.below}>
-          {/* TODO: роут восстановления появится в задаче «восстановление по коду».
-              Пока кнопка ничего не делает — <a href="#"> засорял бы историю. */}
-          <button className={styles.forgot} type="button">
+          <Link className={styles.forgot} to={AUTH_PATHS.forgotPassword}>
             {t('login.forgotPassword')}
-          </button>
+          </Link>
           <p className={styles.hint}>{t('login.accessHint')}</p>
         </div>
       </div>

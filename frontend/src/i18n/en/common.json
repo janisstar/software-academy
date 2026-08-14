@@ -270,7 +270,24 @@
     "submitting": "Signing in…",
     "forgotPassword": "Forgot password?",
     "accessHint": "Access granted by your company administrator",
-    "unexpectedError": "Unexpected error"
+    "unexpectedError": "Unexpected error",
+    "forgot": {
+      "eyebrow": "Account recovery",
+      "title": "Sign in with a reset code",
+      "subtitle": "The code is issued by your company administrator. It is valid for 15 minutes.",
+      "usernameLabel": "Username",
+      "usernamePlaceholder": "i.ivanov",
+      "codeLabel": "Reset code",
+      "codeHint": "Type it exactly as you got it — capital and small letters differ.",
+      "newPasswordLabel": "New password",
+      "newPasswordPlaceholder": "At least {{min}} characters",
+      "tooShort": "The new password must be at least {{min}} characters long.",
+      "submit": "Change password",
+      "backToLogin": "Back to sign in",
+      "doneTitle": "Password changed",
+      "doneSubtitle": "Sign in with your new password — the reset code is now used up.",
+      "doneSubmit": "Go to sign in"
+    }
   },
   "master": {
     "heading": "Home",

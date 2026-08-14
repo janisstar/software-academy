@@ -13,6 +13,12 @@ export const LEGAL_PATHS = {
   terms: '/legal/terms',
 } as const
 
+// Восстановление доступа по коду от администратора. Страница публичная: на
+// неё ведёт ссылка «Forgot password?» со страницы входа, сессии там ещё нет.
+export const AUTH_PATHS = {
+  forgotPassword: '/forgot-password',
+} as const
+
 // Шаги первого входа. Ключи совпадают с FirstLoginStep (utils/firstLogin.ts),
 // поэтому путь шага берётся как FIRST_LOGIN_PATHS[step] — без ветвлений.
 export const FIRST_LOGIN_PATHS = {

@@ -68,16 +68,22 @@
 
 **Categories**
 | POST | `/api/category/` | master | создать (parent_id=null → верхний уровень) |
-| PATCH | `/api/category/` | master | обновить |
+| PATCH | `/api/category/` | master | обновить имя; `parent_id` переносит на другой уровень (null → наверх), поле не прислано = не трогать |
 | DELETE | `/api/category/?id=` | master | удалить (только пустую) |
-| GET | `/api/categories/` | сессия | дерево (отфильтровано по роли) |
+| POST | `/api/category/move/` | master | сдвинуть `{id, direction:"up"\|"down"}` в своём уровне |
+| GET | `/api/categories/` | сессия | дерево (отфильтровано по роли) + `lessons_count` / `subcategories_count` в каждом узле |
 
 **Lessons**
 | POST | `/api/lesson/` | master | создать (`roles`/`is_public`) |
 | PATCH | `/api/lesson/` | master | обновить (в т.ч. видимость) |
 | DELETE | `/api/lesson/?id=` | master | удалить |
+| POST | `/api/lesson/move/` | master | сдвинуть `{id, direction:"up"\|"down"}` в своей категории |
 | GET | `/api/lessons/?category_id=` | сессия | каталог карточек (по роли) |
 | GET | `/api/lesson/{lesson_id}` | сессия | полный урок (если виден) |
+
+**Master** (только роль `master`)
+| GET | `/api/master/dashboard/` | master | сводка платформы |
+| GET | `/api/master/lessons/` | master | ВСЕ уроки для таблицы управления (с `is_public`, `roles`, `vimeo_id`, `created_at`) |
 
 **Progress** (личный)
 | POST | `/api/progress/` | сессия | автосохранение `{lesson_id,watch_percent,last_position_seconds}` |

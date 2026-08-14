@@ -5,11 +5,15 @@
 roles — список ключей ролей; is_public=true — «виден всем» (roles можно не указывать).
 """
 
+from datetime import datetime
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict
 
 
 class LessonCreateIn(BaseModel):
-    """POST /api/lesson/ — создать урок (master)."""
+    """POST /api/lesson/ — создать урок (master).
+    order не передаётся: урок встаёт в конец своей категории."""
     title: str
     vimeo_id: str
     category_id: int
@@ -17,7 +21,6 @@ class LessonCreateIn(BaseModel):
     duration_seconds: int = 0
     thumbnail_url: str | None = None
     transcript: str | None = None
-    order: int = 0
     # видимость (финальный шаг публикации)
     is_public: bool = False
     roles: list[str] = []          # ключи ролей: ["user", "fitter", ...]
@@ -25,7 +28,8 @@ class LessonCreateIn(BaseModel):
 
 class LessonUpdateIn(BaseModel):
     """PATCH /api/lesson/ — обновить урок (master). Меняется только переданное.
-    roles=None — не трогать видимость; roles=[] — очистить список ролей."""
+    roles=None — не трогать видимость; roles=[] — очистить список ролей.
+    Порядок здесь не меняется — только через POST /api/lesson/move/."""
     id: int
     title: str | None = None
     vimeo_id: str | None = None
@@ -34,9 +38,14 @@ class LessonUpdateIn(BaseModel):
     duration_seconds: int | None = None
     thumbnail_url: str | None = None
     transcript: str | None = None
-    order: int | None = None
     is_public: bool | None = None
     roles: list[str] | None = None
+
+
+class LessonMoveIn(BaseModel):
+    """POST /api/lesson/move/ — сдвинуть на одну позицию внутри своей категории."""
+    id: int
+    direction: Literal["up", "down"]
 
 
 class LessonCardOut(BaseModel):
@@ -67,6 +76,42 @@ class LessonOut(BaseModel):
     is_public: bool
     order: int
     roles: list[str]               # ключи ролей, которым виден урок
+
+
+class MasterLessonOut(BaseModel):
+    """
+    Строка таблицы управления уроками (GET /api/master/lessons/, только master).
+
+    Отличие от LessonCardOut: здесь видно всё, что нужно для управления
+    (видимость, Vimeo ID, дата создания), но нет длинных текстов — описание и
+    транскрипт master берёт из GET /api/lesson/{id} при открытии формы.
+    """
+    id: int
+    title: str
+    slug: str
+    category_id: int
+    vimeo_id: str
+    duration_seconds: int
+    is_public: bool
+    roles: list[str]               # ключи ролей, как в LessonOut
+    order: int
+    created_at: datetime           # UTC
+
+
+def build_master_lesson_out(lesson) -> MasterLessonOut:
+    """Собрать MasterLessonOut из модели (roles — как список ключей)."""
+    return MasterLessonOut(
+        id=lesson.id,
+        title=lesson.title,
+        slug=lesson.slug,
+        category_id=lesson.category_id,
+        vimeo_id=lesson.vimeo_id,
+        duration_seconds=lesson.duration_seconds,
+        is_public=lesson.is_public,
+        roles=[r.key for r in lesson.roles],
+        order=lesson.order,
+        created_at=lesson.created_at,
+    )
 
 
 def build_lesson_out(lesson) -> LessonOut:

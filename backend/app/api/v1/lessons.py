@@ -2,9 +2,10 @@
 Эндпоинты уроков.
 
 Управление контентом (master):
-- POST   /api/lesson/   создать (с ролями/ is_public)
-- PATCH  /api/lesson/   обновить
-- DELETE /api/lesson/   удалить
+- POST   /api/lesson/       создать (с ролями/ is_public)
+- PATCH  /api/lesson/       обновить
+- DELETE /api/lesson/       удалить
+- POST   /api/lesson/move/  сдвинуть на позицию вверх/вниз
 
 Каталог (любой залогиненный, фильтр по роли):
 - GET /api/lessons/?category_id=  список видимых уроков (краткие карточки)
@@ -20,6 +21,7 @@ from app.api.v1.deps import get_current_user, require_master
 from app.schemas.lesson import (
     LessonCardOut,
     LessonCreateIn,
+    LessonMoveIn,
     LessonOut,
     LessonUpdateIn,
     build_lesson_out,
@@ -74,6 +76,23 @@ def delete_lesson(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Lesson not found")
     lesson_service.delete(db, lesson)
     return {"status": "deleted", "id": id}
+
+
+@router.post("/lesson/move/", tags=["lessons"])
+def move_lesson(
+    body: LessonMoveIn,
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_master),
+) -> dict:
+    """
+    Сдвинуть урок на одну позицию вверх/вниз внутри своей категории.
+    Если он уже крайний — статус "noop" (не ошибка). Access: master.
+    """
+    lesson = lesson_service.get(db, body.id)
+    if lesson is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Lesson not found")
+    result = lesson_service.move(db, lesson, body.direction)
+    return {"status": result, "id": body.id}
 
 
 @router.get("/lessons/", response_model=list[LessonCardOut], tags=["lessons"])

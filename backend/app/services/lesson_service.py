@@ -7,12 +7,13 @@
 """
 
 from sqlalchemy import select
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session, joinedload, selectinload
 
 from app.core.text import unique_slug
 from app.models.lesson import Lesson
 from app.models.role import Role
 from app.models.user import User
+from app.services import ordering
 
 
 class LessonError(Exception):
@@ -38,6 +39,11 @@ def get(db: Session, lesson_id: int) -> Lesson | None:
     ).unique().scalar_one_or_none()
 
 
+def _row_filter(category_id: int):
+    """Ряд соседей урока: уроки той же категории."""
+    return Lesson.category_id == category_id
+
+
 def create(db: Session, data, ) -> Lesson:
     from app.models.category import Category
 
@@ -53,7 +59,8 @@ def create(db: Session, data, ) -> Lesson:
         transcript=data.transcript,
         category_id=data.category_id,
         is_public=data.is_public,
-        order=data.order,
+        # новый урок встаёт в конец своей категории
+        order=ordering.next_order(db, Lesson, _row_filter(data.category_id)),
     )
     lesson.roles = _resolve_roles(db, data.roles)
     db.add(lesson)
@@ -64,12 +71,14 @@ def create(db: Session, data, ) -> Lesson:
 def update(db: Session, lesson: Lesson, data) -> Lesson:
     from app.models.category import Category
 
-    if data.category_id is not None:
+    if data.category_id is not None and data.category_id != lesson.category_id:
         if db.get(Category, data.category_id) is None:
             raise LessonError("Category not found")
         lesson.category_id = data.category_id
+        # при переносе урок встаёт в конец новой категории
+        lesson.order = ordering.next_order(db, Lesson, _row_filter(data.category_id))
     for field in ("title", "vimeo_id", "description", "duration_seconds",
-                  "thumbnail_url", "transcript", "order", "is_public"):
+                  "thumbnail_url", "transcript", "is_public"):
         value = getattr(data, field)
         if value is not None:
             setattr(lesson, field, value)
@@ -78,6 +87,13 @@ def update(db: Session, lesson: Lesson, data) -> Lesson:
         lesson.roles = _resolve_roles(db, data.roles)
     db.commit()
     return get(db, lesson.id)
+
+
+def move(db: Session, lesson: Lesson, direction: str) -> str:
+    """Сдвинуть урок на одну позицию в своей категории. → "moved" | "noop"."""
+    return ordering.move_in_row(
+        db, Lesson, lesson, direction, _row_filter(lesson.category_id)
+    )
 
 
 def delete(db: Session, lesson: Lesson) -> None:
@@ -102,3 +118,23 @@ def list_visible(
         stmt = stmt.where(Lesson.category_id == category_id)
     lessons = db.execute(stmt).unique().scalars().all()
     return [l for l in lessons if is_visible(user, l)]
+
+
+def list_all_for_master(db: Session) -> list[Lesson]:
+    """
+    ВСЕ уроки для таблицы управления master: без фильтра видимости.
+
+    Порядок: сгруппированно по категориям (в порядке самих категорий),
+    внутри категории — по порядку урока.
+    selectinload вместо joinedload: роли догружаются одним отдельным запросом,
+    поэтому join с категорией не размножает строки уроков (нет N+1 и нет .unique()).
+    """
+    from app.models.category import Category
+
+    stmt = (
+        select(Lesson)
+        .options(selectinload(Lesson.roles))
+        .join(Category, Lesson.category_id == Category.id)
+        .order_by(Category.order, Category.id, Lesson.order, Lesson.id)
+    )
+    return list(db.execute(stmt).scalars().all())

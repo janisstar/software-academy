@@ -49,8 +49,8 @@
   width: 7px;
   height: 7px;
   margin-top: -6px;
-  border-right: 1.5px solid var(--color-ink-400);
-  border-bottom: 1.5px solid var(--color-ink-400);
+  border-right: 1.5px solid var(--color-ink-600);
+  border-bottom: 1.5px solid var(--color-ink-600);
   transform: rotate(45deg);
   pointer-events: none;
 }

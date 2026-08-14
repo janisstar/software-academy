@@ -6,7 +6,12 @@
   min-height: 44px;
   padding: 0 var(--space-6);
   border: none;
-  border-radius: var(--radius-pill);
+  /* Интерфейс приложения квадратный (см. правило радиусов в frontend/CLAUDE.md).
+     Маркетинговые места переопределяют радиус через `--button-radius`; именно
+     переменной, а не своим классом поверх, потому что два класса из разных
+     CSS-модулей имеют одинаковую специфичность — кто победит, зависело бы
+     от порядка сборки (та же причина, что у `--chip-bg` в ui/Chip). */
+  border-radius: var(--button-radius, var(--radius-xs));
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   transition: background 0.2s ease;

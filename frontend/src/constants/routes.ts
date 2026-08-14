@@ -20,6 +20,21 @@ export const FIRST_LOGIN_PATHS = {
   consents: '/first-login/consents',
 } as const
 
+// Раздел Content. Форма урока и ссылки на неё из таблицы нужны одновременно
+// роутеру и коду страниц, поэтому пути живут здесь.
+export const CONTENT_PATHS = {
+  categories: '/content/categories',
+  lessons: '/content/lessons',
+  newLesson: '/content/lessons/new',
+  // Шаблон с параметром — только для роутера; ссылку строит lessonPath().
+  lessonPattern: '/content/lessons/:lessonId',
+} as const
+
+/** Ссылка на страницу конкретного урока. */
+export function lessonPath(id: number): string {
+  return `${CONTENT_PATHS.lessons}/${id}`
+}
+
 // Раздел People. Страница пользователя и форма создания нужны одновременно
 // роутеру и ссылкам в списке пользователей, поэтому пути живут здесь.
 export const PEOPLE_PATHS = {

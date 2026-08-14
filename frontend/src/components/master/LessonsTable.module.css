@@ -1,0 +1,149 @@
+/* Своя карточка, а не ui/Card: у Card есть внутренний отступ, а разделители
+   строк и фон заголовков групп должны идти от края до края (см. мокап). */
+.card {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.th {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-ink-100);
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-medium);
+  text-align: left;
+}
+
+/* Колонка со стрелками: только под сами кнопки, заголовка у неё нет. */
+.orderColumn {
+  width: 48px;
+}
+
+.td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-ink-100);
+  vertical-align: middle;
+}
+
+/* У последней строки таблицы нижняя линия лишняя — она бы легла на край карточки. */
+.table tbody tr:last-child .td {
+  border-bottom: none;
+}
+
+/* Заголовок группы: капсовая строка на сером фоне во всю ширину. */
+.groupCell {
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--color-ink-100);
+  background: var(--color-ink-50);
+  color: var(--color-ink-600);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+/* Вся строка ведёт на урок; с клавиатуры туда же ведёт ссылка в названии. */
+.row {
+  cursor: pointer;
+}
+
+.row:hover .td,
+.row:focus-within .td {
+  background: var(--color-ink-50);
+}
+
+.title {
+  color: var(--color-ink);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+}
+
+.row:hover .title {
+  color: var(--color-accent);
+}
+
+/* Vimeo ID — моноширинным: это код, его сверяют посимвольно. */
+.mono {
+  color: var(--color-ink-600);
+  font-family: ui-monospace, monospace;
+}
+
+.dim {
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Ролей у урока может быть несколько — тогда чипы переносятся. */
+.chips {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+/* Урок, которого учащиеся ещё не видят: нейтральные серые токены вместо
+   мятных. Через переменные — так работает раскраска ui/Chip. */
+.hiddenChip {
+  --chip-bg: var(--color-ink-100);
+  --chip-text: var(--color-ink-600);
+}
+
+/* Пара стрелок ▲▼ столбиком. Размеры 24×18px и 11px — размеры самих значков
+   из мокапа, к шкале отступов отношения не имеют. */
+.orderButtons {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.orderButton {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--color-ink-400);
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.orderButton:hover:not(:disabled) {
+  background: var(--color-ink-100);
+  color: var(--color-ink-800);
+}
+
+.orderButton:disabled {
+  color: var(--color-ink-200);
+  cursor: default;
+}
+
+/* Пустой результат фильтра: сама таблица есть, просто в этой категории пусто. */
+.empty {
+  padding: var(--space-8) var(--space-4);
+  color: var(--color-ink-400);
+  text-align: center;
+}
+
+/* На узком экране таблица прокручивается вбок, а не ломает вёрстку страницы. */
+@media (max-width: 900px) {
+  .card {
+    overflow-x: auto;
+  }
+
+  .table {
+    min-width: 640px;
+  }
+}

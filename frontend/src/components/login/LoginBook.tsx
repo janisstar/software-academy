@@ -125,7 +125,11 @@ export function LoginBook({
             autoComplete="current-password"
           />
           <div className={styles.row}>
-            <Button type="submit" disabled={isDisabled}>
+            <Button
+              className={styles.submit}
+              type="submit"
+              disabled={isDisabled}
+            >
               {isSubmitting ? t('login.submitting') : t('login.submit')}
             </Button>
           </div>

@@ -1,14 +1,14 @@
 .chip {
   display: inline-block;
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-pill);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-xs);
   /* Цвета берутся из --chip-*, если их кто-то задал снаружи (RoleChip),
-     иначе остаётся мятная пилюля по умолчанию. */
+     иначе остаётся мятный ярлык по умолчанию. */
   background: var(--chip-bg, var(--color-accent-tint));
   color: var(--chip-text, var(--color-text-on-tint));
   font-size: var(--font-size-caption);
   line-height: var(--line-height-caption);
   font-weight: var(--font-weight-medium);
-  /* Короткий ярлык не переносим: «site manager» должен остаться одной пилюлей. */
+  /* Короткий ярлык не переносим: «site manager» должен остаться одним тегом. */
   white-space: nowrap;
 }

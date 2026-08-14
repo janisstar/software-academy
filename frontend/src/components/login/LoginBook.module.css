@@ -70,6 +70,12 @@
   margin-top: var(--space-4);
 }
 
+/* Кнопка входа остаётся пилюлей: маркетинговый стиль книжки,
+   см. правило радиусов в frontend/CLAUDE.md. */
+.submit {
+  --button-radius: var(--radius-pill);
+}
+
 /* Обложка лежит поверх формы и отворачивается от левого края. */
 .cover {
   position: absolute;

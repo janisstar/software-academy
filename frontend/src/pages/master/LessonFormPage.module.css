@@ -1,0 +1,13 @@
+/* Ссылка «← Back to lessons» над шапкой страницы. */
+.backlink {
+  display: inline-block;
+  margin-bottom: var(--space-4);
+  color: var(--color-ink-600);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  text-decoration: none;
+}
+
+.backlink:hover {
+  color: var(--color-accent);
+}

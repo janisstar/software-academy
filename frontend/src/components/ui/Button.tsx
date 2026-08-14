@@ -13,7 +13,7 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'solid' | 'ghost' | 'outline' | 'danger'
 }
 
-/** Общая кнопка-пилюля. */
+/** Общая кнопка приложения. */
 export function Button({
   fullWidth = false,
   variant = 'solid',

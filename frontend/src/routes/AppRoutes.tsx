@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { FirstLoginLayout } from '../components/login/FirstLoginLayout'
 import { MasterLayout } from '../components/master/MasterLayout'
 import {
+  CONTENT_PATHS,
   FIRST_LOGIN_PATHS,
   LEGAL_PATHS,
   PEOPLE_PATHS,
@@ -15,6 +16,7 @@ import { LoginPage } from '../pages/login/LoginPage'
 import { CategoriesPage } from '../pages/master/CategoriesPage'
 import { CompaniesPage } from '../pages/master/CompaniesPage'
 import { DashboardPage } from '../pages/master/DashboardPage'
+import { LessonFormPage } from '../pages/master/LessonFormPage'
 import { LessonsPage } from '../pages/master/LessonsPage'
 import { NewCompanyPage } from '../pages/master/NewCompanyPage'
 import { NewUserPage } from '../pages/master/NewUserPage'
@@ -79,8 +81,18 @@ export function AppRoutes() {
         }
       >
         <Route path="/home" element={<DashboardPage />} />
-        <Route path="/content/categories" element={<CategoriesPage />} />
-        <Route path="/content/lessons" element={<LessonsPage />} />
+        <Route path={CONTENT_PATHS.categories} element={<CategoriesPage />} />
+        <Route path={CONTENT_PATHS.lessons} element={<LessonsPage />} />
+        {/* Форма создания объявлена раньше страницы урока, чтобы «new»
+            не был принят за id. */}
+        <Route
+          path={CONTENT_PATHS.newLesson}
+          element={<LessonFormPage mode="new" />}
+        />
+        <Route
+          path={CONTENT_PATHS.lessonPattern}
+          element={<LessonFormPage mode="edit" />}
+        />
         <Route path={PEOPLE_PATHS.users} element={<UsersPage />} />
         {/* Форма создания объявлена раньше страницы пользователя, чтобы
             «new» не был принят за логин. */}

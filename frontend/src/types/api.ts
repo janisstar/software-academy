@@ -93,12 +93,20 @@ export type CategoryUpdatePayload = Schemas['CategoryUpdateIn']
 export type CategoryMovePayload = Schemas['CategoryMoveIn']
 
 // Направление сдвига ("up" | "down") — берём из схемы, чтобы не дублировать
-// литералы руками.
+// литералы руками. Одно на всё: у категорий и у уроков сдвиг одинаковый.
 export type MoveDirection = CategoryMovePayload['direction']
 
 export type LessonCard = Schemas['LessonCardOut']
 export type LessonOut = Schemas['LessonOut']
 export type LessonWithStatus = Schemas['LessonWithStatus']
+
+// Строка таблицы управления уроками (GET /api/master/lessons/). От LessonCard
+// отличается тем, что показывает видимость, Vimeo ID и дату создания, но не
+// содержит длинных текстов — их master берёт из GET /api/lesson/{id}.
+export type MasterLesson = Schemas['MasterLessonOut']
+
+// Тело запроса POST /api/lesson/move/ — { id, direction }.
+export type LessonMovePayload = Schemas['LessonMoveIn']
 
 // --- Прогресс и отчёты ------------------------------------------------------
 
@@ -164,6 +172,17 @@ export function activeRole(privileges: Privileges): RoleKey | null {
     }
   }
   return null
+}
+
+/**
+ * Строка с бэкенда → ключ роли, если такая роль у нас известна.
+ *
+ * Нужна там, где роли приходят просто списком строк (например `roles` у урока):
+ * приводить их к `RoleKey` кастом нельзя — незнакомый ключ тогда молча
+ * притворился бы известным.
+ */
+export function toRoleKey(value: string): RoleKey | null {
+  return ROLE_KEYS.includes(value as RoleKey) ? (value as RoleKey) : null
 }
 
 /**

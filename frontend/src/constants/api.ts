@@ -30,6 +30,11 @@ export const API_ENDPOINTS = {
   category: `${API_BASE_PATH}/category/`,
   // Сдвиг категории на одну позицию внутри своего уровня.
   categoryMove: `${API_BASE_PATH}/category/move/`,
+  // Таблица всех уроков для управления: доступна только master. Учебный
+  // список каталога (`/api/lessons/`) — другой эндпоинт и другие поля.
+  masterLessons: `${API_BASE_PATH}/master/lessons/`,
+  // Сдвиг урока на одну позицию внутри своей категории.
+  lessonMove: `${API_BASE_PATH}/lesson/move/`,
   roles: `${API_BASE_PATH}/roles/`,
   dashboard: `${API_BASE_PATH}/dashboard/`,
   // Сводка платформы: доступна только master, остальным бэкенд отвечает 403.

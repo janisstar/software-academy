@@ -93,6 +93,10 @@ Placement rules:
 - **Components must use tokens via `var(--…)` and CSS Modules** (`*.module.css`).
   Never hardcode hex colors, px spacing, or font sizes in components — reference
   tokens.
+- **Radii — the app interface has a square character.** Buttons and chips use
+  `--radius-xs`; text fields and selects `--radius-sm`; cards `--radius-lg`.
+  `--radius-pill` is allowed ONLY in the marketing areas (landing, login) and on
+  the Switch track. New app components never use pill.
 - Key tokens (must stay consistent): accent teal `--accent: #12A594`
   (hover `#0E8576`), graphite neutrals, status `completed #6AA632`,
   `danger #D14B4B`.

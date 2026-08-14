@@ -108,6 +108,14 @@ export type MasterLesson = Schemas['MasterLessonOut']
 // Тело запроса POST /api/lesson/move/ — { id, direction }.
 export type LessonMovePayload = Schemas['LessonMoveIn']
 
+// Тело запроса POST /api/lesson/ — создать урок.
+// `order` не передаётся: урок встаёт в конец своей категории.
+export type LessonCreatePayload = Schemas['LessonCreateIn']
+
+// Тело запроса PATCH /api/lesson/ — { id } плюс поля, которые меняем.
+// Отдельного псевдонима `Lesson` нет: полный урок — это уже `LessonOut` выше.
+export type LessonUpdatePayload = Schemas['LessonUpdateIn']
+
 // --- Прогресс и отчёты ------------------------------------------------------
 
 export type ProgressOut = Schemas['ProgressOut']

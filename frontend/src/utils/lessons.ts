@@ -99,3 +99,58 @@ export function formatDuration(totalSeconds: number): string {
 
   return `${minutes}:${String(seconds).padStart(2, '0')}`
 }
+
+/**
+ * Длительность урока в форме — два отдельных поля.
+ *
+ * Бэкенд хранит одно число (секунды), а вводить его целиком неудобно, поэтому
+ * форма разбирает его на минуты и секунды и собирает обратно. Это перевод
+ * представления, а не бизнес-логика: никаких правил тут нет.
+ */
+export interface DurationParts {
+  minutes: string
+  seconds: string
+}
+
+/** Только цифры. Пустая строка тоже подходит — считаем её нулём. */
+const DIGITS_ONLY = /^\d*$/
+
+/** Секунды с бэкенда → пара полей формы: «5» и «00». */
+export function splitDuration(totalSeconds: number): DurationParts {
+  const safeSeconds = Math.max(0, Math.floor(totalSeconds))
+
+  return {
+    minutes: String(Math.floor(safeSeconds / 60)),
+    seconds: String(safeSeconds % 60).padStart(2, '0'),
+  }
+}
+
+/** Пара полей формы → секунды для бэкенда. Пустое поле = 0. */
+export function durationToSeconds(parts: DurationParts): number {
+  const minutes = Number(parts.minutes.trim() || 0)
+  const seconds = Number(parts.seconds.trim() || 0)
+
+  return minutes * 60 + seconds
+}
+
+/** Целые числа ≥ 0, секунд не больше 59 — иначе это опечатка. */
+export function isDurationValid(parts: DurationParts): boolean {
+  const minutes = parts.minutes.trim()
+  const seconds = parts.seconds.trim()
+
+  if (!DIGITS_ONLY.test(minutes) || !DIGITS_ONLY.test(seconds)) {
+    return false
+  }
+
+  return Number(seconds || 0) <= 59
+}
+
+/**
+ * Похоже ли значение на Vimeo ID: непустая строка из цифр.
+ *
+ * Тем же признаком проверяется поле формы и решается, показывать ли плеер:
+ * с мусором вместо id iframe просто отдал бы ошибку.
+ */
+export function isVimeoIdValid(value: string): boolean {
+  return /^\d+$/.test(value.trim())
+}

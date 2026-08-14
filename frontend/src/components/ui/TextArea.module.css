@@ -1,0 +1,50 @@
+.field {
+  display: block;
+}
+
+/* Ярлык — как у TextField на белой карточке и у Select: капсовый
+   надзаголовок, чтобы все поля формы выглядели одинаково. */
+.label {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--color-ink-600);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+/* Тянуть можно только по высоте: горизонтально поле шире карточки
+   растянуть нельзя, вёрстка бы поехала. */
+.input {
+  display: block;
+  width: 100%;
+  min-height: 88px;
+  padding: var(--space-3);
+  border: 1px solid var(--color-ink-200);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: inherit;
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  resize: vertical;
+}
+
+.input::placeholder {
+  color: var(--color-ink-400);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 25%, transparent);
+}
+
+.hint {
+  margin-top: var(--space-1);
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}

@@ -1,0 +1,91 @@
+/* Карточка формы просторнее обычной: полей много, и в тесноте они сливаются. */
+.card {
+  padding: var(--space-6);
+}
+
+.card + .card {
+  margin-top: var(--space-6);
+}
+
+.cardTitle {
+  margin-bottom: var(--space-4);
+  color: var(--color-ink);
+}
+
+/* Поля столбиком с одинаковым воздухом между ними. */
+.fields {
+  display: grid;
+  gap: var(--space-5);
+}
+
+/* Ярлык для группы полей (мин / сек) — тот же вид, что у ярлыков TextField
+   и Select, но это не <label>: он подписывает пару полей, а не одно. */
+.groupLabel {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--color-ink-600);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.duration {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* 90px — ширина под несколько цифр: растягивать поле на всю карточку ради
+   двузначного числа незачем. Остальное — как у input в TextField. */
+.durationInput {
+  width: 90px;
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-ink-200);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: inherit;
+  font-size: var(--font-size-body);
+}
+
+.durationInput:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 25%, transparent);
+}
+
+.durationUnit {
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Пояснение к неверно заполненному полю: под самим полем и красным. */
+.error {
+  margin-top: var(--space-1);
+  color: var(--color-status-danger);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Рамка вокруг группы галок: видно, что Public и роли — разные решения. */
+.visibilityBox {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-ink-100);
+  border-radius: var(--radius-md);
+}
+
+.roleBox {
+  margin-top: var(--space-3);
+}
+
+.visibilityNote {
+  margin-top: var(--space-2);
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}

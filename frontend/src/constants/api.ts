@@ -33,6 +33,9 @@ export const API_ENDPOINTS = {
   // Таблица всех уроков для управления: доступна только master. Учебный
   // список каталога (`/api/lessons/`) — другой эндпоинт и другие поля.
   masterLessons: `${API_BASE_PATH}/master/lessons/`,
+  // Один урок: POST — создать, PATCH — изменить, DELETE — удалить (`?id=`).
+  // Чтение одного урока — этот же путь плюс id: `${lesson}${id}`.
+  lesson: `${API_BASE_PATH}/lesson/`,
   // Сдвиг урока на одну позицию внутри своей категории.
   lessonMove: `${API_BASE_PATH}/lesson/move/`,
   roles: `${API_BASE_PATH}/roles/`,

@@ -20,12 +20,23 @@ interface Directories {
  *
  * `withCompanies` есть потому, что `GET /api/companies/` доступен только
  * роли master: остальным запрос не шлём, чтобы не ловить 403.
+ *
+ * `enabled` выключает справочники целиком — на страницах, куда роль вообще
+ * не пускают: там вместо содержимого стоит заглушка, и запросы ей не нужны.
+ * Тот же приём, что у `useCategoriesTree` и `useMasterLessons`.
  */
-export function useDirectories(withCompanies: boolean): Directories {
+export function useDirectories(
+  withCompanies: boolean,
+  enabled = true,
+): Directories {
   const [roles, setRoles] = useState<RoleOut[]>([])
   const [companies, setCompanies] = useState<CompanyOut[]>([])
 
   useEffect(() => {
+    if (!enabled) {
+      return
+    }
+
     let isActive = true
 
     void (async () => {
@@ -43,7 +54,7 @@ export function useDirectories(withCompanies: boolean): Directories {
     return () => {
       isActive = false
     }
-  }, [withCompanies])
+  }, [withCompanies, enabled])
 
   return { roles, companies }
 }

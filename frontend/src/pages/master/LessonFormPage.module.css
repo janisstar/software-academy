@@ -11,3 +11,68 @@
 .backlink:hover {
   color: var(--color-accent);
 }
+
+/* Подпись под заголовком: категория и длительность открытого урока. */
+.caption {
+  margin-bottom: var(--space-4);
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Форма слева, предпросмотр справа. 380px — ширина карточки плеера из мокапа;
+   minmax(0, 1fr) не даёт левой колонке распирать сетку длинным текстом. */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+/* На узком экране предпросмотр уходит под форму: он идёт следом в разметке. */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: var(--space-6);
+}
+
+/* Ошибка запроса: форма при этом остаётся заполненной. */
+.error {
+  margin-top: var(--space-3);
+  color: var(--color-status-danger);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Карточка ошибки загрузки: текст и кнопка повтора столбиком. */
+.loadError {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+}
+
+/* Необратимые действия. Красная рамка вместо обычной — блок должен читаться
+   как предупреждение, а не как ещё один раздел формы. */
+.danger {
+  margin-top: var(--space-6);
+  padding: var(--space-6);
+  border: 1px solid
+    color-mix(in srgb, var(--color-status-danger) 30%, transparent);
+}
+
+.dangerTitle {
+  margin-bottom: var(--space-3);
+  color: var(--color-status-danger);
+}
+
+.dangerText {
+  margin-bottom: var(--space-4);
+  color: var(--color-ink-600);
+}

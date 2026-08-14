@@ -1,7 +1,10 @@
 import { apiRequest } from './client'
 import { API_ENDPOINTS } from '../constants/api'
 import type {
+  LessonCreatePayload,
   LessonMovePayload,
+  LessonOut,
+  LessonUpdatePayload,
   MasterLesson,
   MoveDirection,
 } from '../types/api'
@@ -16,6 +19,55 @@ import type {
 export async function fetchMasterLessons(): Promise<MasterLesson[]> {
   return apiRequest<MasterLesson[]>(API_ENDPOINTS.masterLessons, {
     method: 'GET',
+  })
+}
+
+/**
+ * Один урок целиком — то, что открывает форма редактирования.
+ *
+ * Здесь есть описание, транскрипт и видимость, которых нет в строке таблицы:
+ * длинные тексты грузятся только когда урок действительно открыли.
+ */
+export async function fetchLesson(id: number): Promise<LessonOut> {
+  return apiRequest<LessonOut>(`${API_ENDPOINTS.lesson}${id}`, {
+    method: 'GET',
+  })
+}
+
+/** Создать урок. Он встаёт в конец своей категории — порядок считает бэкенд. */
+export async function createLesson(
+  payload: LessonCreatePayload,
+): Promise<LessonOut> {
+  return apiRequest<LessonOut>(API_ENDPOINTS.lesson, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
+/**
+ * Обновить урок.
+ *
+ * Форма присылает ПОЛНОЕ тело, а не только изменившиеся поля: у бэкенда
+ * «поля нет» значит «не менять», поэтому очистить описание или транскрипт
+ * иначе было бы нечем. Очищенное поле уезжает пустой строкой.
+ */
+export async function updateLesson(
+  payload: LessonUpdatePayload,
+): Promise<LessonOut> {
+  return apiRequest<LessonOut>(API_ENDPOINTS.lesson, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  })
+}
+
+/**
+ * Удалить урок вместе с прогрессом учащихся по нему.
+ *
+ * id — в строке запроса, как у остальных DELETE в этом API.
+ */
+export async function deleteLesson(id: number): Promise<void> {
+  await apiRequest<unknown>(`${API_ENDPOINTS.lesson}?id=${id}`, {
+    method: 'DELETE',
   })
 }
 

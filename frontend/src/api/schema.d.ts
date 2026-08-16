@@ -481,7 +481,12 @@ export interface paths {
         };
         /**
          * List Lessons
-         * @description Каталог видимых пользователю уроков (краткие карточки). Access: залогиненный.
+         * @description Каталог видимых пользователю уроков со статусом ЕГО прогресса.
+         *     Access: залогиненный.
+         *
+         *     Прогресс отдаётся вместе с карточками намеренно: считать статус на клиенте
+         *     значило бы повторять там правила бэкенда (docs/06 — логика на сервере).
+         *     Прогресс строго личный: он всегда берётся для текущей сессии.
          */
         get: operations["list_lessons_api_lessons__get"];
         put?: never;
@@ -906,28 +911,6 @@ export interface components {
             detail?: components["schemas"]["ValidationError"][];
         };
         /**
-         * LessonCardOut
-         * @description Краткая карточка урока для каталога (без транскрипта).
-         */
-        LessonCardOut: {
-            /** Id */
-            id: number;
-            /** Title */
-            title: string;
-            /** Slug */
-            slug: string;
-            /** Description */
-            description: string | null;
-            /** Duration Seconds */
-            duration_seconds: number;
-            /** Thumbnail Url */
-            thumbnail_url: string | null;
-            /** Category Id */
-            category_id: number;
-            /** Order */
-            order: number;
-        };
-        /**
          * LessonCreateIn
          * @description POST /api/lesson/ — создать урок (master).
          *     order не передаётся: урок встаёт в конец своей категории.
@@ -1034,7 +1017,12 @@ export interface components {
         };
         /**
          * LessonWithStatus
-         * @description Карточка урока + статус прохождения текущим пользователем.
+         * @description Карточка урока + статус прохождения ТЕКУЩИМ пользователем.
+         *
+         *     Живёт рядом с LessonCardOut, а не в схемах дашборда: это по-прежнему
+         *     карточка урока, просто с личным статусом. Её отдают каталог
+         *     (GET /api/lessons/), Dashboard и Reports — ни одному из них не приходится
+         *     импортировать схему чужого раздела ради карточки.
          */
         LessonWithStatus: {
             /** Id */
@@ -2348,7 +2336,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["LessonCardOut"][];
+                    "application/json": components["schemas"]["LessonWithStatus"][];
                 };
             };
             /** @description Validation Error */

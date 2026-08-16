@@ -8,7 +8,7 @@
 - POST   /api/lesson/move/  сдвинуть на позицию вверх/вниз
 
 Каталог (любой залогиненный, фильтр по роли):
-- GET /api/lessons/?category_id=  список видимых уроков (краткие карточки)
+- GET /api/lessons/?category_id=  список видимых уроков (карточки со статусом прогресса)
 - GET /api/lesson/{lesson_id}     полный урок (если он виден пользователю)
 """
 
@@ -19,11 +19,11 @@ from app.core.database import get_db
 from app.models.user import User
 from app.api.v1.deps import get_current_user, require_master
 from app.schemas.lesson import (
-    LessonCardOut,
     LessonCreateIn,
     LessonMoveIn,
     LessonOut,
     LessonUpdateIn,
+    LessonWithStatus,
     build_lesson_out,
 )
 from app.services import lesson_service
@@ -95,15 +95,24 @@ def move_lesson(
     return {"status": result, "id": body.id}
 
 
-@router.get("/lessons/", response_model=list[LessonCardOut], tags=["lessons"])
+@router.get("/lessons/", response_model=list[LessonWithStatus], tags=["lessons"])
 def list_lessons(
     db: Session = Depends(get_db),
     actor: User = Depends(get_current_user),
     category_id: int | None = Query(default=None, description="фильтр по категории"),
-) -> list[LessonCardOut]:
-    """Каталог видимых пользователю уроков (краткие карточки). Access: залогиненный."""
-    lessons = lesson_service.list_visible(db, actor, category_id=category_id)
-    return [LessonCardOut.model_validate(l) for l in lessons]
+) -> list[LessonWithStatus]:
+    """
+    Каталог видимых пользователю уроков со статусом ЕГО прогресса.
+    Access: залогиненный.
+
+    Прогресс отдаётся вместе с карточками намеренно: считать статус на клиенте
+    значило бы повторять там правила бэкенда (docs/06 — логика на сервере).
+    Прогресс строго личный: он всегда берётся для текущей сессии.
+    """
+    lessons, _ = lesson_service.list_visible_with_status(
+        db, actor, category_id=category_id
+    )
+    return lessons
 
 
 @router.get("/lesson/{lesson_id}", response_model=LessonOut, tags=["lessons"])

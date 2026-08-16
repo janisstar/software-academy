@@ -5,9 +5,40 @@ import type {
   LessonMovePayload,
   LessonOut,
   LessonUpdatePayload,
+  LessonWithStatus,
   MasterLesson,
   MoveDirection,
 } from '../types/api'
+
+/**
+ * Учебный каталог: уроки, видимые ТЕКУЩЕМУ пользователю, вместе со статусом
+ * его прогресса (`status`, `watch_percent`). Статус считает бэкенд — на клиенте
+ * его собирать нечем и незачем.
+ *
+ * Не путать с `fetchMasterLessons` ниже: та отдаёт ВСЕ уроки платформы для
+ * таблицы управления master, без статусов и с другими полями.
+ *
+ * `categoryId` фильтрует только по самой категории: уроки её подкатегорий
+ * бэкенд НЕ включает. Порядок — тот, в котором уроки пришли; клиент их
+ * не пересортировывает.
+ */
+export async function listLessons(
+  categoryId?: number,
+): Promise<LessonWithStatus[]> {
+  // URLSearchParams сам экранирует значение — строку руками не склеиваем.
+  const query = new URLSearchParams()
+
+  if (categoryId !== undefined) {
+    query.set('category_id', String(categoryId))
+  }
+
+  const search = query.toString()
+
+  return apiRequest<LessonWithStatus[]>(
+    search ? `${API_ENDPOINTS.lessons}?${search}` : API_ENDPOINTS.lessons,
+    { method: 'GET' },
+  )
+}
 
 /**
  * Все уроки платформы для таблицы управления (только master).

@@ -4,7 +4,9 @@
 
 from pydantic import BaseModel
 
-from app.schemas.lesson import LessonCardOut
+# Карточка урока со статусом переехала к остальным схемам урока: её отдаёт
+# и каталог (GET /api/lessons/), а не только эти два эндпоинта.
+from app.schemas.lesson import LessonWithStatus
 
 
 class ProgressSummary(BaseModel):
@@ -14,12 +16,6 @@ class ProgressSummary(BaseModel):
     in_progress: int
     not_started: int
     completion_percent: int     # 0..100 = completed / total_visible
-
-
-class LessonWithStatus(LessonCardOut):
-    """Карточка урока + статус прохождения текущим пользователем."""
-    status: str
-    watch_percent: int
 
 
 class ReportsOut(BaseModel):

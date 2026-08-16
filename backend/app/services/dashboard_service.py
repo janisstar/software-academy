@@ -8,8 +8,9 @@
 
 from app.models.progress import COMPLETED, IN_PROGRESS
 from app.models.user import User
-from app.schemas.dashboard import LessonWithStatus, ProgressSummary
-from app.services import lesson_service, progress_service
+from app.schemas.dashboard import ProgressSummary
+from app.schemas.lesson import LessonWithStatus
+from app.services import lesson_service
 from sqlalchemy.orm import Session
 
 # сколько элементов класть в ряды Dashboard
@@ -17,27 +18,15 @@ ROW_LIMIT = 10
 
 
 def _build(db: Session, user: User):
-    """Собрать видимые уроки + статусы по ним. Возвращает (lessons_with_status, progress_by_lesson)."""
-    lessons = lesson_service.list_visible(db, user)
-    progress = {p.lesson_id: p for p in progress_service.list_for_user(db, user.id)}
+    """
+    Собрать видимые уроки + статусы по ним. Возвращает (lessons_with_status,
+    progress_by_lesson).
 
-    items: list[LessonWithStatus] = []
-    for lesson in lessons:
-        p = progress.get(lesson.id)
-        item = LessonWithStatus(
-            id=lesson.id,
-            title=lesson.title,
-            slug=lesson.slug,
-            description=lesson.description,
-            duration_seconds=lesson.duration_seconds,
-            thumbnail_url=lesson.thumbnail_url,
-            category_id=lesson.category_id,
-            order=lesson.order,
-            status=p.status if p else "not_started",
-            watch_percent=p.watch_percent if p else 0,
-        )
-        items.append(item)
-    return items, progress
+    Сама склейка живёт в lesson_service: ровно её отдаёт каталог
+    GET /api/lessons/, и правило «нет записи прогресса → not_started» должно
+    быть записано в одном месте.
+    """
+    return lesson_service.list_visible_with_status(db, user)
 
 
 def _summary(items: list[LessonWithStatus]) -> ProgressSummary:

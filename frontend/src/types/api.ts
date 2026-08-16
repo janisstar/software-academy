@@ -100,13 +100,15 @@ export type CategoryMovePayload = Schemas['CategoryMoveIn']
 // литералы руками. Одно на всё: у категорий и у уроков сдвиг одинаковый.
 export type MoveDirection = CategoryMovePayload['direction']
 
-export type LessonCard = Schemas['LessonCardOut']
 export type LessonOut = Schemas['LessonOut']
+
+// Карточка урока со статусом МОЕГО прогресса (`status`, `watch_percent`).
+// Её отдают учебный каталог GET /api/lessons/, Dashboard и Reports.
 export type LessonWithStatus = Schemas['LessonWithStatus']
 
-// Строка таблицы управления уроками (GET /api/master/lessons/). От LessonCard
-// отличается тем, что показывает видимость, Vimeo ID и дату создания, но не
-// содержит длинных текстов — их master берёт из GET /api/lesson/{id}.
+// Строка таблицы управления уроками (GET /api/master/lessons/). От карточки
+// каталога отличается тем, что показывает видимость, Vimeo ID и дату создания,
+// но не содержит длинных текстов — их master берёт из GET /api/lesson/{id}.
 export type MasterLesson = Schemas['MasterLessonOut']
 
 // Тело запроса POST /api/lesson/move/ — { id, direction }.

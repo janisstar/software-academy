@@ -30,6 +30,9 @@ export const API_ENDPOINTS = {
   category: `${API_BASE_PATH}/category/`,
   // Сдвиг категории на одну позицию внутри своего уровня.
   categoryMove: `${API_BASE_PATH}/category/move/`,
+  // Учебный каталог: уроки, видимые текущей роли, со статусом ЕГО прогресса.
+  // Фильтр `?category_id=` берёт только саму категорию, без подкатегорий.
+  lessons: `${API_BASE_PATH}/lessons/`,
   // Таблица всех уроков для управления: доступна только master. Учебный
   // список каталога (`/api/lessons/`) — другой эндпоинт и другие поля.
   masterLessons: `${API_BASE_PATH}/master/lessons/`,

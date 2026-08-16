@@ -11,9 +11,11 @@ from sqlalchemy.orm import Session, joinedload, selectinload
 
 from app.core.text import unique_slug
 from app.models.lesson import Lesson
+from app.models.progress import NOT_STARTED, LessonProgress
 from app.models.role import Role
 from app.models.user import User
-from app.services import ordering
+from app.schemas.lesson import LessonWithStatus
+from app.services import ordering, progress_service
 
 
 class LessonError(Exception):
@@ -118,6 +120,45 @@ def list_visible(
         stmt = stmt.where(Lesson.category_id == category_id)
     lessons = db.execute(stmt).unique().scalars().all()
     return [l for l in lessons if is_visible(user, l)]
+
+
+def _with_status(lesson: Lesson, progress: LessonProgress | None) -> LessonWithStatus:
+    """
+    Урок + мой статус по нему.
+
+    ЕДИНСТВЕННОЕ место, где записано правило «записи прогресса нет — значит
+    урок ещё не начат». Им пользуются и каталог, и Dashboard, и Reports.
+    """
+    return LessonWithStatus(
+        id=lesson.id,
+        title=lesson.title,
+        slug=lesson.slug,
+        description=lesson.description,
+        duration_seconds=lesson.duration_seconds,
+        thumbnail_url=lesson.thumbnail_url,
+        category_id=lesson.category_id,
+        order=lesson.order,
+        status=progress.status if progress else NOT_STARTED,
+        watch_percent=progress.watch_percent if progress else 0,
+    )
+
+
+def list_visible_with_status(
+    db: Session, user: User, category_id: int | None = None
+) -> tuple[list[LessonWithStatus], dict[int, LessonProgress]]:
+    """
+    Видимые пользователю уроки со статусом его прогресса — то же, что
+    list_visible, плюс склейка с прогрессом. Порядок и правило видимости
+    не меняются.
+
+    Вторым значением возвращается прогресс по id урока: Dashboard строит по
+    нему ряд «недавно смотренные» и признак новичка, и запрашивать его второй
+    раз незачем. Каталогу он не нужен — там его игнорируют.
+    """
+    lessons = list_visible(db, user, category_id=category_id)
+    progress = {p.lesson_id: p for p in progress_service.list_for_user(db, user.id)}
+    items = [_with_status(lesson, progress.get(lesson.id)) for lesson in lessons]
+    return items, progress
 
 
 def list_all_for_master(db: Session) -> list[Lesson]:

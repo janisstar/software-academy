@@ -62,6 +62,19 @@ class LessonCardOut(BaseModel):
     order: int
 
 
+class LessonWithStatus(LessonCardOut):
+    """
+    Карточка урока + статус прохождения ТЕКУЩИМ пользователем.
+
+    Живёт рядом с LessonCardOut, а не в схемах дашборда: это по-прежнему
+    карточка урока, просто с личным статусом. Её отдают каталог
+    (GET /api/lessons/), Dashboard и Reports — ни одному из них не приходится
+    импортировать схему чужого раздела ради карточки.
+    """
+    status: str
+    watch_percent: int
+
+
 class LessonOut(BaseModel):
     """Полный урок (для плеера и для master): с транскриптом и видимостью."""
     id: int

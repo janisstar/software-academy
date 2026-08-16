@@ -38,3 +38,19 @@
 .locked::before {
   background: var(--color-status-danger);
 }
+
+/* --- Прогресс по уроку ---------------------------------------------------- */
+
+.completed::before {
+  background: var(--color-status-completed);
+}
+
+.inProgress::before {
+  background: var(--color-status-in-progress);
+}
+
+/* Серая точка: урок ещё не открывали. Цвет тут не единственный сигнал —
+   рядом стоит подпись «Not started». */
+.notStarted::before {
+  background: var(--color-status-not-started);
+}

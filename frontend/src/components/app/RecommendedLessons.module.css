@@ -1,0 +1,61 @@
+/* Ссылка «All lessons →» рядом с заголовком секции. */
+.all {
+  color: var(--color-accent);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.all:hover {
+  color: var(--color-accent-hover);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+/* Карточка целиком — ссылка, поэтому цвет текста задаём явно: иначе она
+   унаследовала бы синий цвет ссылок браузера. overflow: hidden обрезает
+   градиент превью по скруглению карточки. */
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  color: var(--color-ink);
+  text-decoration: none;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-soft);
+}
+
+.card:focus-visible {
+  outline: 3px solid var(--teal-300);
+  outline-offset: 2px;
+}
+
+.body {
+  padding: var(--space-4);
+}
+
+.meta {
+  margin-top: var(--space-2);
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+@media (max-width: 600px) {
+  /* Экран 4 мокапа: сетка в одну колонку. */
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

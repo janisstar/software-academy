@@ -87,6 +87,29 @@ function SettingsIcon(props: IconProps) {
   )
 }
 
+/**
+ * Треугольник «play» — единственная иконка не из навигации: ею помечены
+ * превью уроков на дашборде.
+ *
+ * Рисуется заливкой (`fill="currentColor"`), а не обводкой, поэтому общие
+ * атрибуты `iconProps` ей не подходят — цвет наследуется от кружка-подложки.
+ */
+export function PlayGlyph({ size = 16, className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M9 6.5l9 5.5-9 5.5z" />
+    </svg>
+  )
+}
+
 /** Таблица «имя иконки из конфига → компонент». Наружу не выходит. */
 const APP_NAV_ICONS: Record<
   AppNavIcon,

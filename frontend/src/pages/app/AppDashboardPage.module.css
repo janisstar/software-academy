@@ -1,0 +1,51 @@
+.greeting {
+  margin-bottom: var(--space-6);
+}
+
+/* Каптион под приветствием — та же роль, что у приписки в шапке карточки. */
+.caption {
+  margin-top: var(--space-1);
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Карточка ошибки: текст и кнопка повтора столбиком, кнопка по левому краю
+   (как на дашборде master). */
+.error {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+}
+
+/* Блоки дашборда столбиком. Между смысловыми частями воздуха больше, чем
+   внутри них, — поэтому два уровня сетки. */
+.blocks {
+  display: grid;
+  gap: var(--space-10);
+}
+
+.summary {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Три счётчика в ряд — и на мобильном тоже (экран 4 мокапа). */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 600px) {
+  .blocks {
+    gap: var(--space-8);
+  }
+
+  /* На узком экране карточки поджимаются: три в ряд с обычным отступом
+     не помещаются. Отступ карточки задаётся переменной — см. ui/Card. */
+  .stats {
+    gap: var(--space-2);
+    --card-padding: var(--space-3);
+  }
+}

@@ -2,6 +2,10 @@
   background: var(--color-surface);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
-  padding: var(--space-5);
+  /* Отступ поджимается через переменную, а не классом снаружи: два класса из
+     разных CSS-модулей имеют одинаковую специфичность, и кто победит,
+     зависело бы от порядка сборки (та же причина, что у `--button-radius`).
+     Нужно, например, ряду счётчиков на узком экране. */
+  padding: var(--card-padding, var(--space-5));
   color: var(--color-ink-600);
 }

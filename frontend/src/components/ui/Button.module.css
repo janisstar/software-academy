@@ -14,6 +14,9 @@
   border-radius: var(--button-radius, var(--radius-xs));
   font-weight: var(--font-weight-medium);
   cursor: pointer;
+  /* Для <button> ничего не меняет, но эти же классы носит `ui/LinkButton`:
+     у ссылки подчёркивание убрать надо. */
+  text-decoration: none;
   transition: background 0.2s ease;
 }
 

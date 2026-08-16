@@ -90,6 +90,31 @@ export function groupLessonsByCategory(
   return groups
 }
 
+/**
+ * Статус урока в личном прогрессе. Значения задаёт бэкенд
+ * (backend/app/models/progress.py), в схеме OpenAPI это просто `string`.
+ */
+export type LessonStatus = 'not_started' | 'in_progress' | 'completed'
+
+const LESSON_STATUSES: LessonStatus[] = [
+  'not_started',
+  'in_progress',
+  'completed',
+]
+
+/**
+ * Строка статуса с бэкенда → известный нам статус.
+ *
+ * Приводить кастом нельзя: незнакомое значение тогда молча притворилось бы
+ * известным (тот же приём, что у `toRoleKey`). Неизвестное считаем
+ * «не начат» — это самое безобидное предположение о прогрессе.
+ */
+export function toLessonStatus(value: string): LessonStatus {
+  return LESSON_STATUSES.includes(value as LessonStatus)
+    ? (value as LessonStatus)
+    : 'not_started'
+}
+
 /** Секунды с бэкенда → «4:20». Секунды всегда двумя цифрами. */
 export function formatDuration(totalSeconds: number): string {
   // Отрицательного бэкенд не пришлёт, но подпись «-1:-5» выглядела бы поломкой.

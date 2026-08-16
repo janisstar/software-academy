@@ -1,0 +1,8 @@
+/* baseline — чтобы мелкая ссылка справа стояла на одной линии с заголовком. */
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}

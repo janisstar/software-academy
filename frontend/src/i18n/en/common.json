@@ -17,6 +17,39 @@
       "lessons": "Lessons",
       "reports": "Reports",
       "settings": "Settings"
+    },
+    "dashboard": {
+      "greeting": "Good day, {{name}}",
+      "caption": "Your learning overview",
+      "percent": "{{value}}%",
+      "error": "Could not load your dashboard.",
+      "retry": "Retry",
+      "continue": {
+        "eyebrow": "Continue learning",
+        "action": "Continue lesson"
+      },
+      "stats": {
+        "completion": "Overall completion",
+        "completed": "Lessons completed",
+        "inProgress": "In progress"
+      },
+      "recommended": {
+        "title": "Recommended for you",
+        "all": "All lessons"
+      },
+      "recent": {
+        "title": "Recently watched"
+      },
+      "status": {
+        "completed": "Completed",
+        "inProgress": "In progress",
+        "notStarted": "Not started"
+      },
+      "empty": {
+        "title": "Start your first lesson",
+        "text": "Short 3–5 minute guides picked for your role. Find the answer and get back to work.",
+        "action": "Browse lessons"
+      }
     }
   },
   "brand": {

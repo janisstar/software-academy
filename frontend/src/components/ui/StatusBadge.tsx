@@ -1,7 +1,14 @@
 import styles from './StatusBadge.module.css'
 
-/** Варианты состояния: «работает», «ещё не начал», «доступ закрыт». */
-export type StatusVariant = 'active' | 'pending' | 'locked'
+/**
+ * Варианты состояния.
+ *
+ * Аккаунт человека: «работает», «первый вход не пройден», «доступ закрыт».
+ * Прогресс по уроку: «пройден», «в работе», «не начат» — те же точка плюс
+ * подпись, только цвета берутся из токенов `--color-status-*`.
+ */
+export type StatusVariant =
+  'active' | 'pending' | 'locked' | 'completed' | 'inProgress' | 'notStarted'
 
 type StatusBadgeProps = {
   variant: StatusVariant

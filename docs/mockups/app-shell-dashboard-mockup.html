@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup — App shell + Learner dashboard</title>
+<style>
+/* ============================================================
+   ТОКЕНЫ — копия styles/ (colors, typography, spacing).
+   В мокапе ни одного hex вне этого блока.
+   ============================================================ */
+:root {
+  --color-surface: #ffffff;
+  --color-on-accent: #ffffff;
+  --color-ink: #1c2024;
+  --color-ink-800: #2c313a;
+  --color-ink-600: #4a515b;
+  --color-ink-400: #7c838d;
+  --color-ink-200: #c9cdd3;
+  --color-ink-100: #e9ebee;
+  --color-ink-50: #f6f7f8;
+  --color-accent: #12a594;
+  --color-accent-hover: #0e8576;
+  --color-accent-tint: #dcf2ef;
+  --color-text-on-tint: #0b6b5f;
+
+  --teal-50: #e1f5ee;
+  --teal-200: #9fe1cb;
+  --teal-300: #5dcaa5;
+  --teal-500: #12a594;
+  --teal-600: #0f8a76;
+  --teal-700: #0f6e56;
+  --teal-800: #085041;
+  --teal-900: #04342c;
+
+  --color-status-not-started: #7c838d;
+  --color-status-in-progress: #12a594;
+  --color-status-completed: #6aa632;
+  --color-status-danger: #d14b4b;
+
+  --font-family-sans: 'Inter', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-size-h1: 22px;
+  --font-size-h2: 18px;
+  --font-size-h3: 16px;
+  --font-size-body: 16px;
+  --font-size-caption: 13px;
+  --line-height-h1: 28px;
+  --line-height-h2: 24px;
+  --line-height-h3: 22px;
+  --line-height-body: 24px;
+  --line-height-caption: 18px;
+  --letter-spacing-wide: 0.08em;
+
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
+  --space-12: 48px; --space-16: 64px;
+  --radius-xs: 6px; --radius-sm: 8px; --radius-md: 12px;
+  --radius-lg: 14px; --radius-xl: 16px;
+  --layout-max-width: 1100px;
+  --shadow-soft: 0 8px 24px rgba(28, 32, 36, 0.08);
+  --shadow-card: 0 4px 16px rgba(28, 32, 36, 0.06);
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-ink);
+  background: var(--color-ink-100); /* фон только у мокапа, чтобы экраны отделялись */
+}
+h1, h2, h3, p { margin: 0; }
+button { font: inherit; cursor: pointer; }
+
+/* ============================================================
+   ОБВЯЗКА МОКАПА (переключатель экранов — только в мокапе)
+   ============================================================ */
+.mockupBar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; gap: var(--space-2); flex-wrap: wrap; align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-ink); color: var(--color-surface);
+}
+.mockupBar strong { font-size: var(--font-size-caption); margin-right: var(--space-2); }
+.mockupBar button {
+  border: 1px solid var(--color-ink-600); background: transparent;
+  color: var(--color-surface); border-radius: var(--radius-xs);
+  padding: 6px 12px; font-size: var(--font-size-caption);
+}
+.mockupBar button.active { background: var(--color-accent); border-color: var(--color-accent); }
+.screen { display: none; }
+.screen.visible { display: block; }
+.mockNote {
+  max-width: var(--layout-max-width); margin: var(--space-4) auto 0;
+  padding: 0 var(--space-4);
+  font-size: var(--font-size-caption); line-height: var(--line-height-caption);
+  color: var(--color-ink-600);
+}
+
+/* ============================================================
+   КАРКАС APP-ОБЛАСТИ — верхняя шапка (desktop)
+   ============================================================ */
+.appViewport { background: var(--color-ink-50); min-height: 720px; padding-bottom: var(--space-16); }
+.appHeader {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-ink-100);
+}
+.appHeaderInner {
+  max-width: var(--layout-max-width); margin: 0 auto;
+  display: flex; align-items: center; gap: var(--space-8);
+  padding: 0 var(--space-4); height: 64px;
+}
+.brand { display: flex; align-items: center; gap: var(--space-2); font-weight: var(--font-weight-medium); }
+.brandMark {
+  width: 28px; height: 28px; border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--teal-300), var(--teal-700));
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--color-on-accent); font-weight: 700; font-size: 15px;
+}
+.topNav { display: flex; gap: var(--space-2); flex: 1; }
+.topNav a {
+  display: inline-flex; align-items: center; height: 64px;
+  padding: 0 var(--space-3);
+  color: var(--color-ink-600); text-decoration: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px; /* поверх бордера шапки */
+}
+.topNav a:hover { color: var(--color-ink); }
+.topNav a.current {
+  color: var(--color-accent);
+  font-weight: var(--font-weight-medium);
+  border-bottom-color: var(--color-accent);
+}
+.userBlock { display: flex; align-items: center; gap: var(--space-3); }
+.avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--color-accent-tint); color: var(--color-text-on-tint);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: var(--font-size-caption); font-weight: var(--font-weight-medium);
+}
+.userMeta { line-height: 1.2; }
+.userMeta .name { font-size: 14px; font-weight: var(--font-weight-medium); }
+.userMeta .role { font-size: var(--font-size-caption); color: var(--color-ink-400); }
+
+/* ============================================================
+   КОНТЕНТ DASHBOARD
+   ============================================================ */
+.page {
+  max-width: var(--layout-max-width); margin: 0 auto;
+  padding: var(--space-8) var(--space-4) 0;
+}
+.greeting h1 { font-size: var(--font-size-h1); line-height: var(--line-height-h1); font-weight: var(--font-weight-medium); }
+.greeting .caption { color: var(--color-ink-400); font-size: var(--font-size-caption); margin-top: var(--space-1); }
+
+/* Continue learning — мятная hero-карточка */
+.continueCard {
+  margin-top: var(--space-6);
+  background: var(--teal-50);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  display: flex; gap: var(--space-6); align-items: center;
+  box-shadow: var(--shadow-card);
+}
+.thumb {
+  flex: 0 0 180px; height: 104px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--teal-200), var(--teal-600));
+  display: flex; align-items: center; justify-content: center;
+}
+.thumb.small { flex-basis: 96px; height: 56px; border-radius: var(--radius-sm); }
+.playIcon {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  display: flex; align-items: center; justify-content: center;
+}
+.playIcon::after {
+  content: ''; display: block; margin-left: 3px;
+  border-left: 12px solid var(--teal-700);
+  border-top: 8px solid transparent; border-bottom: 8px solid transparent;
+}
+.playIcon.small { width: 26px; height: 26px; }
+.playIcon.small::after { border-left-width: 8px; border-top-width: 5px; border-bottom-width: 5px; }
+.continueBody { flex: 1; min-width: 0; }
+.eyebrow {
+  font-size: var(--font-size-caption); letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase; color: var(--color-text-on-tint);
+  font-weight: var(--font-weight-medium);
+}
+.continueBody h2 { margin-top: var(--space-2); font-size: var(--font-size-h2); }
+.continueBody .meta { color: var(--color-ink-600); font-size: var(--font-size-caption); margin-top: var(--space-1); }
+.progressRow { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-3); }
+.progressTrack {
+  flex: 1; height: 6px; border-radius: var(--radius-xs);
+  background: rgba(255,255,255,0.85); overflow: hidden;
+}
+.progressFill { height: 100%; background: var(--color-accent); border-radius: var(--radius-xs); }
+.progressLabel { font-size: var(--font-size-caption); color: var(--color-text-on-tint); font-weight: var(--font-weight-medium); }
+.btn {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  border: none; border-radius: var(--radius-xs);
+  background: var(--color-accent); color: var(--color-on-accent);
+  padding: 10px 18px; font-weight: var(--font-weight-medium);
+}
+.btn:hover { background: var(--color-accent-hover); }
+.btn.outline {
+  background: transparent; color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+}
+
+/* Сводка — три stat-карточки */
+.statsRow {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4); margin-top: var(--space-4);
+}
+.statCard {
+  background: var(--color-surface); border-radius: var(--radius-lg);
+  padding: var(--space-5); box-shadow: var(--shadow-card);
+}
+.statCard .num { font-size: 28px; line-height: 34px; font-weight: var(--font-weight-medium); }
+.statCard .lbl { color: var(--color-ink-600); font-size: var(--font-size-caption); margin-top: var(--space-1); }
+
+/* Секции Recommended / Recently */
+.sectionHead {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-top: var(--space-10);
+}
+.sectionHead h2 { font-size: var(--font-size-h2); }
+.sectionHead a { font-size: var(--font-size-caption); color: var(--color-accent); text-decoration: none; font-weight: var(--font-weight-medium); }
+.cardsGrid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4); margin-top: var(--space-4);
+}
+.lessonCard {
+  background: var(--color-surface); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card); overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.lessonCard .cover {
+  height: 110px;
+  background: linear-gradient(135deg, var(--teal-50), var(--teal-200));
+  display: flex; align-items: center; justify-content: center;
+}
+.lessonCard .body { padding: var(--space-4); }
+.lessonCard h3 { font-size: var(--font-size-h3); line-height: var(--line-height-h3); }
+.lessonCard .meta { margin-top: var(--space-2); color: var(--color-ink-400); font-size: var(--font-size-caption); }
+
+.recentList {
+  background: var(--color-surface); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card); margin-top: var(--space-4);
+  padding: var(--space-2) 0;
+}
+.recentRow {
+  display: flex; align-items: center; gap: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+}
+.recentRow + .recentRow { border-top: 1px solid var(--color-ink-100); }
+.recentRow .title { flex: 1; min-width: 0; }
+.recentRow .title .cat { display: block; color: var(--color-ink-400); font-size: var(--font-size-caption); }
+.statusBadge { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--font-size-caption); color: var(--color-ink-600); white-space: nowrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; }
+.dot.completed { background: var(--color-status-completed); }
+.dot.inprogress { background: var(--color-status-in-progress); }
+
+/* Пустое состояние новичка */
+.emptyHero {
+  margin-top: var(--space-6);
+  background: var(--teal-50); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-12) var(--space-6);
+  text-align: center;
+}
+.emptyHero h2 { font-size: var(--font-size-h2); margin-top: var(--space-4); }
+.emptyHero p { color: var(--color-ink-600); margin-top: var(--space-2); max-width: 420px; margin-left: auto; margin-right: auto; }
+.emptyHero .btn { margin-top: var(--space-6); }
+.emptyMark {
+  width: 56px; height: 56px; margin: 0 auto; border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ============================================================
+   МОБИЛЬНЫЙ ЭКРАН — рамка 375px + нижние табы
+   ============================================================ */
+.phoneFrame {
+  width: 375px; margin: var(--space-8) auto;
+  background: var(--color-ink-50);
+  border: 1px solid var(--color-ink-200); border-radius: 24px;
+  overflow: hidden; box-shadow: var(--shadow-soft);
+  position: relative;
+}
+.phoneHeader {
+  background: var(--color-surface); border-bottom: 1px solid var(--color-ink-100);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+}
+.phoneScroll { padding: var(--space-5) var(--space-4) 96px; }
+.phoneScroll .continueCard { flex-direction: column; align-items: stretch; padding: var(--space-5); gap: var(--space-4); margin-top: var(--space-5); }
+.phoneScroll .thumb { flex-basis: auto; width: 100%; height: 120px; }
+.phoneScroll .statsRow { grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
+.phoneScroll .statCard { padding: var(--space-3); }
+.phoneScroll .statCard .num { font-size: 20px; line-height: 26px; }
+.phoneScroll .cardsGrid { grid-template-columns: 1fr; }
+.phoneScroll .sectionHead { margin-top: var(--space-8); }
+.tabBar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: var(--color-surface); border-top: 1px solid var(--color-ink-100);
+  display: flex;
+}
+.tabBar a {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: var(--space-2) 0 var(--space-3);
+  text-decoration: none; color: var(--color-ink-400);
+  font-size: 11px; line-height: 14px;
+}
+.tabBar a.current { color: var(--color-accent); font-weight: var(--font-weight-medium); }
+.tabIcon { width: 22px; height: 22px; }
+.tabIcon path, .tabIcon rect, .tabIcon circle { stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+</style>
+</head>
+<body>
+
+<div class="mockupBar">
+  <strong>MOCKUP · App shell + Dashboard</strong>
+  <button data-screen="s1" class="active">1 · Dashboard (desktop)</button>
+  <button data-screen="s2">2 · New user — empty (desktop)</button>
+  <button data-screen="s3">3 · Admin nav + People (desktop)</button>
+  <button data-screen="s4">4 · Mobile (375px)</button>
+</div>
+
+<!-- ================= ЭКРАН 1: Dashboard ученика, desktop ================= -->
+<section class="screen visible" id="s1">
+  <p class="mockNote">Ученик (Welder). Верхняя шапка вместо боковой панели: Dashboard / Lessons / Reports / Settings.
+  Continue — мятная hero-карточка (данные из <code>dashboard.continue</code>), ниже сводка, Recommended, Recently watched.</p>
+
+  <div class="appViewport">
+    <header class="appHeader">
+      <div class="appHeaderInner">
+        <span class="brand"><span class="brandMark">S</span>Software Academy</span>
+        <nav class="topNav">
+          <a href="#" class="current">Dashboard</a>
+          <a href="#">Lessons</a>
+          <a href="#">Reports</a>
+          <a href="#">Settings</a>
+        </nav>
+        <div class="userBlock">
+          <span class="avatar">II</span>
+          <span class="userMeta"><span class="name">Ivan Ivanov</span><br><span class="role">Welder · Acme Oy</span></span>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="greeting">
+        <h1>Good day, Ivan</h1>
+        <p class="caption">Your learning overview</p>
+      </div>
+
+      <!-- Continue learning -->
+      <div class="continueCard">
+        <div class="thumb"><span class="playIcon"></span></div>
+        <div class="continueBody">
+          <span class="eyebrow">Continue learning</span>
+          <h2>Daily Welding Report</h2>
+          <p class="meta">Welding · 4:20 · stopped at 2:45</p>
+          <div class="progressRow">
+            <div class="progressTrack"><div class="progressFill" style="width:64%"></div></div>
+            <span class="progressLabel">64%</span>
+          </div>
+        </div>
+        <button class="btn">Continue lesson →</button>
+      </div>
+
+      <!-- Сводка -->
+      <div class="statsRow">
+        <div class="statCard"><div class="num">42%</div><div class="lbl">Overall completion</div></div>
+        <div class="statCard"><div class="num">5</div><div class="lbl">Lessons completed</div></div>
+        <div class="statCard"><div class="num">2</div><div class="lbl">In progress</div></div>
+      </div>
+
+      <!-- Recommended -->
+      <div class="sectionHead">
+        <h2>Recommended for you</h2>
+        <a href="#">All lessons →</a>
+      </div>
+      <div class="cardsGrid">
+        <article class="lessonCard">
+          <div class="cover"><span class="playIcon"></span></div>
+          <div class="body"><h3>Adding work hours</h3><p class="meta">Getting started · 3:10</p></div>
+        </article>
+        <article class="lessonCard">
+          <div class="cover"><span class="playIcon"></span></div>
+          <div class="body"><h3>Sign-off checklist</h3><p class="meta">Welding · 4:55</p></div>
+        </article>
+        <article class="lessonCard">
+          <div class="cover"><span class="playIcon"></span></div>
+          <div class="body"><h3>Weld log basics</h3><p class="meta">Welding · 3:40</p></div>
+        </article>
+      </div>
+
+      <!-- Recently watched -->
+      <div class="sectionHead"><h2>Recently watched</h2></div>
+      <div class="recentList">
+        <div class="recentRow">
+          <div class="thumb small"><span class="playIcon small"></span></div>
+          <div class="title">Login to the platform<span class="cat">Getting started</span></div>
+          <span class="statusBadge"><span class="dot completed"></span>Completed</span>
+        </div>
+        <div class="recentRow">
+          <div class="thumb small"><span class="playIcon small"></span></div>
+          <div class="title">Daily Welding Report<span class="cat">Welding</span></div>
+          <span class="statusBadge"><span class="dot inprogress"></span>In progress</span>
+        </div>
+        <div class="recentRow">
+          <div class="thumb small"><span class="playIcon small"></span></div>
+          <div class="title">Adding work hours<span class="cat">Getting started</span></div>
+          <span class="statusBadge"><span class="dot completed"></span>Completed</span>
+        </div>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ================= ЭКРАН 2: Новичок, пустое состояние ================= -->
+<section class="screen" id="s2">
+  <p class="mockNote">Тот же ученик, но <code>is_new_user = true</code>: вместо Continue и Recently — приглашение
+  начать. Recommended остаётся (бэкенд отдаёт рекомендации по роли и новичку). Сводка скрыта — нули не показываем.</p>
+
+  <div class="appViewport">
+    <header class="appHeader">
+      <div class="appHeaderInner">
+        <span class="brand"><span class="brandMark">S</span>Software Academy</span>
+        <nav class="topNav">
+          <a href="#" class="current">Dashboard</a>
+          <a href="#">Lessons</a>
+          <a href="#">Reports</a>
+          <a href="#">Settings</a>
+        </nav>
+        <div class="userBlock">
+          <span class="avatar">II</span>
+          <span class="userMeta"><span class="name">Ivan Ivanov</span><br><span class="role">Welder · Acme Oy</span></span>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="greeting">
+        <h1>Good day, Ivan</h1>
+        <p class="caption">Your learning overview</p>
+      </div>
+
+      <div class="emptyHero">
+        <div class="emptyMark"><span class="playIcon small"></span></div>
+        <h2>Start your first lesson</h2>
+        <p>Short 3–5 minute guides picked for your role. Find the answer and get back to work.</p>
+        <button class="btn">Browse lessons →</button>
+      </div>
+
+      <div class="sectionHead">
+        <h2>Recommended for you</h2>
+        <a href="#">All lessons →</a>
+      </div>
+      <div class="cardsGrid">
+        <article class="lessonCard">
+          <div class="cover"><span class="playIcon"></span></div>
+          <div class="body"><h3>Login to the platform</h3><p class="meta">Getting started · 2:30</p></div>
+        </article>
+        <article class="lessonCard">
+          <div class="cover"><span class="playIcon"></span></div>
+          <div class="body"><h3>Adding work hours</h3><p class="meta">Getting started · 3:10</p></div>
+        </article>
+        <article class="lessonCard">
+          <div class="cover"><span class="playIcon"></span></div>
+          <div class="body"><h3>Daily Welding Report</h3><p class="meta">Welding · 4:20</p></div>
+        </article>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ================= ЭКРАН 3: admin — пункт People ================= -->
+<section class="screen" id="s3">
+  <p class="mockNote">Тот же учебный интерфейс для admin/manager/site: единственное отличие — пункт <strong>People</strong>
+  в шапке (видимость через activeRole). Контент dashboard идентичен ученическому — админ учится как все.</p>
+
+  <div class="appViewport">
+    <header class="appHeader">
+      <div class="appHeaderInner">
+        <span class="brand"><span class="brandMark">S</span>Software Academy</span>
+        <nav class="topNav">
+          <a href="#" class="current">Dashboard</a>
+          <a href="#">Lessons</a>
+          <a href="#">Reports</a>
+          <a href="#">People</a>
+          <a href="#">Settings</a>
+        </nav>
+        <div class="userBlock">
+          <span class="avatar">AK</span>
+          <span class="userMeta"><span class="name">Anna Korhonen</span><br><span class="role">Administrator · Acme Oy</span></span>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="greeting">
+        <h1>Good day, Anna</h1>
+        <p class="caption">Your learning overview</p>
+      </div>
+
+      <div class="continueCard">
+        <div class="thumb"><span class="playIcon"></span></div>
+        <div class="continueBody">
+          <span class="eyebrow">Continue learning</span>
+          <h2>Create Inspection Report</h2>
+          <p class="meta">Inspection · 4:50 · stopped at 1:12</p>
+          <div class="progressRow">
+            <div class="progressTrack"><div class="progressFill" style="width:25%"></div></div>
+            <span class="progressLabel">25%</span>
+          </div>
+        </div>
+        <button class="btn">Continue lesson →</button>
+      </div>
+
+      <div class="statsRow">
+        <div class="statCard"><div class="num">18%</div><div class="lbl">Overall completion</div></div>
+        <div class="statCard"><div class="num">3</div><div class="lbl">Lessons completed</div></div>
+        <div class="statCard"><div class="num">1</div><div class="lbl">In progress</div></div>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ================= ЭКРАН 4: Mobile 375px ================= -->
+<section class="screen" id="s4">
+  <p class="mockNote">Мобильный ученик: шапка сжимается до лого + аватара, навигация — нижние табы
+  (Dashboard / Lessons / Reports / Settings; у admin добавится People). Continue-карточка складывается в столбик.</p>
+
+  <div class="phoneFrame">
+    <div class="phoneHeader">
+      <span class="brand"><span class="brandMark">S</span>Software Academy</span>
+      <span class="avatar">II</span>
+    </div>
+
+    <div class="phoneScroll">
+      <div class="greeting">
+        <h1>Good day, Ivan</h1>
+        <p class="caption">Your learning overview</p>
+      </div>
+
+      <div class="continueCard">
+        <div class="thumb"><span class="playIcon"></span></div>
+        <div class="continueBody">
+          <span class="eyebrow">Continue learning</span>
+          <h2>Daily Welding Report</h2>
+          <p class="meta">Welding · 4:20 · stopped at 2:45</p>
+          <div class="progressRow">
+            <div class="progressTrack"><div class="progressFill" style="width:64%"></div></div>
+            <span class="progressLabel">64%</span>
+          </div>
+        </div>
+        <button class="btn">Continue lesson →</button>
+      </div>
+
+      <div class="statsRow">
+        <div class="statCard"><div class="num">42%</div><div class="lbl">Completion</div></div>
+        <div class="statCard"><div class="num">5</div><div class="lbl">Completed</div></div>
+        <div class="statCard"><div class="num">2</div><div class="lbl">In progress</div></div>
+      </div>
+
+      <div class="sectionHead">
+        <h2>Recommended</h2>
+        <a href="#">All →</a>
+      </div>
+      <div class="cardsGrid">
+        <article class="lessonCard">
+          <div class="cover"><span class="playIcon"></span></div>
+          <div class="body"><h3>Adding work hours</h3><p class="meta">Getting started · 3:10</p></div>
+        </article>
+      </div>
+    </div>
+
+    <nav class="tabBar">
+      <a href="#" class="current">
+        <svg class="tabIcon" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/></svg>
+        Dashboard
+      </a>
+      <a href="#">
+        <svg class="tabIcon" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M10 9.5v5l4.5-2.5z"/></svg>
+        Lessons
+      </a>
+      <a href="#">
+        <svg class="tabIcon" viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>
+        Reports
+      </a>
+      <a href="#">
+        <svg class="tabIcon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 4.5v2M12 17.5v2M4.5 12h2M17.5 12h2M6.7 6.7l1.4 1.4M15.9 15.9l1.4 1.4M17.3 6.7l-1.4 1.4M8.1 15.9l-1.4 1.4"/></svg>
+        Settings
+      </a>
+    </nav>
+  </div>
+</section>
+
+<script>
+// Переключатель экранов — только для мокапа
+document.querySelectorAll('.mockupBar button').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    document.querySelectorAll('.mockupBar button').forEach(function (b) { b.classList.remove('active'); });
+    document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('visible'); });
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.screen).classList.add('visible');
+  });
+});
+</script>
+
+</body>
+</html>

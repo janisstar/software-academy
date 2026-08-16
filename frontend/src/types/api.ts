@@ -187,6 +187,20 @@ export function activeRole(privileges: Privileges): RoleKey | null {
 }
 
 /**
+ * Роли, которым доступен раздел People (docs/06 §2): master ведёт всю
+ * платформу, admin / manager / site — людей своей компании.
+ */
+const PEOPLE_ROLES: RoleKey[] = ['master', 'admin', 'manager', 'site']
+
+/**
+ * Может ли роль управлять людьми. Рабочим ролям (inspector / user / fitter)
+ * раздел People закрыт — и на бэкенде, и в маршрутах.
+ */
+export function canManagePeople(role: RoleKey | null): boolean {
+  return role !== null && PEOPLE_ROLES.includes(role)
+}
+
+/**
  * Строка с бэкенда → ключ роли, если такая роль у нас известна.
  *
  * Нужна там, где роли приходят просто списком строк (например `roles` у урока):

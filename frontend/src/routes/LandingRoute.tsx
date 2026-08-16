@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
+import { homePathFor } from '../constants/routes'
 import { useAuth } from '../hooks/useAuth'
+import { activeRole } from '../types/api'
 import { hasSeenLanding } from '../utils/storage'
 
 interface LandingRouteProps {
@@ -33,5 +35,10 @@ export function LandingRoute({ children }: LandingRouteProps) {
     return <div>{t('common.loading')}</div>
   }
 
-  return <Navigate to={user ? '/home' : '/login'} replace />
+  return (
+    <Navigate
+      to={user ? homePathFor(activeRole(user.privileges)) : '/login'}
+      replace
+    />
+  )
 }

@@ -1,13 +1,20 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { AppLayout } from '../components/app/AppLayout'
 import { FirstLoginLayout } from '../components/login/FirstLoginLayout'
 import { MasterLayout } from '../components/master/MasterLayout'
 import {
+  APP_PATHS,
   AUTH_PATHS,
   CONTENT_PATHS,
   FIRST_LOGIN_PATHS,
   LEGAL_PATHS,
+  MASTER_HOME,
   PEOPLE_PATHS,
 } from '../constants/routes'
+import { AppDashboardPage } from '../pages/app/AppDashboardPage'
+import { AppLessonsPage } from '../pages/app/AppLessonsPage'
+import { AppReportsPage } from '../pages/app/AppReportsPage'
+import { AppSettingsPage } from '../pages/app/AppSettingsPage'
 import { LandingPage } from '../pages/landing/LandingPage'
 import { PrivacyPage } from '../pages/legal/PrivacyPage'
 import { TermsPage } from '../pages/legal/TermsPage'
@@ -26,6 +33,8 @@ import { ReportsPage } from '../pages/master/ReportsPage'
 import { SettingsPage } from '../pages/master/SettingsPage'
 import { UserDetailPage } from '../pages/master/UserDetailPage'
 import { UsersPage } from '../pages/master/UsersPage'
+import { AreaGate } from './AreaGate'
+import { ByRole } from './ByRole'
 import { FirstLoginGate } from './FirstLoginGate'
 import { LandingRoute } from './LandingRoute'
 import { ProtectedRoute } from './ProtectedRoute'
@@ -75,21 +84,25 @@ export function AppRoutes() {
         />
       </Route>
 
-      {/* Роут без своего пути: даёт всем страницам master общий каркас
-          (боковое меню / нижние табы) за одной проверкой авторизации.
-          Сами страницы подставляются в <Outlet /> внутри MasterLayout. */}
+      {/* Роут без своего пути: даёт страницам master общий каркас (боковое
+          меню / нижние табы) за одной проверкой авторизации. Сами страницы
+          подставляются в <Outlet /> внутри MasterLayout.
+          AreaGate закрывает область от остальных ролей: им сюда нельзя,
+          уводим на их собственный /dashboard. */}
       <Route
         element={
           <ProtectedRoute>
             {/* Незакрытый первый вход в портал не пускает: сначала пароль,
                 потом согласия (docs/07-api-reference.md). */}
             <FirstLoginGate>
-              <MasterLayout />
+              <AreaGate area="master">
+                <MasterLayout />
+              </AreaGate>
             </FirstLoginGate>
           </ProtectedRoute>
         }
       >
-        <Route path="/home" element={<DashboardPage />} />
+        <Route path={MASTER_HOME} element={<DashboardPage />} />
         <Route path={CONTENT_PATHS.categories} element={<CategoriesPage />} />
         <Route path={CONTENT_PATHS.lessons} element={<LessonsPage />} />
         {/* Форма создания объявлена раньше страницы урока, чтобы «new»
@@ -102,15 +115,89 @@ export function AppRoutes() {
           path={CONTENT_PATHS.lessonPattern}
           element={<LessonFormPage mode="edit" />}
         />
+      </Route>
+
+      {/* Раздел People — общий для двух интерфейсов, поэтому оболочку выбирает
+          роль: master открывает те же страницы в своей боковой панели, а
+          admin / manager / site — внутри учебной шапки, не теряя навигацию по
+          урокам. Сами страницы People при этом одни и те же.
+          Рабочие роли сюда не допущены — AreaGate уводит их на /dashboard. */}
+      <Route
+        element={
+          <ProtectedRoute>
+            <FirstLoginGate>
+              <AreaGate area="people">
+                <ByRole master={<MasterLayout />} app={<AppLayout />} />
+              </AreaGate>
+            </FirstLoginGate>
+          </ProtectedRoute>
+        }
+      >
         <Route path={PEOPLE_PATHS.users} element={<UsersPage />} />
         {/* Форма создания объявлена раньше страницы пользователя, чтобы
             «new» не был принят за логин. */}
         <Route path={PEOPLE_PATHS.newUser} element={<NewUserPage />} />
         <Route path={PEOPLE_PATHS.userPattern} element={<UserDetailPage />} />
+      </Route>
+
+      {/* Companies — только master: компании ведёт вендор (docs/06 §3).
+          В учебной оболочке этих адресов нет вовсе, поэтому остальных уводим
+          в соседний раздел People, а не на дашборд: список пользователей им
+          доступен, и это ближайшее осмысленное место. */}
+      <Route
+        element={
+          <ProtectedRoute>
+            <FirstLoginGate>
+              <AreaGate area="master" redirectTo={PEOPLE_PATHS.users}>
+                <MasterLayout />
+              </AreaGate>
+            </FirstLoginGate>
+          </ProtectedRoute>
+        }
+      >
         <Route path={PEOPLE_PATHS.companies} element={<CompaniesPage />} />
         <Route path={PEOPLE_PATHS.newCompany} element={<NewCompanyPage />} />
-        <Route path="/reports" element={<ReportsPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
+      </Route>
+
+      {/* Учебная область: все роли, КРОМЕ master (master уроки не смотрит —
+          AreaGate уводит его в свой интерфейс). */}
+      <Route
+        element={
+          <ProtectedRoute>
+            <FirstLoginGate>
+              <AreaGate area="app">
+                <AppLayout />
+              </AreaGate>
+            </FirstLoginGate>
+          </ProtectedRoute>
+        }
+      >
+        <Route path={APP_PATHS.dashboard} element={<AppDashboardPage />} />
+        <Route path={APP_PATHS.lessons} element={<AppLessonsPage />} />
+      </Route>
+
+      {/* Reports и Settings — ОДИН адрес на два интерфейса: у master свой
+          раздел, у остальных ролей — свой. Дважды объявить путь нельзя,
+          поэтому и каркас, и страницу выбирает роль. */}
+      <Route
+        element={
+          <ProtectedRoute>
+            <FirstLoginGate>
+              <ByRole master={<MasterLayout />} app={<AppLayout />} />
+            </FirstLoginGate>
+          </ProtectedRoute>
+        }
+      >
+        <Route
+          path={APP_PATHS.reports}
+          element={<ByRole master={<ReportsPage />} app={<AppReportsPage />} />}
+        />
+        <Route
+          path={APP_PATHS.settings}
+          element={
+            <ByRole master={<SettingsPage />} app={<AppSettingsPage />} />
+          }
+        />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,0 +1,23 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-ink-50);
+}
+
+/* min-width: 0 — иначе широкое содержимое растянет колонку и сломает flex. */
+.main {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  /* 96px снизу — запас под нижние табы на мобильном. */
+  padding: var(--space-8) var(--space-4) 96px;
+}
+
+@media (max-width: 600px) {
+  .main {
+    padding: var(--space-5) var(--space-4) 96px;
+  }
+}

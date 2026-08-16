@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { FIRST_LOGIN_PATHS } from '../../constants/routes'
+import { FIRST_LOGIN_PATHS, homePathFor } from '../../constants/routes'
 import { useAuth } from '../../hooks/useAuth'
 import type { FirstLoginOutletContext } from '../../hooks/useFirstLoginProgress'
+import { activeRole } from '../../types/api'
 import {
   nextFirstLoginStep,
   requiredFirstLoginSteps,
@@ -30,9 +31,15 @@ export function FirstLoginLayout() {
 
   const step = nextFirstLoginStep(user)
 
-  // Проходить нечего — в том числе если экран открыли руками. В портал.
+  // Проходить нечего — в том числе если экран открыли руками. В портал той
+  // роли, которая вошла: сам сценарий первого входа при этом не меняется.
   if (!step) {
-    return <Navigate to="/home" replace />
+    return (
+      <Navigate
+        to={homePathFor(user ? activeRole(user.privileges) : null)}
+        replace
+      />
+    )
   }
 
   // Открыт не тот шаг — или текущий только что завершён и refresh() снял флаг.

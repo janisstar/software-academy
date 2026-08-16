@@ -1,0 +1,38 @@
+.user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.text {
+  display: grid;
+  min-width: 0;
+}
+
+/* Длинные имя и название компании обрезаем: шапка не должна расти. */
+.name,
+.meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.name {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-ink);
+}
+
+.meta {
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* На телефоне в шапке остаются только аватар и выход: имя и роль человек и
+   так знает, а место нужно под название продукта. */
+@media (max-width: 600px) {
+  .text {
+    display: none;
+  }
+}

@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { ApiError } from '../../api/client'
-import { AUTH_PATHS } from '../../constants/routes'
+import { AUTH_PATHS, homePathFor } from '../../constants/routes'
 import { useAuth } from '../../hooks/useAuth'
+import { activeRole } from '../../types/api'
 import { LoginBook } from '../../components/login/LoginBook'
 // Тот же вариант знака, что в шапке лендинга — фон здесь тоже светлый.
 import logoMark from '../../assets/logo-mark-light.png'
@@ -31,8 +32,12 @@ export function LoginPage() {
 
     try {
       setIsSubmitting(true)
-      await login(un, pw)
-      navigate('/home', { replace: true })
+      // Куда вести, решает роль из ответа входа: master — в свой интерфейс,
+      // остальные — в учебный. Незакрытый первый вход перехватит FirstLoginGate.
+      const response = await login(un, pw)
+      navigate(homePathFor(activeRole(response.user.privileges)), {
+        replace: true,
+      })
     } catch (caughtError) {
       if (caughtError instanceof ApiError) {
         setError(caughtError.detail)
@@ -51,7 +56,7 @@ export function LoginPage() {
 
   // Уже вошедшему пользователю форма входа не нужна.
   if (user) {
-    return <Navigate to="/home" replace />
+    return <Navigate to={homePathFor(activeRole(user.privileges))} replace />
   }
 
   return (

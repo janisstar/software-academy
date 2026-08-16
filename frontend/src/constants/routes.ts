@@ -6,6 +6,8 @@
  * Один источник правды избавляет от опечаток вида `/legal/privacy-policy`.
  */
 
+import type { RoleKey } from '../types/api'
+
 // Тексты Privacy Policy и Terms: публичные страницы. Ссылки на них даёт и
 // футер лендинга, и экран согласий при первом входе.
 export const LEGAL_PATHS = {
@@ -55,4 +57,30 @@ export const PEOPLE_PATHS = {
 /** Ссылка на страницу конкретного пользователя. */
 export function userPath(un: string): string {
   return `${PEOPLE_PATHS.users}/${encodeURIComponent(un)}`
+}
+
+// Учебная область `app` — интерфейс всех ролей, КРОМЕ master. Пути короткие,
+// без префикса: их знают роутер, верхняя шапка, нижние табы и редирект после
+// входа.
+//
+// `reports` и `settings` намеренно совпадают с адресами master-интерфейса:
+// это один и тот же раздел, просто у master он открывается в его каркасе.
+// Какой каркас и какую страницу показать, решает роль (см. routes/ByRole).
+export const APP_PATHS = {
+  dashboard: '/dashboard',
+  lessons: '/lessons',
+  reports: '/reports',
+  settings: '/settings',
+} as const
+
+// Корень master-интерфейса. Нужен и роутеру, и редиректам по роли.
+export const MASTER_HOME = '/home'
+
+/**
+ * Куда ведёт человека его роль: master — в свой интерфейс, все остальные —
+ * в учебный. Одна функция на все редиректы (вход, лендинг, конец первого
+ * входа, чужой интерфейс), чтобы правило жило в одном месте.
+ */
+export function homePathFor(role: RoleKey | null): string {
+  return role === 'master' ? MASTER_HOME : APP_PATHS.dashboard
 }

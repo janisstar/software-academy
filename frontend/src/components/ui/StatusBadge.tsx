@@ -14,11 +14,29 @@ type StatusBadgeProps = {
   variant: StatusVariant
   /** Текст статуса — УЖЕ переведённый вызывающим компонентом. */
   label: string
+  /**
+   * Красить в цвет статуса не только точку, но и подпись.
+   *
+   * Нужно там, где статус — главное, что человек ищет глазами: на карточке
+   * учебного каталога. В плотных списках (недавние уроки на дашборде, таблицы
+   * People) он остаётся спокойным серым, иначе строки пестрят.
+   */
+  strong?: boolean
 }
 
 /** Статус строкой: цветная точка и подпись рядом. */
-export function StatusBadge({ variant, label }: StatusBadgeProps) {
-  return (
-    <span className={[styles.status, styles[variant]].join(' ')}>{label}</span>
-  )
+export function StatusBadge({
+  variant,
+  label,
+  strong = false,
+}: StatusBadgeProps) {
+  const classNames = [
+    styles.status,
+    styles[variant],
+    strong ? styles.strong : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  return <span className={classNames}>{label}</span>
 }

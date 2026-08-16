@@ -12,6 +12,7 @@ import {
   PEOPLE_PATHS,
 } from '../constants/routes'
 import { AppDashboardPage } from '../pages/app/AppDashboardPage'
+import { AppLessonPage } from '../pages/app/AppLessonPage'
 import { AppLessonsPage } from '../pages/app/AppLessonsPage'
 import { AppReportsPage } from '../pages/app/AppReportsPage'
 import { AppSettingsPage } from '../pages/app/AppSettingsPage'
@@ -174,6 +175,7 @@ export function AppRoutes() {
       >
         <Route path={APP_PATHS.dashboard} element={<AppDashboardPage />} />
         <Route path={APP_PATHS.lessons} element={<AppLessonsPage />} />
+        <Route path={APP_PATHS.lessonPattern} element={<AppLessonPage />} />
       </Route>
 
       {/* Reports и Settings — ОДИН адрес на два интерфейса: у master свой

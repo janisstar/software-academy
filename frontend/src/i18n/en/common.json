@@ -15,8 +15,29 @@
     "stub": {
       "dashboard": "Dashboard",
       "lessons": "Lessons",
+      "lesson": "Lesson",
       "reports": "Reports",
       "settings": "Settings"
+    },
+    "lessons": {
+      "title": "Lessons",
+      "caption": "Short guides for your daily tasks",
+      "categoryFilter": "Filter by category",
+      "allCategories": "All categories",
+      "categoryPath": "{{parent}} / {{child}}",
+      "otherGroup": "Other",
+      "error": "Could not load the lessons.",
+      "retry": "Retry",
+      "filterEmpty": "No guides in this category.",
+      "showAll": "Show all lessons",
+      "emptyTitle": "No guides yet",
+      "emptyText": "Guides for your role will appear here.",
+      "emptyHint": "If you expected something, ask your company administrator.",
+      "status": {
+        "completed": "Completed",
+        "inProgress": "In progress",
+        "notStarted": "Not started"
+      }
     },
     "dashboard": {
       "greeting": "Good day, {{name}}",
@@ -66,6 +87,7 @@
     "cancel": "Cancel",
     "saving": "Saving…",
     "arrow": "→",
+    "chevron": "›",
     "arrowBack": "←",
     "arrowUp": "▲",
     "arrowDown": "▼",

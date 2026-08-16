@@ -78,7 +78,7 @@
 | PATCH | `/api/lesson/` | master | обновить (в т.ч. видимость) |
 | DELETE | `/api/lesson/?id=` | master | удалить |
 | POST | `/api/lesson/move/` | master | сдвинуть `{id, direction:"up"\|"down"}` в своей категории |
-| GET | `/api/lessons/?category_id=` | сессия | каталог карточек (по роли) со статусом прогресса текущего пользователя (`status`, `watch_percent`) |
+| GET | `/api/lessons/?category_id=` | сессия | каталог карточек (по роли) со статусом прогресса текущего пользователя (`status`, `watch_percent`); порядок — обход дерева категорий (родитель → его подкатегории), внутри категории — порядок уроков |
 | GET | `/api/lesson/{lesson_id}` | сессия | полный урок (если виден) |
 
 **Master** (только роль `master`)

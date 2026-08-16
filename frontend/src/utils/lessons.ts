@@ -1,4 +1,4 @@
-import type { CategoryTree, MasterLesson } from '../types/api'
+import type { CategoryTree } from '../types/api'
 
 /**
  * Категория, вытащенная из дерева в плоский список.
@@ -35,14 +35,25 @@ export function flattenCategoryTree(tree: CategoryTree[]): CategoryEntry[] {
   return entries
 }
 
-/** Группа таблицы: заголовок-категория и её уроки. */
-export interface LessonGroup {
+/**
+ * Что раскладке нужно знать об уроке — только его категория.
+ *
+ * Благодаря этому одна и та же функция раскладывает и строки master-таблицы
+ * (`MasterLesson`), и карточки учебного каталога (`LessonWithStatus`):
+ * порядок групп у них обязан совпадать, значит и код должен быть один.
+ */
+interface HasCategory {
+  category_id: number
+}
+
+/** Группа: заголовок-категория и её уроки. */
+export interface LessonGroup<TLesson extends HasCategory> {
   /**
    * Категория группы. `null` — уроки, чьей категории в дереве не нашлось:
    * так они хотя бы видны, а не пропадают молча.
    */
   category: CategoryEntry | null
-  lessons: MasterLesson[]
+  lessons: TLesson[]
 }
 
 /**
@@ -52,14 +63,14 @@ export interface LessonGroup {
  * внутри группы — тот, в котором их отдал бэкенд. Ничего не сортируем:
  * оба порядка уже посчитаны на сервере.
  *
- * Категории без уроков в таблицу не попадают — пустой заголовок ничего
+ * Категории без уроков в результат не попадают — пустой заголовок ничего
  * не сообщает.
  */
-export function groupLessonsByCategory(
-  lessons: MasterLesson[],
+export function groupLessonsByCategory<TLesson extends HasCategory>(
+  lessons: TLesson[],
   categories: CategoryEntry[],
-): LessonGroup[] {
-  const byCategory = new Map<number, MasterLesson[]>()
+): LessonGroup<TLesson>[] {
+  const byCategory = new Map<number, TLesson[]>()
 
   for (const lesson of lessons) {
     const bucket = byCategory.get(lesson.category_id)
@@ -70,7 +81,7 @@ export function groupLessonsByCategory(
     }
   }
 
-  const groups: LessonGroup[] = []
+  const groups: LessonGroup<TLesson>[] = []
 
   for (const category of categories) {
     const bucket = byCategory.get(category.id)

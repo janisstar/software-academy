@@ -110,6 +110,28 @@ export function PlayGlyph({ size = 16, className }: IconProps) {
   )
 }
 
+/**
+ * Часы — метка длительности урока на карточке каталога.
+ *
+ * Как и `PlayGlyph`, рисуется заливкой: рядом с мелкой подписью «4:30»
+ * сплошной значок читается лучше обводки.
+ */
+export function ClockGlyph({ size = 13, className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.7 3.5v3.8l2.6 1.5-.7 1.2-3.3-1.9V4.5h1.4z" />
+    </svg>
+  )
+}
+
 /** Таблица «имя иконки из конфига → компонент». Наружу не выходит. */
 const APP_NAV_ICONS: Record<
   AppNavIcon,

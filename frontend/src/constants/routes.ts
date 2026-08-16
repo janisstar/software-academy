@@ -69,9 +69,21 @@ export function userPath(un: string): string {
 export const APP_PATHS = {
   dashboard: '/dashboard',
   lessons: '/lessons',
+  // Шаблон с параметром — только для роутера; ссылку строит appLessonPath().
+  lessonPattern: '/lessons/:lessonId',
   reports: '/reports',
   settings: '/settings',
 } as const
+
+/**
+ * Ссылка на страницу урока в учебной области.
+ *
+ * Не путать с `lessonPath()` выше: тот ведёт в форму РЕДАКТИРОВАНИЯ урока
+ * у master (`/content/lessons/{id}`), а этот — на просмотр урока учеником.
+ */
+export function appLessonPath(id: number): string {
+  return `${APP_PATHS.lessons}/${id}`
+}
 
 // Корень master-интерфейса. Нужен и роутеру, и редиректам по роли.
 export const MASTER_HOME = '/home'

@@ -18,7 +18,7 @@ const COLUMN_COUNT = 6
 
 type LessonsTableProps = {
   /** Группы уже в нужном порядке: таблица ничего не сортирует. */
-  groups: LessonGroup[]
+  groups: LessonGroup<MasterLesson>[]
   /** Ключ роли → её название с бэкенда. Нет названия — покажем сам ключ. */
   roleNames: Record<string, string>
   /** id урока, по которому прямо сейчас идёт запрос сдвига. */
@@ -135,7 +135,7 @@ export function LessonsTable({
   const { t } = useTranslation()
   const navigate = useNavigate()
 
-  const groupTitle = (group: LessonGroup) => {
+  const groupTitle = (group: LessonGroup<MasterLesson>) => {
     if (group.category === null) {
       return t('content.lessons.unknownCategory')
     }

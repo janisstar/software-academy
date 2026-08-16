@@ -1,0 +1,98 @@
+/* Карточка целиком — ссылка, поэтому цвет текста задаём явно: иначе она
+   унаследовала бы синий цвет ссылок браузера.
+   position + overflow нужны полоске прогресса: она прижата к нижнему краю
+   и обрезается по скруглению карточки. */
+.card {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-4);
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+/* Рамка вместо тени на наведении: карточки стоят плотной сеткой, и растущая
+   тень пачкала бы соседей. Место под рамку занято прозрачной с самого
+   начала — иначе на hover содержимое дёргалось бы на 1px. */
+.card:hover {
+  border-color: var(--color-ink-200);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* baseline — чтобы шеврон стоял на строке заголовка, а не по центру блока. */
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* min-width: 0 — иначе длинное название вытолкнет шеврон за край. */
+.title {
+  min-width: 0;
+}
+
+.chevron {
+  flex: none;
+  color: var(--color-ink-400);
+}
+
+/* Описание — РОВНО одна строка с многоточием: карточки в сетке должны быть
+   одной высоты, а полный текст человек прочтёт на странице урока. */
+.description {
+  margin-top: var(--space-1);
+  margin-bottom: var(--space-3);
+  overflow: hidden;
+  color: var(--color-ink-600);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+.duration {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-ink-600);
+}
+
+/* Иконка часов чуть светлее подписи: она подсказка, а не само число. */
+.duration svg {
+  flex: none;
+  color: var(--color-ink-400);
+}
+
+/* Полоска прогресса по нижнему краю — только у начатых уроков.
+   3px — толщина самой полосы, к шкале отступов отношения не имеет. */
+.progress {
+  display: block;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--color-ink-100);
+}
+
+.progressFill {
+  display: block;
+  height: 100%;
+  background: var(--color-status-in-progress);
+}

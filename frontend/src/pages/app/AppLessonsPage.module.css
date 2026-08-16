@@ -1,0 +1,109 @@
+/* Mobile-first: заголовок, под ним фильтр во всю ширину. */
+.head {
+  margin-bottom: var(--space-5);
+}
+
+.caption {
+  margin-top: var(--space-1);
+  color: var(--color-ink-600);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+.filterSlot {
+  width: 100%;
+  margin-top: var(--space-4);
+}
+
+/* Карточка ошибки: текст и кнопка повтора столбиком, кнопка по левому краю
+   (тот же приём, что на дашборде и в списке пользователей). */
+.error {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+}
+
+.group {
+  margin-bottom: var(--space-6);
+}
+
+/* Надзаголовок с именем родителя — только у подкатегорий: «REPORTS / My
+   reports». Так название группы читается так же коротко, как у категории
+   верхнего уровня. */
+.eyebrow {
+  margin-bottom: var(--space-1);
+  color: var(--color-ink-400);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+/* h2 по смыслу (заголовок группы), но размером с h3: по мокапу заголовок
+   группы не должен спорить с названиями уроков под ним. */
+.groupTitle {
+  margin-bottom: var(--space-3);
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-h3);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-3);
+}
+
+/* Отфильтровали в ноль: короткая строка и выход из тупика в один клик. */
+.filterEmpty {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+}
+
+/* Уроков нет вообще — не тупик, а объяснение: к кому идти. */
+.empty {
+  margin-top: var(--space-8);
+  padding: var(--space-10) var(--space-6);
+  text-align: center;
+}
+
+/* Мятный кружок с иконкой раздела. 64px — размер пятна, не отступ. */
+.emptyMark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--space-4);
+  border-radius: 50%;
+  background: var(--color-accent-tint);
+  color: var(--color-text-on-tint);
+}
+
+.emptyText {
+  margin-top: var(--space-2);
+  color: var(--color-ink-600);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Десктоп: заголовок и фильтр в одну строку, карточки в две колонки. */
+@media (min-width: 900px) {
+  .head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-6);
+    margin-bottom: var(--space-6);
+  }
+
+  .filterSlot {
+    flex: none;
+    width: 280px;
+    margin-top: 0;
+  }
+
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+}

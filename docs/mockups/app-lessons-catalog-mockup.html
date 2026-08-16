@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup — Lessons catalog (app area)</title>
+<style>
+  /* ===== Токены проекта (копия значений из styles/*.css) ===== */
+  :root {
+    --color-surface: #ffffff;
+    --color-on-accent: #ffffff;
+    --color-ink: #1c2024;
+    --color-ink-800: #2c313a;
+    --color-ink-600: #4a515b;
+    --color-ink-400: #7c838d;
+    --color-ink-200: #c9cdd3;
+    --color-ink-100: #e9ebee;
+    --color-ink-50: #f6f7f8;
+    --color-accent: #12a594;
+    --color-accent-hover: #0e8576;
+    --color-accent-tint: #dcf2ef;
+    --color-text-on-tint: #0b6b5f;
+    --teal-900: #04342c;
+    --color-status-not-started: #7c838d;
+    --color-status-in-progress: #12a594;
+    --color-status-completed: #6aa632;
+
+    --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+    --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
+    --radius-xs: 6px; --radius-sm: 8px; --radius-lg: 14px;
+    --layout-max-width: 1100px;
+    --shadow-card: 0 4px 16px rgba(28, 32, 36, 0.06);
+
+    --font: 'Inter', sans-serif;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #e4e6e9; font-family: var(--font);
+    font-size: 16px; line-height: 24px; color: var(--color-ink);
+  }
+
+  /* ===== Панель переключения экранов (ТОЛЬКО в мокапе) ===== */
+  .mockbar {
+    position: sticky; top: 0; z-index: 50; background: var(--color-ink);
+    color: #fff; padding: 10px 16px; display: flex; gap: 8px; align-items: center;
+    flex-wrap: wrap;
+  }
+  .mockbar span { font-size: 13px; color: var(--color-ink-200); margin-right: 8px; }
+  .mockbar button {
+    font: inherit; font-size: 13px; padding: 6px 12px; border-radius: var(--radius-xs);
+    border: 1px solid var(--color-ink-600); background: transparent; color: #fff; cursor: pointer;
+  }
+  .mockbar button.active { background: var(--color-accent); border-color: var(--color-accent); }
+
+  .note {
+    max-width: 720px; margin: 16px auto; padding: 12px 16px; background: #fff8e6;
+    border: 1px solid #e8d9a8; border-radius: var(--radius-sm); font-size: 13px; line-height: 18px;
+    color: var(--color-ink-800);
+  }
+
+  .screen { display: none; padding: 24px 12px 48px; }
+  .screen.active { display: block; }
+
+  /* ===== Рамка телефона ===== */
+  .phone {
+    width: 375px; margin: 0 auto; background: var(--color-ink-50);
+    border: 1px solid var(--color-ink-200); border-radius: 24px; overflow: hidden;
+    display: flex; flex-direction: column; min-height: 720px; position: relative;
+  }
+
+  /* ===== Мобильная шапка ===== */
+  .m-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: var(--space-4); background: var(--color-ink-50);
+  }
+  .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; }
+  .brand .mark {
+    width: 26px; height: 26px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--color-accent), var(--teal-900));
+    color: #fff; display: grid; place-items: center; font-size: 14px; font-weight: 600;
+  }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%; background: var(--color-accent-tint);
+    color: var(--color-text-on-tint); display: grid; place-items: center;
+    font-size: 12px; font-weight: 600;
+  }
+
+  .m-body { flex: 1; padding: 0 var(--space-4) 96px; overflow-y: auto; }
+
+  h1.page { font-size: 22px; line-height: 28px; font-weight: 500; margin: var(--space-2) 0 2px; }
+  .page-cap { font-size: 13px; line-height: 18px; color: var(--color-ink-600); margin: 0 0 var(--space-4); }
+
+  /* ===== Фильтр-селект (стиль Select приложения: radius-sm) ===== */
+  .filter { position: relative; margin-bottom: var(--space-5); }
+  .filter select {
+    width: 100%; font: inherit; font-size: 15px; padding: 10px 36px 10px 12px;
+    border: 1px solid var(--color-ink-200); border-radius: var(--radius-sm);
+    background: var(--color-surface); color: var(--color-ink); appearance: none;
+  }
+  .filter::after {
+    content: ""; position: absolute; right: 14px; top: 50%; width: 8px; height: 8px;
+    border-right: 2px solid var(--color-ink-600); border-bottom: 2px solid var(--color-ink-600);
+    transform: translateY(-70%) rotate(45deg); pointer-events: none;
+  }
+
+  /* ===== Группа-категория ===== */
+  .group { margin-bottom: var(--space-6); }
+  .group-eyebrow {
+    font-size: 11px; line-height: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--color-ink-400); margin: 0 0 2px;
+  }
+  .group-title { font-size: 16px; line-height: 22px; font-weight: 500; margin: 0 0 var(--space-3); }
+
+  /* ===== Карточка урока ===== */
+  .card {
+    display: block; background: var(--color-surface); border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card); padding: var(--space-4); margin-bottom: var(--space-3);
+    text-decoration: none; color: inherit; position: relative; overflow: hidden;
+    border: 1px solid transparent;
+  }
+  .card:hover { border-color: var(--color-ink-200); }
+  .card:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  .card-row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
+  .card-title { font-size: 16px; line-height: 22px; font-weight: 500; margin: 0; }
+  .card-desc {
+    font-size: 13px; line-height: 18px; color: var(--color-ink-600); margin: 2px 0 var(--space-3);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .card-meta { display: flex; align-items: center; gap: var(--space-4); font-size: 13px; line-height: 18px; }
+  .dur { color: var(--color-ink-600); display: inline-flex; align-items: center; gap: 5px; }
+  .dur svg { width: 13px; height: 13px; fill: var(--color-ink-400); }
+  .chev { color: var(--color-ink-400); font-size: 18px; line-height: 1; align-self: center; }
+
+  /* Статус: точка + текст (визуальный язык проекта, без заливки) */
+  .st { display: inline-flex; align-items: center; gap: 6px; }
+  .st .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .st-not .dot { background: var(--color-status-not-started); }
+  .st-not { color: var(--color-ink-600); }
+  .st-prog .dot { background: var(--color-status-in-progress); }
+  .st-prog { color: var(--color-status-in-progress); font-weight: 500; }
+  .st-done .dot { background: var(--color-status-completed); }
+  .st-done { color: var(--color-status-completed); font-weight: 500; }
+
+  /* Тонкая полоска прогресса — ТОЛЬКО у in_progress */
+  .pbar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--color-ink-100); }
+  .pbar i { display: block; height: 100%; background: var(--color-status-in-progress); }
+
+  /* ===== Нижние табы (мобайл) ===== */
+  .tabs {
+    position: absolute; left: 0; right: 0; bottom: 0; display: flex;
+    background: var(--color-surface); border-top: 1px solid var(--color-ink-100);
+    padding: 6px 0 10px;
+  }
+  .tab {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-size: 11px; line-height: 14px; color: var(--color-ink-400); text-decoration: none;
+  }
+  .tab svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+  .tab.active { color: var(--color-accent); font-weight: 500; }
+
+  /* ===== Десктоп ===== */
+  .desk {
+    max-width: 1240px; margin: 0 auto; background: var(--color-ink-50);
+    border: 1px solid var(--color-ink-200); border-radius: 16px; overflow: hidden; min-height: 720px;
+  }
+  .d-top {
+    display: flex; align-items: center; gap: var(--space-8);
+    padding: var(--space-4) var(--space-8); background: var(--color-surface);
+    border-bottom: 1px solid var(--color-ink-100);
+  }
+  .d-nav { display: flex; gap: var(--space-6); flex: 1; }
+  .d-nav a {
+    font-size: 15px; text-decoration: none; color: var(--color-ink-600);
+    padding: 6px 2px; border-bottom: 2px solid transparent;
+  }
+  .d-nav a.active { color: var(--color-ink); font-weight: 500; border-bottom-color: var(--color-accent); }
+  .d-body { max-width: var(--layout-max-width); margin: 0 auto; padding: var(--space-8); }
+  .d-head { display: flex; align-items: end; justify-content: space-between; gap: var(--space-6); margin-bottom: var(--space-6); }
+  .d-head .filter { margin: 0; width: 280px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+  .grid .card { margin: 0; }
+
+  /* ===== Пустое состояние ===== */
+  .empty {
+    text-align: center; padding: var(--space-10) var(--space-6); margin-top: var(--space-8);
+  }
+  .empty .pic {
+    width: 64px; height: 64px; margin: 0 auto var(--space-4); border-radius: 50%;
+    background: var(--color-accent-tint); display: grid; place-items: center;
+  }
+  .empty .pic svg { width: 28px; height: 28px; stroke: var(--color-text-on-tint); fill: none; stroke-width: 1.6; }
+  .empty h2 { font-size: 18px; line-height: 24px; font-weight: 500; margin: 0 0 var(--space-2); }
+  .empty p { font-size: 13px; line-height: 18px; color: var(--color-ink-600); margin: 0; }
+</style>
+</head>
+<body>
+
+<div class="mockbar">
+  <span>Мокап · только переключатель</span>
+  <button class="active" data-s="s1">1 · Mobile</button>
+  <button data-s="s2">2 · Desktop</button>
+  <button data-s="s3">3 · Empty state</button>
+</div>
+
+<div class="note">
+  <b>Решения в этом мокапе:</b> группы = обход дерева категорий (подкатегория —
+  своя группа с надзаголовком родителя); счётчиков у категорий НЕТ; статус =
+  точка + текст; полоска прогресса — только у in&nbsp;progress; фильтр — селект
+  категорий (как в master-таблице); карточки, не таблица (mobile-first).
+  Вид — глазами welder: он видит только свои уроки.
+</div>
+
+<!-- ================= ЭКРАН 1: MOBILE ================= -->
+<section class="screen active" id="s1">
+  <div class="phone">
+    <div class="m-top">
+      <div class="brand"><span class="mark">S</span>Software Academy</div>
+      <div class="avatar">II</div>
+    </div>
+    <div class="m-body">
+      <h1 class="page">Lessons</h1>
+      <p class="page-cap">Short guides for your daily tasks</p>
+
+      <div class="filter">
+        <select><option>All categories</option><option>Getting started</option><option>Welding</option><option>Reports</option></select>
+      </div>
+
+      <div class="group">
+        <h2 class="group-title">Getting started</h2>
+        <a class="card" href="#">
+          <div class="card-row"><h3 class="card-title">Log in to the platform</h3><span class="chev">›</span></div>
+          <p class="card-desc">Open the platform and sign in with your company account.</p>
+          <div class="card-meta">
+            <span class="dur"><svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.7 3.5v3.8l2.6 1.5-.7 1.2-3.3-1.9V4.5h1.4z"/></svg>2:10</span>
+            <span class="st st-done"><span class="dot"></span>Completed</span>
+          </div>
+        </a>
+        <a class="card" href="#">
+          <div class="card-row"><h3 class="card-title">Add your hours</h3><span class="chev">›</span></div>
+          <p class="card-desc">Record working hours at the end of the shift.</p>
+          <div class="card-meta">
+            <span class="dur"><svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.7 3.5v3.8l2.6 1.5-.7 1.2-3.3-1.9V4.5h1.4z"/></svg>3:05</span>
+            <span class="st st-done"><span class="dot"></span>Completed</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="group">
+        <h2 class="group-title">Welding</h2>
+        <a class="card" href="#">
+          <div class="card-row"><h3 class="card-title">Daily welding report</h3><span class="chev">›</span></div>
+          <p class="card-desc">Fill in and submit the daily report from your phone.</p>
+          <div class="card-meta">
+            <span class="dur"><svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.7 3.5v3.8l2.6 1.5-.7 1.2-3.3-1.9V4.5h1.4z"/></svg>4:30</span>
+            <span class="st st-prog"><span class="dot"></span>In progress</span>
+          </div>
+          <div class="pbar"><i style="width:52%"></i></div>
+        </a>
+        <a class="card" href="#">
+          <div class="card-row"><h3 class="card-title">Sign off a weld log</h3><span class="chev">›</span></div>
+          <p class="card-desc">Confirm finished welds so the supervisor sees them.</p>
+          <div class="card-meta">
+            <span class="dur"><svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.7 3.5v3.8l2.6 1.5-.7 1.2-3.3-1.9V4.5h1.4z"/></svg>3:45</span>
+            <span class="st st-not"><span class="dot"></span>Not started</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="group">
+        <p class="group-eyebrow">Reports</p>
+        <h2 class="group-title">My reports</h2>
+        <a class="card" href="#">
+          <div class="card-row"><h3 class="card-title">Submit a daily report</h3><span class="chev">›</span></div>
+          <p class="card-desc">Send your report for approval in three steps.</p>
+          <div class="card-meta">
+            <span class="dur"><svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.7 3.5v3.8l2.6 1.5-.7 1.2-3.3-1.9V4.5h1.4z"/></svg>5:00</span>
+            <span class="st st-not"><span class="dot"></span>Not started</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <nav class="tabs">
+      <a class="tab" href="#"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1v-9z"/></svg>Dashboard</a>
+      <a class="tab active" href="#"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V5z"/><path d="M10 8l5 4-5 4V8z"/></svg>Lessons</a>
+      <a class="tab" href="#"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Reports</a>
+      <a class="tab" href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 00-2-1.2L14 3h-4l-.6 2.7a7 7 0 00-2 1.2l-2.3-1-2 3.4 2 1.5A7 7 0 005 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-1a7 7 0 002 1.2L10 21h4l.6-2.7a7 7 0 002-1.2l2.3 1 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></svg>Settings</a>
+    </nav>
+  </div>
+</section>
+
+<!-- ================= ЭКРАН 2: DESKTOP ================= -->
+<section class="screen" id="s2">
+  <div class="desk">
+    <div class="d-top">
+      <div class="brand"><span class="mark">S</span>Software Academy</div>
+      <nav class="d-nav">
+        <a href="#">Dashboard</a><a class="active" href="#">Lessons</a><a href="#">Reports</a><a href="#">Settings</a>
+      </nav>
+      <div class="avatar">II</div>
+    </div>
+    <div class="d-body">
+      <div class="d-head">
+        <div>
+          <h1 class="page">Lessons</h1>
+          <p class="page-cap" style="margin:0">Short guides for your daily tasks</p>
+        </div>
+        <div class="filter">
+          <select><option>All categories</option><option>Getting started</option><option>Welding</option><option>Reports</option></select>
+        </div>
+      </div>
+
+      <div class="group">
+        <h2 class="group-title">Getting started</h2>
+        <div class="grid">
+          <a class="card" href="#">
+            <div class="card-row"><h3 class="card-title">Log in to the platform</h3><span class="chev">›</span></div>
+            <p class="card-desc">Open the platform and sign in with your company account.</p>
+            <div class="card-meta">
+              <span class="dur"><svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.7 3.5v3.8l2.6 1.5-.7 1.2-3.3-1.9V4.5h1.4z"/></svg>2:10</span>
+              <span class="st st-done"><span class="dot"></span>Completed</span>
+            </div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-row"><h3 class="card-title">Add your hours</h3><span class="chev">›</span></div>
+            <p class="card-desc">Record working hours at the end of the shift.</p>
+            <div class="card-meta">
+              <span class="dur"><svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.7 3.5v3.8l2.6 1.5-.7 1.2-3.3-1.9V4.5h1.4z"/></svg>3:05</span>
+              <span class="st st-done"><span class="dot"></span>Completed</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="group">
+        <h2 class="group-title">Welding</h2>
+        <div class="grid">
+          <a class="card" href="#">
+            <div class="card-row"><h3 class="card-title">Daily welding report</h3><span class="chev">›</span></div>
+            <p class="card-desc">Fill in and submit the daily report from your phone.</p>
+            <div class="card-meta">
+              <span class="dur"><svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.7 3.5v3.8l2.6 1.5-.7 1.2-3.3-1.9V4.5h1.4z"/></svg>4:30</span>
+              <span class="st st-prog"><span class="dot"></span>In progress</span>
+            </div>
+            <div class="pbar"><i style="width:52%"></i></div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-row"><h3 class="card-title">Sign off a weld log</h3><span class="chev">›</span></div>
+            <p class="card-desc">Confirm finished welds so the supervisor sees them.</p>
+            <div class="card-meta">
+              <span class="dur"><svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.7 3.5v3.8l2.6 1.5-.7 1.2-3.3-1.9V4.5h1.4z"/></svg>3:45</span>
+              <span class="st st-not"><span class="dot"></span>Not started</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="group">
+        <p class="group-eyebrow">Reports</p>
+        <h2 class="group-title">My reports</h2>
+        <div class="grid">
+          <a class="card" href="#">
+            <div class="card-row"><h3 class="card-title">Submit a daily report</h3><span class="chev">›</span></div>
+            <p class="card-desc">Send your report for approval in three steps.</p>
+            <div class="card-meta">
+              <span class="dur"><svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.7 3.5v3.8l2.6 1.5-.7 1.2-3.3-1.9V4.5h1.4z"/></svg>5:00</span>
+              <span class="st st-not"><span class="dot"></span>Not started</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ЭКРАН 3: EMPTY STATE ================= -->
+<section class="screen" id="s3">
+  <div class="phone">
+    <div class="m-top">
+      <div class="brand"><span class="mark">S</span>Software Academy</div>
+      <div class="avatar">II</div>
+    </div>
+    <div class="m-body">
+      <h1 class="page">Lessons</h1>
+      <p class="page-cap">Short guides for your daily tasks</p>
+      <div class="empty">
+        <div class="pic"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V5z"/><path d="M10 8l5 4-5 4V8z"/></svg></div>
+        <h2>No guides yet</h2>
+        <p>Guides for your role will appear here.<br>If you expected something, ask your company administrator.</p>
+      </div>
+    </div>
+    <nav class="tabs">
+      <a class="tab" href="#"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1v-9z"/></svg>Dashboard</a>
+      <a class="tab active" href="#"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V5z"/><path d="M10 8l5 4-5 4V8z"/></svg>Lessons</a>
+      <a class="tab" href="#"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Reports</a>
+      <a class="tab" href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 00-2-1.2L14 3h-4l-.6 2.7a7 7 0 00-2 1.2l-2.3-1-2 3.4 2 1.5A7 7 0 005 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-1a7 7 0 002 1.2L10 21h4l.6-2.7a7 7 0 002-1.2l2.3 1 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></svg>Settings</a>
+    </nav>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('.mockbar button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.mockbar button').forEach(function (x) { x.classList.remove('active'); });
+      document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); });
+      b.classList.add('active');
+      document.getElementById(b.dataset.s).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

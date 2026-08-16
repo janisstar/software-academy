@@ -6,8 +6,8 @@
 Управление контентом (create/update/delete) — только master (проверяется в роуте).
 """
 
-from sqlalchemy import select
-from sqlalchemy.orm import Session, joinedload, selectinload
+from sqlalchemy import func, select
+from sqlalchemy.orm import Session, aliased, joinedload, selectinload
 
 from app.core.text import unique_slug
 from app.models.lesson import Lesson
@@ -111,14 +111,58 @@ def is_visible(user: User, lesson: Lesson) -> bool:
     return any(r.id == user.role_id for r in lesson.roles)
 
 
+def _ordered_by_tree(stmt):
+    """
+    Добавить к запросу уроков порядок «как в дереве категорий»: категория
+    верхнего уровня, сразу за ней её подкатегории, и только потом следующая
+    категория верхнего уровня. Внутри категории — порядок уроков.
+
+    Почему не хватает `ORDER BY Category.order`: `order` считается ВНУТРИ
+    своего ряда соседей, поэтому у верхней категории и у чужой подкатегории
+    спокойно стоит order = 1 — они бы перемешались. Поэтому сортируем сначала
+    по ряду ВЕРХНЕГО уровня (у подкатегории его берём у родителя), а внутри
+    этого ряда — сначала уроки самой категории, потом её подкатегорий.
+
+    Тот же порядок, что строит фронтенд обходом дерева (`flattenCategoryTree`):
+    список и раскладка по группам обязаны совпадать.
+    """
+    from app.models.category import Category
+
+    parent = aliased(Category)
+
+    return (
+        stmt.join(Category, Lesson.category_id == Category.id)
+        .outerjoin(parent, Category.parent_id == parent.id)
+        .order_by(
+            # ряд верхнего уровня: сам родитель либо категория без родителя
+            func.coalesce(parent.order, Category.order),
+            func.coalesce(parent.id, Category.id),
+            # внутри ряда родитель идёт раньше своих подкатегорий
+            # (FALSE < TRUE)
+            Category.parent_id.is_not(None),
+            Category.order,
+            Category.id,
+            Lesson.order,
+            Lesson.id,
+        )
+    )
+
+
 def list_visible(
     db: Session, user: User, category_id: int | None = None
 ) -> list[Lesson]:
-    """Уроки, видимые пользователю (опционально в одной категории), по порядку."""
-    stmt = select(Lesson).options(joinedload(Lesson.roles)).order_by(Lesson.order, Lesson.id)
+    """
+    Уроки, видимые пользователю (опционально в одной категории), в порядке
+    обхода дерева категорий.
+
+    selectinload вместо joinedload: роли догружаются отдельным запросом,
+    поэтому join с категориями не размножает строки уроков (та же причина,
+    что в list_all_for_master, — и .unique() тогда не нужен).
+    """
+    stmt = _ordered_by_tree(select(Lesson).options(selectinload(Lesson.roles)))
     if category_id is not None:
         stmt = stmt.where(Lesson.category_id == category_id)
-    lessons = db.execute(stmt).unique().scalars().all()
+    lessons = db.execute(stmt).scalars().all()
     return [l for l in lessons if is_visible(user, l)]
 
 
@@ -165,17 +209,11 @@ def list_all_for_master(db: Session) -> list[Lesson]:
     """
     ВСЕ уроки для таблицы управления master: без фильтра видимости.
 
-    Порядок: сгруппированно по категориям (в порядке самих категорий),
-    внутри категории — по порядку урока.
+    Порядок — тот же обход дерева категорий, что и в учебном каталоге
+    (`_ordered_by_tree`): master должен видеть уроки ровно в том порядке,
+    в каком их получают учащиеся, иначе управлять порядком он будет вслепую.
     selectinload вместо joinedload: роли догружаются одним отдельным запросом,
-    поэтому join с категорией не размножает строки уроков (нет N+1 и нет .unique()).
+    поэтому join с категориями не размножает строки уроков (нет N+1 и нет .unique()).
     """
-    from app.models.category import Category
-
-    stmt = (
-        select(Lesson)
-        .options(selectinload(Lesson.roles))
-        .join(Category, Lesson.category_id == Category.id)
-        .order_by(Category.order, Category.id, Lesson.order, Lesson.id)
-    )
+    stmt = _ordered_by_tree(select(Lesson).options(selectinload(Lesson.roles)))
     return list(db.execute(stmt).scalars().all())

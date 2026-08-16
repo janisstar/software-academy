@@ -54,3 +54,19 @@
 .notStarted::before {
   background: var(--color-status-not-started);
 }
+
+/* Усиленный вид (prop `strong`): подпись красится в цвет статуса. Два класса
+   вместе дают специфичность выше, чем у `.status` с его серым цветом.
+   У «не начат» усиливать нечего — серый и есть его цвет. */
+.strong.completed,
+.strong.inProgress {
+  font-weight: var(--font-weight-medium);
+}
+
+.strong.completed {
+  color: var(--color-status-completed);
+}
+
+.strong.inProgress {
+  color: var(--color-status-in-progress);
+}
